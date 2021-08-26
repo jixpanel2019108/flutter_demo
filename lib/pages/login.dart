@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_demo/services/userService.dart';
 
 class Login extends StatefulWidget {
   static String id = 'Login';
@@ -10,6 +11,11 @@ class Login extends StatefulWidget {
 }
 
 class _LoginState extends State<Login> {
+
+  loginService()async{
+    UserService().loginUser("hola", "como");
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -204,7 +210,9 @@ class _LoginState extends State<Login> {
                 borderRadius: BorderRadius.circular(20),
               ),
               color: Color(0xffFE1EF8),
-              onPressed: (){}
+              onPressed: (){
+                loginService();
+              }
           );
         }
     );
