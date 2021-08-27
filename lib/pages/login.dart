@@ -226,7 +226,6 @@ class _login extends State<loginScreen> {
     setState(() {
       _passGuardada = preferences.get("pass")??"12345";
     });
-
   }
 
   Future<void> obtenerEmail() async {
@@ -235,11 +234,11 @@ class _login extends State<loginScreen> {
       _emailGuardado = preferences.get("email")??"suemail@gmail.com";
     });
   }
+
   _loginButton() async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
     preferences.setString("pass", emailController.text);
     preferences.setString("email", emailController.text);
-
   }
 
   loginService()async{
@@ -248,4 +247,4 @@ class _login extends State<loginScreen> {
     UserService().loginUser('$_emailGuardado', '$_passGuardada');
   }
 
-   }
+}
