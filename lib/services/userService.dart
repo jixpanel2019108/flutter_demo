@@ -12,7 +12,7 @@ class UserService{
 
     final http.Response response = await http.post(Uri.parse(url+"/loginUser"),
       headers: <String,String>{ "Content-Type": "application/json"},
-      body: jsonEncode({"nombre_usuario": "JZETINA", "clave": "ADMIN", "key": "12345"}));
+      body: jsonEncode({"nombre_usuario": userName, "clave": password, "key": "12345"}));
       try{ 
         print(response.body);
         return LoginUser.fromJson(json.decode(response.body));
