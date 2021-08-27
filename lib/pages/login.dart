@@ -2,17 +2,14 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_demo/services/userService.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:flutter_demo/pages/forgotPassword.dart';
 
-class Login extends StatefulWidget {
-  static String id = 'Login';
-   
-
+class loginScreen extends StatefulWidget {
   @override
-  _LoginState createState() => _LoginState();
+  _login createState() => _login();
 }
 
-class _LoginState extends State<Login> {
-
+class _login extends State<loginScreen> {
   loginService()async{
     UserService().loginUser("hola", "como");
   }
@@ -27,7 +24,8 @@ class _LoginState extends State<Login> {
     obtenerPass();
     obtenerEmail();
     return Scaffold(
-      body: _cuerpo(),
+      body:
+      _cuerpo(),
     );
   }
 
@@ -51,11 +49,7 @@ class _LoginState extends State<Login> {
            SizedBox(height: 15.0,),
            _passwordTextField(),
            SizedBox(height: 20.0,),
-           Text('¿Has olvidado tu contraseña?',
-           style: TextStyle(
-             color: Colors.white
-           ),
-           ),
+           _forgot(),
            SizedBox(height: 100.0,),
            _botonLogin(),
            SizedBox(height: 100.0,),
@@ -81,6 +75,25 @@ class _LoginState extends State<Login> {
               ]
 
             )
+          );
+        }
+    );
+  }
+
+  Widget _forgot(){
+    return StreamBuilder(
+        builder: (BuildContext context, AsyncSnapshot snapshot) {
+          return Container(
+              padding: EdgeInsets.symmetric(horizontal: 15.0),
+              child: FlatButton(
+                onPressed: (){
+                  Navigator.of(context).pushNamed('/forgotPassword');
+                },
+                child: Text('¿Has olvidado tu contraseña?',
+                style: TextStyle(
+                  color: Colors.white
+                ),),
+              )
           );
         }
     );
@@ -225,33 +238,3 @@ class _LoginState extends State<Login> {
     });
   }
    }
-
-  /*Widget _fondo(){
-    return Container(
-      child: Scaffold(
-        body: Center(
-          child: Column(
-            children: [
-              SizedBox(height: 100.0,),
-              _logo(),
-              SizedBox(height: 150.0,),
-              _userTextField(),
-              SizedBox(height: 15.0,),
-              _passwordTextField(),
-              SizedBox(height: 15.0,),
-              SizedBox(height: 100.0,),
-              _botonLogin(),
-              SizedBox(height: 200.0,),
-              _powered()
-            ],
-          ),
-        ),
-      ),
-      decoration: BoxDecoration(
-        image: DecorationImage( image: AssetImage('assets/login-bg.jpg'),
-        fit: BoxFit.cover
-        )
-      ),
-    );
-  }*/
-
