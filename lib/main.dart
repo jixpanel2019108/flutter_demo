@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_demo/pages/login.dart';
+import 'package:flutter_demo/pages/forgotPassword.dart';
 
 void main() {
   runApp(MyApp());
@@ -11,14 +12,11 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
       debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        cardColor: Colors.purpleAccent,
-      ),
-      initialRoute: Login.id,
+      initialRoute: '/login',
       routes: {
-       Login.id : (context) => Login()
+       '/login': (context) => loginScreen(),
+        '/forgotPassword': (context) => forgotScreen()
       },
     );
   }
