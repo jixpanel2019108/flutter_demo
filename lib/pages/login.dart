@@ -10,9 +10,6 @@ class loginScreen extends StatefulWidget {
 }
 
 class _login extends State<loginScreen> {
-  loginService()async{
-    UserService().loginUser("hola", "como");
-  }
 
   @override
   String _passGuardada = '';
@@ -210,7 +207,7 @@ class _login extends State<loginScreen> {
                 borderRadius: BorderRadius.circular(20),
               ),
               color: Color(0xffFE1EF8),
-              onPressed: (){_guardarPassword();},
+              onPressed: (){loginService();},
           );
         }
     );
@@ -225,16 +222,23 @@ class _login extends State<loginScreen> {
 
   }
 
-  _guardarPassword() async {
-    SharedPreferences preferences = await SharedPreferences.getInstance();
-    preferences.setString("pass", emailController.text);
-    preferences.setString("email", emailController.text);
-  }
-
   Future<void> obtenerEmail() async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
     setState(() {
       _emailGuardado = preferences.get("email")??"suemail@gmail.com";
     });
   }
+  _loginButton() async {
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    preferences.setString("pass", emailController.text);
+    preferences.setString("email", emailController.text);
+
+  }
+
+  loginService()async{
+    _loginButton();
+    // print(_emailGuardado + ' ___ hola '+  _passGuardada);
+    UserService().loginUser('$_emailGuardado', '$_passGuardada');
+  }
+
    }
