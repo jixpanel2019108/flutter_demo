@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_demo/services/userService.dart';
 
 class Login extends StatefulWidget {
   static String id = 'Login';
@@ -10,6 +11,12 @@ class Login extends StatefulWidget {
 }
 
 class _LoginState extends State<Login> {
+
+  forgotPasswordFunction() async {
+    UserService().forgotPasswordService("jose.zetina@soft3plus.com","12345");
+  }
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
