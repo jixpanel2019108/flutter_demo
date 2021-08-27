@@ -80,12 +80,6 @@ class _LoginState extends State<Login> {
     );
   }
 
-  /*                    Text('Powered By',
-                    style: TextStyle(
-                      color: Colors.white
-                    ),
-                    ),*/
-
   Widget _powered(){
     return StreamBuilder(
         builder: (BuildContext context, AsyncSnapshot snapshot) {
@@ -217,33 +211,4 @@ class _LoginState extends State<Login> {
         }
     );
   }
-
-  /*Widget _fondo(){
-    return Container(
-      child: Scaffold(
-        body: Center(
-          child: Column(
-            children: [
-              SizedBox(height: 100.0,),
-              _logo(),
-              SizedBox(height: 150.0,),
-              _userTextField(),
-              SizedBox(height: 15.0,),
-              _passwordTextField(),
-              SizedBox(height: 15.0,),
-              SizedBox(height: 100.0,),
-              _botonLogin(),
-              SizedBox(height: 200.0,),
-              _powered()
-            ],
-          ),
-        ),
-      ),
-      decoration: BoxDecoration(
-        image: DecorationImage( image: AssetImage('assets/login-bg.jpg'),
-        fit: BoxFit.cover
-        )
-      ),
-    );
-  }*/
 }
