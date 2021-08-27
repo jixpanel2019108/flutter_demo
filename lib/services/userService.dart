@@ -1,7 +1,12 @@
+// @dart=2.9
+
+import 'package:flutter_demo/services/api_base_helper.dart';
+import 'package:flutter_demo/models/loginModel.dart';
+import 'package:flutter_demo/services/app_exceptions.dart';
+import 'package:flutter_demo/models/forgotPasswordModel.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
-import 'package:flutter_demo/models/loginModel.dart';
-import 'package:flutter_demo/models/forgotPasswordModel.dart';
+import 'dart:io';
 
 // const urlBase = "https://demo.s3.gt/WS_SEGURIDAD_CPE/ws/";
 
@@ -22,22 +27,25 @@ class UserService{
       }
   }
 
-  Future forgotPasswordService (String user, String key) async {
+  Future <List<ForgotPassword>>forgotPasswordService (String user, String key) async {
     
     var urlRequest = Uri.parse(url+"/forgotPassword");
     var bodyRequest = jsonEncode({"user": user, "key": key});
-
-    final http.Response response = await http.post(urlRequest, 
-    headers: <String,String>{ "Content-Type": "application/json"},
-    body: bodyRequest);
+    var responseJson;
+    
     
     try{
-      print(response);
-      return ForgotPassword.fromJson(json.decode(response.body));
-    }catch(e){
-      print(e);
-      return response.statusCode;
+      final http.Response response = await http.post(urlRequest, 
+        headers: <String,String>{ "Content-Type": "application/json"},
+        body: bodyRequest);
+      responseJson = returnResponse(response);
+      // return ForgotPassword.fromJson(json.decode(response.body));
+    }on SocketException{
+      throw FetchDataException('No internet connection');
+      // return response.statusCode;
     }
+
+    return forgotPasswordFromJson(responseJson).forgotPassword;
   }
   
 }
