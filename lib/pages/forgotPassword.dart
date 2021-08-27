@@ -2,6 +2,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_demo/services/userService.dart';
 
+//flutter run --no-sound-null-safety
+
 class forgotScreen extends StatefulWidget {
   @override
   _forgotState createState() => _forgotState();
@@ -17,7 +19,13 @@ class _forgotState extends State<forgotScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: _cuerpo(),
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            _cuerpo(),
+          ],),
+      )
+       
     );
   }
 
@@ -42,8 +50,8 @@ class _forgotState extends State<forgotScreen> {
             SizedBox(height: 20.0,),
             SizedBox(height: 100.0,),
             _botonLogin(),
-            SizedBox(height: 80.0,),
-            SizedBox(height: 85.0,),
+            SizedBox(height: 100.0,),
+            SizedBox(height: 90.0,),
             _powered(),
           ],
         ),
