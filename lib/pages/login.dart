@@ -13,10 +13,6 @@ class Login extends StatefulWidget {
 
 class _LoginState extends State<Login> {
 
-  loginService()async{
-    UserService().loginUser("hola", "como");
-  }
-
   @override
   String _passGuardada = '';
   String _emailGuardado = '';
@@ -197,7 +193,7 @@ class _LoginState extends State<Login> {
                 borderRadius: BorderRadius.circular(20),
               ),
               color: Color(0xffFE1EF8),
-              onPressed: (){_guardarPassword();},
+              onPressed: (){loginService();},
           );
         }
     );
@@ -212,46 +208,23 @@ class _LoginState extends State<Login> {
 
   }
 
-  _guardarPassword() async {
-    SharedPreferences preferences = await SharedPreferences.getInstance();
-    preferences.setString("pass", emailController.text);
-    preferences.setString("email", emailController.text);
-  }
-
   Future<void> obtenerEmail() async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
     setState(() {
       _emailGuardado = preferences.get("email")??"suemail@gmail.com";
     });
   }
+  _loginButton() async {
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    preferences.setString("pass", emailController.text);
+    preferences.setString("email", emailController.text);
+
+  }
+
+  loginService()async{
+    _loginButton();
+    // print(_emailGuardado + ' ___ hola '+  _passGuardada);
+    UserService().loginUser('$_emailGuardado', '$_passGuardada');
+  }
+
    }
-
-  /*Widget _fondo(){
-    return Container(
-      child: Scaffold(
-        body: Center(
-          child: Column(
-            children: [
-              SizedBox(height: 100.0,),
-              _logo(),
-              SizedBox(height: 150.0,),
-              _userTextField(),
-              SizedBox(height: 15.0,),
-              _passwordTextField(),
-              SizedBox(height: 15.0,),
-              SizedBox(height: 100.0,),
-              _botonLogin(),
-              SizedBox(height: 200.0,),
-              _powered()
-            ],
-          ),
-        ),
-      ),
-      decoration: BoxDecoration(
-        image: DecorationImage( image: AssetImage('assets/login-bg.jpg'),
-        fit: BoxFit.cover
-        )
-      ),
-    );
-  }*/
-
