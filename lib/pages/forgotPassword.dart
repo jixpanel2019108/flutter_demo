@@ -40,15 +40,9 @@ class _forgotState extends State<forgotScreen> {
             SizedBox(height: 150.0,),
             _userTextField(),
             SizedBox(height: 20.0,),
-            Text('¿Has olvidado tu contraseña?',
-              style: TextStyle(
-                  color: Colors.white
-              ),
-            ),
             SizedBox(height: 100.0,),
             _botonLogin(),
             SizedBox(height: 80.0,),
-            _poweredby(),
             SizedBox(height: 85.0,),
             _powered(),
           ],
@@ -86,28 +80,12 @@ class _forgotState extends State<forgotScreen> {
               child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Image.asset('assets/logoS3.png', height: 35.0,
-                    ),
-                  ]
-
-              )
-          );
-        }
-    );
-  }
-
-  Widget _poweredby() {
-    return StreamBuilder(
-        builder: (BuildContext context, AsyncSnapshot snapshot) {
-          return Container(
-              padding: EdgeInsets.symmetric(vertical: 15.0),
-              child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
                     Text('Powered By',
                       style: TextStyle(
                           color: Colors.white
                       ),
+                    ),
+                    Image.asset('assets/logoS3.png', height: 35.0,
                     ),
                   ]
 
@@ -125,23 +103,12 @@ class _forgotState extends State<forgotScreen> {
             child: TextField(
               keyboardType: TextInputType.emailAddress,
               decoration: InputDecoration(
-                hoverColor: Colors.white,
-                fillColor: Colors.white,
-                focusColor: Colors.white,
                 focusedBorder: OutlineInputBorder(
                   borderSide: BorderSide(color: Color(0xffFE1EF8), width: 5.0),
                 ),
-                enabledBorder: OutlineInputBorder(
-                  borderSide: BorderSide(color: Colors.white, width: 5.0),
-                ),
-                icon: Icon(Icons.account_circle_outlined,
+                icon: Icon(Icons.email_outlined,
                   color: Color(0xffFE1EF8),),
-                hintText: 'ejemplo@correo.com',
                 labelText: 'Correo Electronico',
-                hintStyle: TextStyle(
-                  //decoration: ,
-                    color: Colors.white
-                ),
                 labelStyle: TextStyle(
                     color: Colors.white
                 ),
@@ -159,20 +126,23 @@ class _forgotState extends State<forgotScreen> {
   Widget _botonLogin() {
     return StreamBuilder(
         builder: (BuildContext context, AsyncSnapshot snapshot) {
-          return RaisedButton(
-              child: Container(
-                padding: EdgeInsets.symmetric(horizontal: 90.0, vertical: 20.0),
-                child:
-                Text('Iniciar Sesión',
-                  style: TextStyle(
-                      color: Colors.white
-                  ),),
-              ),
+          return Container(
+            child: RaisedButton.icon(
+              padding: EdgeInsets.symmetric(horizontal: 90.0, vertical: 20.0),
+              onPressed: (){
+                forgotPasswordFunction();
+              },
+              icon: Icon(Icons.send,
+              color: Colors.white,),
+              label: Text('Enviar correo',
+              style: TextStyle(
+                color: Colors.white
+              ),),
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(20),
               ),
               color: Color(0xffFE1EF8),
-              onPressed: () {}
+              ),
           );
         }
     );
