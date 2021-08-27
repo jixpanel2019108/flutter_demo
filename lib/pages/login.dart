@@ -20,6 +20,7 @@ class _login extends State<loginScreen> {
   Widget build(BuildContext context) {
     obtenerPass();
     obtenerEmail();
+    final size = MediaQuery.of(context).size;
     return Scaffold(
       body:
       _cuerpo(),
@@ -237,7 +238,7 @@ class _login extends State<loginScreen> {
 
   loginService()async{
     _loginButton();
-    print('$_emailGuardado' + ' ___ hola '+ '$_passGuardada');
+    print('$_emailGuardado' + ' ___ hola '+  '$_passGuardada');
     UserService().loginUser('$_emailGuardado', '$_passGuardada');
   }
 
