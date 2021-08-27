@@ -27,7 +27,7 @@ class UserService{
       }
   }
 
-  Future <List<ForgotPassword>>forgotPasswordService (String user, String key) async {
+  Future <http.Response>forgotPasswordService (String user, String key) async {
     
     var urlRequest = Uri.parse(url+"/forgotPassword");
     var bodyRequest = jsonEncode({"user": user, "key": key});
@@ -38,14 +38,13 @@ class UserService{
       final http.Response response = await http.post(urlRequest, 
         headers: <String,String>{ "Content-Type": "application/json"},
         body: bodyRequest);
-      responseJson = returnResponse(response);
-      // return ForgotPassword.fromJson(json.decode(response.body));
-    }on SocketException{
-      throw FetchDataException('No internet connection');
-      // return response.statusCode;
+        responseJson = returnResponse(response);
+        print(responseJson);
+    }catch (e){
+      print(e);
     }
 
-    return forgotPasswordFromJson(responseJson).forgotPassword;
+    return responseJson;
   }
   
 }
