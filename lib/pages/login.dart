@@ -237,7 +237,7 @@ class _login extends State<loginScreen> {
 
   loginService()async{
     _loginButton();
-    // print(_emailGuardado + ' ___ hola '+  _passGuardada);
+    print('$_emailGuardado' + ' ___ hola '+ '$_passGuardada');
     UserService().loginUser('$_emailGuardado', '$_passGuardada');
   }
 
