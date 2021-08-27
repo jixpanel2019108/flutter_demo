@@ -1,14 +1,18 @@
+// @dart=2.9
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_demo/services/userService.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:flutter_demo/pages/forgotPassword.dart';
+//import 'package:flutter_demo/pages/forgotPassword.dart';
 
+// ignore: camel_case_types
 class loginScreen extends StatefulWidget {
   @override
   _login createState() => _login();
 }
 
+// ignore: camel_case_types
 class _login extends State<loginScreen> {
 
   @override
@@ -20,7 +24,6 @@ class _login extends State<loginScreen> {
   Widget build(BuildContext context) {
     obtenerPass();
     obtenerEmail();
-    final size = MediaQuery.of(context).size;
     return Scaffold(
       body: SingleChildScrollView(
         child: Column(
@@ -89,14 +92,15 @@ class _login extends State<loginScreen> {
         builder: (BuildContext context, AsyncSnapshot snapshot) {
           return Container(
               padding: EdgeInsets.symmetric(horizontal: 15.0),
-              child: FlatButton(
+              child: TextButton(
                 onPressed: (){
                   Navigator.of(context).pushNamed('/forgotPassword');
                 },
                 child: Text('¿Has olvidado tu contraseña?',
                 style: TextStyle(
                   color: Colors.white
-                ),),
+                ),
+                ),
               )
           );
         }
