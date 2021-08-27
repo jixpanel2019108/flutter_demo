@@ -2,15 +2,12 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_demo/services/userService.dart';
 
-class Login extends StatefulWidget {
-  static String id = 'Login';
-
-
+class forgotScreen extends StatefulWidget {
   @override
-  _LoginState createState() => _LoginState();
+  _forgotState createState() => _forgotState();
 }
 
-class _LoginState extends State<Login> {
+class _forgotState extends State<forgotScreen> {
 
   forgotPasswordFunction() async {
     UserService().forgotPasswordService("jose.zetina@soft3plus.com","12345");
