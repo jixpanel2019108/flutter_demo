@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_demo/services/userService.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class Login extends StatefulWidget {
   static String id = 'Login';
@@ -17,7 +18,14 @@ class _LoginState extends State<Login> {
   }
 
   @override
+  String _passGuardada = '';
+  String _emailGuardado = '';
+  final emailController = TextEditingController(text: '');
+  final passController = TextEditingController(text: '');
+
   Widget build(BuildContext context) {
+    obtenerPass();
+    obtenerEmail();
     return Scaffold(
       body: _cuerpo(),
     );
@@ -50,9 +58,7 @@ class _LoginState extends State<Login> {
            ),
            SizedBox(height: 100.0,),
            _botonLogin(),
-           SizedBox(height: 80.0,),
-           _poweredby(),
-           SizedBox(height: 85.0,),
+           SizedBox(height: 100.0,),
            _powered(),
          ],
         ),
@@ -80,12 +86,6 @@ class _LoginState extends State<Login> {
     );
   }
 
-  /*                    Text('Powered By',
-                    style: TextStyle(
-                      color: Colors.white
-                    ),
-                    ),*/
-
   Widget _powered(){
     return StreamBuilder(
         builder: (BuildContext context, AsyncSnapshot snapshot) {
@@ -94,28 +94,12 @@ class _LoginState extends State<Login> {
               child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Image.asset('assets/logoS3.png', height: 35.0,
-                    ),
-                  ]
-
-              )
-          );
-        }
-    );
-  }
-
-  Widget _poweredby(){
-    return StreamBuilder(
-        builder: (BuildContext context, AsyncSnapshot snapshot) {
-          return Container(
-              padding: EdgeInsets.symmetric(vertical: 15.0),
-              child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
                     Text('Powered By',
-                    style: TextStyle(
-                      color: Colors.white
+                      style: TextStyle(
+                          color: Colors.white
+                      ),
                     ),
+                    Image.asset('assets/logoS3.png', height: 35.0,
                     ),
                   ]
 
@@ -130,36 +114,35 @@ class _LoginState extends State<Login> {
         builder: (BuildContext context, AsyncSnapshot snapshot) {
           return Container(
             padding: EdgeInsets.symmetric(horizontal: 40.0),
-            child: TextField(
-              keyboardType: TextInputType.emailAddress,
-              decoration: InputDecoration(
-                hoverColor: Colors.white,
-                fillColor: Colors.white,
-                focusColor: Colors.white,
-                focusedBorder: OutlineInputBorder(
-                  borderSide: BorderSide(color: Color(0xffFE1EF8), width: 5.0),
-                ),
-                enabledBorder: OutlineInputBorder(
-                  borderSide: BorderSide(color: Colors.white, width: 5.0),
-                ),
-                icon: Icon(Icons.account_circle_outlined,
-                  color: Color(0xffFE1EF8),),
-                hintText: 'ejemplo@correo.com',
-                labelText: 'Correo Electronico',
-                hintStyle: TextStyle(
-                  //decoration: ,
-                  color: Colors.white
-                ),
-                labelStyle: TextStyle(
-                  color: Colors.white
-                ),
-
-              ),
-              onChanged: (value){
-
-              },
+            child: Column(
+              children: <Widget>[
+                Padding(padding: EdgeInsets.all(10.0), child: TextFormField(
+                controller: emailController,
+                keyboardType: TextInputType.emailAddress,
+            decoration: InputDecoration(
+            hoverColor: Colors.white,
+            fillColor: Colors.white,
+            focusColor: Colors.white,
+            focusedBorder: OutlineInputBorder(
+              borderSide: BorderSide(color: Color(0xffFE1EF8), width: 5.0),
             ),
-          );
+            icon: Icon(Icons.account_circle_outlined,
+              color: Color(0xffFE1EF8),),
+            labelText: 'Correo Electronico',
+            hintStyle: TextStyle(
+              //decoration: ,
+                color: Colors.white
+            ),
+            labelStyle: TextStyle(
+                color: Colors.white
+            ),
+
+          ),
+          ),)
+              ],
+
+          ),
+            );
         }
     );
   }
@@ -169,25 +152,29 @@ class _LoginState extends State<Login> {
         builder: (BuildContext context, AsyncSnapshot snapshot) {
           return Container(
             padding: EdgeInsets.symmetric(horizontal: 40.0),
-            child: TextField(
-              keyboardType: TextInputType.emailAddress,
-              obscureText: true,
-              decoration: InputDecoration(
-                icon: Icon(Icons.lock_outline_rounded,
-                  color: Color(0xffFE1EF8),),
-                hintText: 'Contraseña',
-                labelText: 'Contraseña',
-                  //alignLabelWithHint: ,
-                  hintStyle: TextStyle(
-                      color: Colors.white
-                  ),
-                  labelStyle: TextStyle(
-                      color: Colors.white
-                  )
-              ),
-              onChanged: (value){
-
-              },
+            child: Column(
+              children: <Widget>[
+                Padding(padding: EdgeInsets.all(10.0), child: TextFormField(
+                  controller: passController,
+                  keyboardType: TextInputType.emailAddress,
+                  obscureText: true,
+                  decoration: InputDecoration(
+                    focusedBorder: OutlineInputBorder(
+                      borderSide: BorderSide(color: Color(0xffFE1EF8), width: 5.0),
+                    ),
+                    icon: Icon(Icons.lock_outline_rounded,
+                      color: Color(0xffFE1EF8),),
+                    labelText: 'Contraseña',
+                    //alignLabelWithHint: ,
+                    hintStyle: TextStyle(
+                        color: Colors.white
+                    ),
+                    labelStyle: TextStyle(
+                        color: Colors.white
+                    ),
+                ),
+                ),)
+              ]
             ),
           );
         }
@@ -210,13 +197,34 @@ class _LoginState extends State<Login> {
                 borderRadius: BorderRadius.circular(20),
               ),
               color: Color(0xffFE1EF8),
-              onPressed: (){
-                loginService();
-              }
+              onPressed: (){_guardarPassword();},
           );
         }
     );
   }
+
+
+  Future<void> obtenerPass() async {
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    setState(() {
+      _passGuardada = preferences.get("pass")??"12345";
+    });
+
+  }
+
+  _guardarPassword() async {
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    preferences.setString("pass", emailController.text);
+    preferences.setString("email", emailController.text);
+  }
+
+  Future<void> obtenerEmail() async {
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    setState(() {
+      _emailGuardado = preferences.get("email")??"suemail@gmail.com";
+    });
+  }
+   }
 
   /*Widget _fondo(){
     return Container(
@@ -246,4 +254,4 @@ class _LoginState extends State<Login> {
       ),
     );
   }*/
-}
+
