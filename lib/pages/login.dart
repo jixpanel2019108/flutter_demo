@@ -22,8 +22,14 @@ class _login extends State<loginScreen> {
     obtenerEmail();
     final size = MediaQuery.of(context).size;
     return Scaffold(
-      body:
-      _cuerpo(),
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            _cuerpo(),
+        ],)
+        
+        ,)
+      
     );
   }
 
@@ -46,11 +52,11 @@ class _login extends State<loginScreen> {
            _userTextField(),
            SizedBox(height: 15.0,),
            _passwordTextField(),
-           SizedBox(height: 20.0,),
+           SizedBox(height: 30.0,),
            _forgot(),
-           SizedBox(height: 100.0,),
+           SizedBox(height: 150.0,),
            _botonLogin(),
-           SizedBox(height: 100.0,),
+           SizedBox(height: 150.0,),
            _powered(),
          ],
         ),
