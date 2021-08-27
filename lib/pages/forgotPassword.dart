@@ -1,16 +1,19 @@
+// @dart=2.9
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_demo/services/userService.dart';
 
 //flutter run --no-sound-null-safety
 
+// ignore: camel_case_types
 class forgotScreen extends StatefulWidget {
   @override
   _forgotState createState() => _forgotState();
 }
 
+// ignore: camel_case_types
 class _forgotState extends State<forgotScreen> {
-
   forgotPasswordFunction() async {
     UserService().forgotPasswordService("jose.zetina@soft3plus.com","12345");
   }
