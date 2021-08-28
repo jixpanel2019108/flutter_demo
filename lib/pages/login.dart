@@ -16,14 +16,13 @@ class loginScreen extends StatefulWidget {
 class _login extends State<loginScreen> {
 
   @override
-  String _passGuardada = '';
-  String _emailGuardado = '';
-  final emailController = TextEditingController(text: '');
-  final passController = TextEditingController(text: '');
+  final usuario = TextEditingController();
+  final password = TextEditingController();
+  String usu = '';
+  String pass = '';
 
   Widget build(BuildContext context) {
-    obtenerPass();
-    obtenerEmail();
+    
     return Scaffold(
       body: SingleChildScrollView(
         child: Column(
@@ -138,7 +137,7 @@ class _login extends State<loginScreen> {
             child: Column(
               children: <Widget>[
                 Padding(padding: EdgeInsets.all(10.0), child: TextFormField(
-                controller: emailController,
+                controller: usuario,
                 keyboardType: TextInputType.emailAddress,
             decoration: InputDecoration(
             hoverColor: Colors.white,
@@ -176,7 +175,7 @@ class _login extends State<loginScreen> {
             child: Column(
               children: <Widget>[
                 Padding(padding: EdgeInsets.all(10.0), child: TextFormField(
-                  controller: passController,
+                  controller: password,
                   keyboardType: TextInputType.emailAddress,
                   obscureText: true,
                   decoration: InputDecoration(
@@ -218,38 +217,16 @@ class _login extends State<loginScreen> {
                 borderRadius: BorderRadius.circular(20),
               ),
               color: Color(0xffFE1EF8),
-              onPressed: (){loginService();},
+              onPressed: (){
+                usu = usuario.text;
+                pass = password.text;
+
+              UserService().loginUser(usu, pass);
+
+              },
           );
         }
     );
-  }
-
-
-  Future<void> obtenerPass() async {
-    SharedPreferences preferences = await SharedPreferences.getInstance();
-    setState(() {
-      _passGuardada = preferences.get("pass")??"12345";
-    });
-  }
-
-  Future<void> obtenerEmail() async {
-    SharedPreferences preferences = await SharedPreferences.getInstance();
-    setState(() {
-      _emailGuardado = preferences.get("email")??'$_emailGuardado';
-    });
-  }
-
-  _loginButton() async {
-    SharedPreferences preferences = await SharedPreferences.getInstance();
-    preferences.setString("email", emailController.text);
-    preferences.setString("pass", passController.text);
-
-  }
-
-  loginService()async{
-    _loginButton();
-    print('$_emailGuardado' + ' ___ hola '+  '$_passGuardada');
-    UserService().loginUser('$_emailGuardado', '$_passGuardada');
   }
 
 }

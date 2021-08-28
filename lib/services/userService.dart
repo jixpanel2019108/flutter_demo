@@ -1,7 +1,10 @@
 // @dart=2.9
 
+import 'dart:async';
+
 import 'package:flutter_demo/services/api_base_helper.dart';
 import 'package:flutter_demo/models/loginModel.dart';
+import 'package:flutter_demo/utils/user_simple_preferences.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
@@ -16,7 +19,11 @@ class UserService{
       headers: <String,String>{ "Content-Type": "application/json"},
       body: jsonEncode({"nombre_usuario": userName, "clave": password, "key": "12345"}));
       try{ 
-        print(response.body);
+        // print(response.body);
+        final Map jsonBody = jsonDecode(response.body);
+        print(jsonBody);
+        
+        await UserSimplePreferences.setUserName("PRUEBA");
         return LoginUser.fromJson(json.decode(response.body));
       }catch(e){
         print(e);

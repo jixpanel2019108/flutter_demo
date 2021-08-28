@@ -3,6 +3,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_demo/services/userService.dart';
+import 'package:flutter_demo/utils/user_simple_preferences.dart';
 
 //flutter run --no-sound-null-safety
 
@@ -141,7 +142,7 @@ class _forgotState extends State<forgotScreen> {
             child: RaisedButton.icon(
               padding: EdgeInsets.symmetric(horizontal: 90.0, vertical: 20.0),
               onPressed: (){
-                forgotPasswordFunction();
+                print(UserSimplePreferences.getUsername());
               },
               icon: Icon(Icons.send,
               color: Colors.white,),

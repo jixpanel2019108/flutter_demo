@@ -4,8 +4,11 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_demo/pages/login.dart';
 import 'package:flutter_demo/pages/forgotPassword.dart';
+import 'package:flutter_demo/utils/user_simple_preferences.dart';
 
-void main() {
+Future main()async {
+  WidgetsFlutterBinding.ensureInitialized();
+  UserSimplePreferences.init();
   runApp(MyApp());
 }
 
