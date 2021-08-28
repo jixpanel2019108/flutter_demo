@@ -41,6 +41,7 @@ class _login extends State<loginScreen> {
       decoration: BoxDecoration(
         color: const Color(0xff000000),
           image: DecorationImage( image: AssetImage('assets/login-bg.jpg',),
+          alignment: Alignment(0.0, 3.0),
               colorFilter: new ColorFilter.mode(Colors.black.withOpacity(0.5), BlendMode.dstATop),
               fit: BoxFit.cover
           )
