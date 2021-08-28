@@ -22,7 +22,10 @@ class UserService{
         // print(response.body);
         final Map jsonBody = jsonDecode(response.body);
         print(jsonBody);
-        
+        final responseObject = LoginResponse.fromJson(jsonBody);
+        print("soy el objeto xds");
+        print(responseObject);
+
         await UserSimplePreferences.setUserName("PRUEBA");
         return LoginUser.fromJson(json.decode(response.body));
       }catch(e){
