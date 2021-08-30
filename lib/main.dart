@@ -20,7 +20,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       theme: ThemeData(primarySwatch: Colors.purple,),
       debugShowCheckedModeBanner: false,
-      initialRoute: '/principal',
+      initialRoute: '/login',
       routes: {
        '/login': (context) => loginScreen(),
         '/forgotPassword': (context) => forgotScreen(),
