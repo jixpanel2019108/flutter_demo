@@ -221,7 +221,7 @@ class _login extends State<loginScreen> {
               onPressed: (){
                 usu = usuario.text;
                 pass = password.text;
-
+                _alertaSucces();
               UserService().loginUser(usu, pass);
 
               },
@@ -230,8 +230,21 @@ class _login extends State<loginScreen> {
     );
   }
 
-  Widget _alertaSucces(){
 
+   
+  Widget _alertaSucces(){
+    return AlertDialog(
+      title: Text('Correcto'),
+      content: Text('Tus credenciales coinciden a la perfección! ;)'),
+      actions: [
+        FlatButton(
+          onPressed:(){
+            Navigator.of(context).pushNamed('/principal');
+          },
+          child: Text('okey')
+        )
+      ],
+    );
   }
 
   Widget _alertaError(){
