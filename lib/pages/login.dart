@@ -230,4 +230,12 @@ class _login extends State<loginScreen> {
     );
   }
 
+  Widget _alertaSucces(){
+
+  }
+
+  Widget _alertaError(){
+    
+  }
+
 }
