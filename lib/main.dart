@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_demo/pages/login.dart';
 import 'package:flutter_demo/pages/forgotPassword.dart';
 import 'package:flutter_demo/utils/user_simple_preferences.dart';
+import 'package:flutter_demo/pages/principal.dart';
 
 Future main()async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -22,7 +23,8 @@ class MyApp extends StatelessWidget {
       initialRoute: '/login',
       routes: {
        '/login': (context) => loginScreen(),
-        '/forgotPassword': (context) => forgotScreen()
+        '/forgotPassword': (context) => forgotScreen(),
+        '/principal' : (context) => homeScreen()
       },
     );
   }

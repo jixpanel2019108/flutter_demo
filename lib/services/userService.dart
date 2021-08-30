@@ -13,25 +13,24 @@ import 'dart:convert';
 class UserService{
   String url = "https://demo.s3.gt/WS_SEGURIDAD_CPE/ws/post";
   
-  Future <LoginUser> loginUser (String userName, String password) async {
+  Future <void> loginUser (String userName, String password) async {
 
     final http.Response response = await http.post(Uri.parse(url+"/loginUser"),
       headers: <String,String>{ "Content-Type": "application/json"},
       body: jsonEncode({"nombre_usuario": userName, "clave": password, "key": "12345"}));
-      try{ 
-        // print(response.body);
-        final Map jsonBody = jsonDecode(response.body);
-        print(jsonBody);
-        final responseObject = LoginResponse.fromJson(jsonBody);
-        print("soy el objeto xds");
-        print(responseObject);
+      
+        final body = json.decode(response.body);
+        print(body);
+        print(body['token']);
 
-        await UserSimplePreferences.setUserName("PRUEBA");
-        return LoginUser.fromJson(json.decode(response.body));
-      }catch(e){
-        print(e);
-        return LoginUser(nombre_usuario:"", clave: "", key: "");
-      }
+        
+        if(body['error'] == false){
+          final String token = body['token'];
+          await UserSimplePreferences.setUserName(userName);
+          await UserSimplePreferences.setToken(token);
+        }else if (body['error'] == true){
+
+        }
   }
 
   Future <http.Response>forgotPasswordService (String user, String key) async {
