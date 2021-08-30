@@ -29,29 +29,37 @@ class UserService{
           await UserSimplePreferences.setUserName(userName);
           await UserSimplePreferences.setToken(token);
         }else if (body['error'] == true){
-
+          final String mensaje = body['msg'];
+          // aquí se pone la alerta!
         }
   }
 
-  Future <http.Response>forgotPasswordService (String user, String key) async {
+  Future <void> forgotPasswordService (String user) async {
     
-    var urlRequest = Uri.parse(url+"/forgotPassword");
-    var bodyRequest = jsonEncode({"user": user, "key": key});
+    var urlRequest = Uri.parse(url+"/forgotpassword");
+
+    var bodyRequest = jsonEncode({"user": user, "key": "12345"});
     var responseJson;
     
-    
-    try{
       final http.Response response = await http.post(urlRequest, 
-        headers: <String,String>{ "Content-Type": "application/json"},
-        body: bodyRequest);
-        responseJson = returnResponse(response);
-        print(responseJson);
-    }catch (e){
-      print(e);
-    }
+                                    headers: <String,String>{ "Content-Type": "application/json"},
+                                    body: bodyRequest);
+      responseJson = returnResponse(response);
+      
+      var body = jsonDecode(response.body);
 
-    return responseJson;
+      print(body);
+      if(body['error'] == false){
+        final String mensaje = body['msg'];
+        // alerta de exito
+      }else{
+        final String mensaje = body['msg'];
+        // alerta de fallo
+      }
+    
   }
   
 }
+
+
 

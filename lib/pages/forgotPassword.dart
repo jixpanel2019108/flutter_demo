@@ -15,9 +15,9 @@ class forgotScreen extends StatefulWidget {
 
 // ignore: camel_case_types
 class _forgotState extends State<forgotScreen> {
-  forgotPasswordFunction() async {
-    UserService().forgotPasswordService("jose.zetina@soft3plus.com","12345");
-  }
+
+  final usuario = TextEditingController();
+  String usu = '';
 
 
   @override
@@ -113,6 +113,7 @@ class _forgotState extends State<forgotScreen> {
           return Container(
             padding: EdgeInsets.symmetric(horizontal: 40.0),
             child: TextField(
+              controller: usuario,
               keyboardType: TextInputType.emailAddress,
               decoration: InputDecoration(
                 focusedBorder: OutlineInputBorder(
@@ -142,7 +143,9 @@ class _forgotState extends State<forgotScreen> {
             child: RaisedButton.icon(
               padding: EdgeInsets.symmetric(horizontal: 90.0, vertical: 20.0),
               onPressed: (){
-                print(UserSimplePreferences.getUsername());
+                usu = usuario.text;
+                print(usu);
+                UserService().forgotPasswordService(usu);
               },
               icon: Icon(Icons.send,
               color: Colors.white,),
