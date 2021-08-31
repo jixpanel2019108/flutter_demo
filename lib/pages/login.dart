@@ -1,5 +1,8 @@
 // @dart=2.9
 
+import 'dart:html';
+import 'dart:js';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_demo/services/userService.dart';
@@ -221,34 +224,96 @@ class _login extends State<loginScreen> {
               onPressed: (){
                 usu = usuario.text;
                 pass = password.text;
-                _alertaSucces();
+                //alertaSucces();
               UserService().loginUser(usu, pass);
-
               },
           );
         }
     );
   }
-
-
    
-  Widget _alertaSucces(){
-    return AlertDialog(
-      title: Text('Correcto'),
-      content: Text('Tus credenciales coinciden a la perfección! ;)'),
-      actions: [
-        FlatButton(
-          onPressed:(){
-            Navigator.of(context).pushNamed('/principal');
-          },
-          child: Text('okey')
-        )
-      ],
-    );
-  }
-
-  Widget _alertaError(){
-    
-  }
-
+  // JZETINA-ADMIN
 }
+
+  class alertaError extends StatelessWidget {
+    String title,description, buttonText;
+    Image image;
+    
+    alertaError({this.title, this.description, this.buttonText, this.image});
+
+    @override
+    
+    Widget build(BuildContext context){
+      return Dialog(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(16)
+        ),
+        elevation: 0,
+        backgroundColor: Colors.transparent,
+        child: dialogContent(context),
+      );
+    }
+    dialogContent(BuildContext context) {
+      return Stack(
+        children: <Widget> [
+          Container(
+            padding: EdgeInsets.only(
+              top: 100,
+              bottom: 10,
+              left: 10,
+              right: 10
+            ),
+            margin: EdgeInsets.only(top: 16),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              shape: BoxShape.rectangle,
+              borderRadius: BorderRadius.circular(17),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black26,
+                  blurRadius: 10.0,
+                  offset: Offset(0.0, 10.0)
+                )
+              ]
+            ),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: <Widget>[
+                Text(
+                  title,
+                  style: TextStyle(
+                    fontSize: 24.0,
+                    fontWeight: FontWeight.w700
+                  ),
+                ),
+                SizedBox(height: 24.0,),
+                Text(description, style: TextStyle(
+                  fontSize: 16.0
+                ),),
+                SizedBox(height: 24.0,),
+                Align(
+                  alignment: Alignment.bottomRight,
+                  child: FlatButton(
+                    onPressed: (){
+                      Navigator.of(context).pushNamed('/principal');
+                    },
+                    child: Text('Okey')
+                  ),
+                )
+              ],
+            ),
+          ),
+          Positioned(
+            top: 0,
+            left: 16,
+            right: 16,
+            child: CircleAvatar(
+              backgroundColor: Color(0xffFE1EF8),
+              radius: 50,
+              backgroundImage: AssetImage('assets/comp_3.gif'),
+            ),
+          )
+        ],
+      );
+    }
+  }
