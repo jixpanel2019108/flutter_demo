@@ -1,7 +1,10 @@
 // @dart=2.9
 
 import 'dart:async';
+import 'dart:js';
 
+import 'package:flutter/material.dart';
+import 'package:flutter_demo/pages/login.dart';
 import 'package:flutter_demo/services/api_base_helper.dart';
 import 'package:flutter_demo/models/loginModel.dart';
 import 'package:flutter_demo/utils/user_simple_preferences.dart';
@@ -31,6 +34,15 @@ class UserService{
         }else if (body['error'] == true){
           final String mensaje = body['msg'];
           // aquí se pone la alerta!
+          dialogContent(BuildContext context){
+            showDialog(
+              context: context,
+              builder: (context) => alertaError(
+                title: 'Error',
+                description: '$mensaje',
+              )
+            );
+          }
         }
   }
 
