@@ -29,8 +29,11 @@ class UserService{
         
         if(body['error'] == false){
           final String token = body['token'];
+
           await UserSimplePreferences.setUserName(userName);
           await UserSimplePreferences.setToken(token);
+          listPerfilService(token);
+
         }else if (body['error'] == true){
           final String mensaje = body['msg'];
           // aquí se pone la alerta!
@@ -71,6 +74,41 @@ class UserService{
     
   }
   
+  Future <void> listPerfilService(String token) async {
+    final http.Response response = await http.post(Uri.parse(url+"/listPerfil"),
+                                    headers: <String,String>{ "Content-Type": "application/json"},
+                                    body: jsonEncode({"key": "12345","token": token}));
+
+    final body = json.decode(response.body);
+    print(body);
+      if(body['error'] == false){
+
+        final String last_name01 = body['last_name01'];
+        final String name02 = body['name02'];
+        final String last_name02 = body['last_name02'];
+        final String name01 = body['name01'];
+        final String rpas = body['rpas'];
+        final String nickname = body['nickname'];
+        final String photo = body['photo'];
+        final String id = body['id'];        
+        final String email = body['email'];
+
+        await UserSimplePreferences.setLast_name01(last_name01);
+        await UserSimplePreferences.setName02(name02);
+        await UserSimplePreferences.setLast_name02(last_name02);
+        await UserSimplePreferences.setName01(name01);
+        await UserSimplePreferences.setRpas(rpas);
+        await UserSimplePreferences.setNickname(nickname);
+        await UserSimplePreferences.setPhoto(photo);
+        await UserSimplePreferences.setId(id);
+        await UserSimplePreferences.setEmail(email);
+
+
+      }else if (body['error'] == true){
+
+      }
+  }
+
 }
 
 
