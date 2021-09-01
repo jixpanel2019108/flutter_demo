@@ -80,8 +80,6 @@ class _login extends State<loginScreen> {
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
                 Image.asset('assets/logo_shoppertrace_blanco.png', height: 75.0,),
-
-
               ]
 
             )
@@ -225,6 +223,7 @@ class _login extends State<loginScreen> {
                 usu = usuario.text;
                 pass = password.text;
                 //alertaSucces();
+                Navigator.of(context).pushNamed('/principal');
               UserService().loginUser(usu, pass);
               },
           );
