@@ -1,6 +1,7 @@
 // @dart=2.9
 
 import 'dart:async';
+import 'dart:ffi';
 import 'dart:js';
 
 import 'package:flutter/material.dart';
@@ -33,11 +34,12 @@ class UserService{
           await UserSimplePreferences.setUserName(userName);
           await UserSimplePreferences.setToken(token);
           listPerfilService(token);
+          loginScreen();
 
         }else if (body['error'] == true){
           final String mensaje = body['msg'];
           // aquí se pone la alerta!
-          dialogContent(BuildContext context){
+          /*dialogContent(BuildContext context){
             showDialog(
               context: context,
               builder: (context) => alertaError(
@@ -45,7 +47,7 @@ class UserService{
                 description: '$mensaje',
               )
             );
-          }
+          }*/
         }
   }
 
