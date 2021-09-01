@@ -1,7 +1,7 @@
 // @dart=2.9
 
 import 'dart:async';
-import 'dart:ffi';
+// import 'dart:ffi';
 import 'dart:js';
 
 import 'package:flutter/material.dart';
@@ -25,15 +25,16 @@ class UserService{
       
         final body = json.decode(response.body);
         print(body);
-        print(body['token']);
+        
 
         
         if(body['error'] == false){
           final String token = body['token'];
-
+          print(token);
           await UserSimplePreferences.setUserName(userName);
           await UserSimplePreferences.setToken(token);
           listPerfilService(token);
+          listMenuService(token);
           loginScreen();
 
         }else if (body['error'] == true){
@@ -105,7 +106,7 @@ class UserService{
         await UserSimplePreferences.setId(id);
         await UserSimplePreferences.setEmail(email);
 
-
+        
       }else if (body['error'] == true){
         
       }
