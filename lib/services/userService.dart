@@ -107,8 +107,25 @@ class UserService{
 
 
       }else if (body['error'] == true){
-
+        
       }
+  }
+
+  Future <void> listMenuService(String token) async {
+    final http.Response response = await http.post(Uri.parse(url+"/listMenuApp"),
+                                headers: <String,String>{ "Content-Type": "application/json"},
+                                    body: jsonEncode({"key": "12345","token": token}));
+
+    final body = json.decode(response.body);
+    print(body);
+
+    if(body['error'] == false){
+      print("List menu exitoso");
+    }else if (body['error'] == true){
+      print("List menu con error");
+    }
+
+
   }
 
 }
