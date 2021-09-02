@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_demo/main.dart';
 import 'package:flutter_demo/services/userService.dart';
+import 'package:flutter_demo/utils/user_secure_storage.dart';
 import 'package:flutter_demo/utils/user_simple_preferences.dart';
+import 'package:http/http.dart';
 
 class homeScreen extends StatefulWidget {
   @override
@@ -14,7 +16,6 @@ class _home extends State<homeScreen> {
   @override
 
   Widget build(BuildContext context) {
-    final String nickname = UserSimplePreferences.getNickname();
     final String email = UserSimplePreferences.getEmail();
     return SafeArea(
       child: Scaffold(
@@ -36,7 +37,8 @@ class _home extends State<homeScreen> {
                     Expanded(
                       child: Image.asset('assets/logo_shoppertrace_blanco.png'),
                     ),
-                    Text('$nickname'),
+                    
+                    // Text('$username'),
                     Text('$email'),
                   ],
                 ),
