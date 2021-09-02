@@ -222,9 +222,8 @@ class _login extends State<loginScreen> {
               onPressed: (){
                 usu = usuario.text;
                 pass = password.text;
-                //alertaSucces();
                 Navigator.of(context).pushNamed('/principal');
-              UserService().loginUser(usu, pass);
+                UserService().loginUser(usu, pass);
               },
           );
         }
