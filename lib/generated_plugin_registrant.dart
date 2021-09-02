@@ -1,6 +1,7 @@
 //
 // Generated file. Do not edit.
 //
+// @dart=2.9
 
 // ignore_for_file: lines_longer_than_80_chars
 
