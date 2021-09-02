@@ -1,10 +1,6 @@
 // @dart=2.9
 
 import 'dart:async';
-<<<<<<< Updated upstream
-=======
-// import 'dart:ffi';
->>>>>>> Stashed changes
 import 'dart:js';
 
 import 'package:flutter/material.dart';
