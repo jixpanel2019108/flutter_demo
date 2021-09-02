@@ -17,6 +17,7 @@ class UserSimplePreferences {
   static const _keyId = "id"; 
   static const _keyEmail = "email"; 
 
+  static const _menu = "menu";
 
 
 
@@ -55,5 +56,6 @@ class UserSimplePreferences {
   static Future setEmail(String email) async => await _preferences.setString(_keyEmail, email);
   static String getEmail() => _preferences.getString(_keyEmail);
 
+  
 
 }
