@@ -16,8 +16,6 @@ class _home extends State<homeScreen> {
   Widget build(BuildContext context) {
     final String nickname = UserSimplePreferences.getNickname();
     final String email = UserSimplePreferences.getEmail();
-    print(nickname);
-    print(email);
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
@@ -38,7 +36,6 @@ class _home extends State<homeScreen> {
                     Expanded(
                       child: Image.asset('assets/logo_shoppertrace_blanco.png'),
                     ),
-                    
                     Text('$nickname'),
                     Text('$email'),
                   ],

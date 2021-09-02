@@ -1,10 +1,6 @@
 // @dart=2.9
 
 import 'dart:async';
-<<<<<<< HEAD
-// import 'dart:ffi';
-=======
->>>>>>> Rodrigo
 import 'dart:js';
 
 import 'package:flutter/material.dart';
@@ -42,7 +38,7 @@ class UserService{
         }else if (body['error'] == true){
           final String mensaje = body['msg'];
           // aquí se pone la alerta!
-          /*dialogContent(BuildContext context){
+          dialogContent(BuildContext context){
             showDialog(
               context: context,
               builder: (context) => alertaError(
@@ -50,7 +46,7 @@ class UserService{
                 description: '$mensaje',
               )
             );
-          }*/
+          }
         }
   }
 
@@ -80,15 +76,6 @@ class UserService{
   }
   
   Future <void> listPerfilService(String token) async {
-<<<<<<< HEAD
-    // User usuario = new User();
-=======
-<<<<<<< HEAD
-
-=======
-    User usuario = new User();
->>>>>>> Develop
->>>>>>> Develop
     final http.Response response = await http.post(Uri.parse(url+"/listPerfil"),
                                     headers: <String,String>{ "Content-Type": "application/json"},
                                     body: jsonEncode({"key": "12345","token": token}));
