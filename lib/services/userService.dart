@@ -77,7 +77,7 @@ class UserService{
   }
   
   Future <void> listPerfilService(String token) async {
-    User usuario = new User();
+    // User usuario = new User();
     final http.Response response = await http.post(Uri.parse(url+"/listPerfil"),
                                     headers: <String,String>{ "Content-Type": "application/json"},
                                     body: jsonEncode({"key": "12345","token": token}));
@@ -86,7 +86,7 @@ class UserService{
     print(body);
       if(body['error'] == false){
 
-        usuario.username = "Hola";  
+        User().username = "Hola";  
         final String last_name01 = body['last_name01'];
         final String name02 = body['name02'];
         final String last_name02 = body['last_name02'];
