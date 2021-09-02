@@ -1,10 +1,10 @@
 // @dart=2.9
 
 import 'dart:async';
-<<<<<<< HEAD
-// import 'dart:ffi';
+<<<<<<< Updated upstream
 =======
->>>>>>> Rodrigo
+// import 'dart:ffi';
+>>>>>>> Stashed changes
 import 'dart:js';
 
 import 'package:flutter/material.dart';
@@ -12,6 +12,7 @@ import 'package:flutter_demo/models/userModel.dart';
 import 'package:flutter_demo/pages/login.dart';
 import 'package:flutter_demo/services/api_base_helper.dart';
 import 'package:flutter_demo/models/loginModel.dart';
+import 'package:flutter_demo/utils/user_secure_storage.dart';
 import 'package:flutter_demo/utils/user_simple_preferences.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -35,14 +36,16 @@ class UserService{
           print(token);
           await UserSimplePreferences.setUserName(userName);
           await UserSimplePreferences.setToken(token);
+
           listPerfilService(token);
           listMenuService(token);
           loginScreen();
+          
 
         }else if (body['error'] == true){
           final String mensaje = body['msg'];
           // aquí se pone la alerta!
-          /*dialogContent(BuildContext context){
+          dialogContent(BuildContext context){
             showDialog(
               context: context,
               builder: (context) => alertaError(
@@ -50,7 +53,7 @@ class UserService{
                 description: '$mensaje',
               )
             );
-          }*/
+          }
         }
   }
 
@@ -80,15 +83,7 @@ class UserService{
   }
   
   Future <void> listPerfilService(String token) async {
-<<<<<<< HEAD
     // User usuario = new User();
-=======
-<<<<<<< HEAD
-
-=======
-    User usuario = new User();
->>>>>>> Develop
->>>>>>> Develop
     final http.Response response = await http.post(Uri.parse(url+"/listPerfil"),
                                     headers: <String,String>{ "Content-Type": "application/json"},
                                     body: jsonEncode({"key": "12345","token": token}));
@@ -118,7 +113,7 @@ class UserService{
         await UserSimplePreferences.setId(id);
         await UserSimplePreferences.setEmail(email);
 
-        
+        print(UserSimplePreferences.getUsername());
       }else if (body['error'] == true){
         
       }
