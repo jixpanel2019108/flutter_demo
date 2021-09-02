@@ -5,6 +5,7 @@ import 'dart:async';
 import 'dart:js';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_demo/models/userModel.dart';
 import 'package:flutter_demo/pages/login.dart';
 import 'package:flutter_demo/services/api_base_helper.dart';
 import 'package:flutter_demo/models/loginModel.dart';
@@ -25,9 +26,7 @@ class UserService{
       
         final body = json.decode(response.body);
         print(body);
-        
 
-        
         if(body['error'] == false){
           final String token = body['token'];
           print(token);
@@ -78,6 +77,7 @@ class UserService{
   }
   
   Future <void> listPerfilService(String token) async {
+    User usuario = new User();
     final http.Response response = await http.post(Uri.parse(url+"/listPerfil"),
                                     headers: <String,String>{ "Content-Type": "application/json"},
                                     body: jsonEncode({"key": "12345","token": token}));
@@ -86,6 +86,7 @@ class UserService{
     print(body);
       if(body['error'] == false){
 
+        usuario.username = "Hola";  
         final String last_name01 = body['last_name01'];
         final String name02 = body['name02'];
         final String last_name02 = body['last_name02'];
@@ -122,6 +123,9 @@ class UserService{
 
     if(body['error'] == false){
       print("List menu exitoso");
+      var menu = body['menu'];
+      
+
     }else if (body['error'] == true){
       print("List menu con error");
     }
