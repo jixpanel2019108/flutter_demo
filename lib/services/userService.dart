@@ -18,7 +18,60 @@ import 'dart:convert';
 // const urlBase = "https://demo.s3.gt/WS_SEGURIDAD_CPE/ws/";
 
 class UserService{
+
   String url = "https://demo.s3.gt/WS_SEGURIDAD_CPE/ws/post";
+
+    Future <void> loginUser (String userName, String password) async {
+
+    final http.Response response = await http.post(Uri.parse(url+"/loginUser"),
+      headers: <String,String>{ "Content-Type": "application/json"},
+      body: jsonEncode({"nombre_usuario": userName, "clave": password, "key": "12345"}));
+      
+        final body = json.decode(response.body);
+        print(body);
+
+        Widget _botonLogin () {
+          return StreamBuilder(
+        builder: (BuildContext context, AsyncSnapshot snapshot){
+          return RaisedButton(
+              child: Container(
+                padding: EdgeInsets.symmetric(horizontal: 90.0, vertical: 20.0),
+                child:
+                Text('Iniciar Sesión',
+                style: TextStyle(
+                  color: Colors.white
+                ),),
+              ),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(20),
+              ),
+              color: Color(0xffFE1EF8),
+              onPressed: (){
+                if(body['error'] == false){
+                  final String token = body['token'];
+                  print(token);
+                  UserSimplePreferences.setUserName(userName);
+                  UserSimplePreferences.setToken(token);
+                  listPerfilService(token);
+                  listMenuService(token);
+                  Navigator.of(context).pushNamed('/principal');
+
+                }else if (body['error'] == true){
+                  final String mensaje = body['msg'];
+                  // aquí se pone la alerta!
+
+                }
+                //UserService().loginUser(usu, pass);
+              },
+          );
+        }
+    );
+        }
+  }
+   
+  // JZETINA-ADMIN
+
+  /*String url = "https://demo.s3.gt/WS_SEGURIDAD_CPE/ws/post";
   
   Future <void> loginUser (String userName, String password) async {
 
@@ -56,7 +109,7 @@ class UserService{
           //   );
           // }
         }
-  }
+  }*/
 
   Future <void> forgotPasswordService (String user) async {
     
@@ -179,6 +232,7 @@ class UserService{
 
 
 }
+
 
 
 

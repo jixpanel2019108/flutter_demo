@@ -2,11 +2,16 @@
 
 import 'dart:html';
 import 'dart:js';
+import 'dart:async';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_demo/models/userModel.dart';
 import 'package:flutter_demo/services/userService.dart';
+import 'package:flutter_demo/utils/user_simple_preferences.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 //import 'package:flutter_demo/pages/forgotPassword.dart';
 
 // ignore: camel_case_types
@@ -19,7 +24,7 @@ class loginScreen extends StatefulWidget {
 class _login extends State<loginScreen> {
 
   final usuario = TextEditingController();
-  final password = TextEditingController();
+  final passpass = TextEditingController();
   String usu = '';
   String pass = '';
 
@@ -61,7 +66,6 @@ class _login extends State<loginScreen> {
            SizedBox(height: 30.0,),
            _forgot(),
            SizedBox(height: 150.0,),
-           _botonLogin(),
            SizedBox(height: 150.0,),
            _powered(),
          ],
@@ -177,7 +181,7 @@ class _login extends State<loginScreen> {
             child: Column(
               children: <Widget>[
                 Padding(padding: EdgeInsets.all(10.0), child: TextFormField(
-                  controller: password,
+                  controller: passpass,
                   keyboardType: TextInputType.emailAddress,
                   obscureText: true,
                   decoration: InputDecoration(
@@ -203,7 +207,8 @@ class _login extends State<loginScreen> {
     );
   }
 
-  Widget _botonLogin() {
+  /*Widget _botonLogin() {
+    String url = "https://demo.s3.gt/WS_SEGURIDAD_CPE/ws/post";
     return StreamBuilder(
         builder: (BuildContext context, AsyncSnapshot snapshot){
           return RaisedButton(
@@ -222,38 +227,102 @@ class _login extends State<loginScreen> {
               onPressed: (){
                 usu = usuario.text;
                 pass = password.text;
-                UserService userService = new UserService();
-                
-                userService.login(usu,pass).then((response)=> {
-                  if (response.token.isNotEmpty) {
-                    print("si entre"),
-                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                    content:  Text(response.msg),
-                    duration: const Duration(seconds: 1),
-                    
-                  ))
-                  } else {
-                    print("no entre"),
-                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                    content:  Text(response.msg),
-                    duration: const Duration(seconds: 5),
-                    
-                  ))
-                  }
-                });
+                Navigator.of(context).pushNamed('/principal');
+                Future <void> loginUser (String userName, String password) async {
+                  final http.Response response = await http.post(Uri.parse(url+"/loginUser"),
+                  headers: <String,String>{ "Content-Type": "application/json"},
+                  body: jsonEncode({"nombre_usuario": userName, "clave": password, "key": "12345"}));
+      
+                  final body = json.decode(response.body);
+                  print(body);
 
-                // UserService().loginUser(usu, pass);
-                // Navigator.of(context).pushNamed('/principal');
+                  if(body['error'] == false){
+                    final String token = body['token'];
+                    print(token);
+                    await UserSimplePreferences.setUserName(userName);
+                    await UserSimplePreferences.setToken(token);
+                    UserService().listPerfilService(token);
+                    UserService().listMenuService(token);
+                    Navigator.of(context).pushNamed('/principal');
+
+                  }else if (body['error'] == true){
+                    final String mensaje = body['msg'];
+                    // aquí se pone la alerta!
+                    showDialog(
+                      context: context,
+                      builder: (context) => alertaError(
+                        title: 'Error',
+                        description: '$mensaje',
+                      )
+                    );
+                  }
+                  }
+                //UserService().loginUser(usu, pass);
               },
           );
         }
     );
-  }
+  }*/
+  /*String url = "https://demo.s3.gt/WS_SEGURIDAD_CPE/ws/post";
+
+    Future <void> loginUser (String userName, String password) async {
+
+    final http.Response response = await http.post(Uri.parse(url+"/loginUser"),
+      headers: <String,String>{ "Content-Type": "application/json"},
+      body: jsonEncode({"nombre_usuario": userName, "clave": password, "key": "12345"}));
+      
+        final body = json.decode(response.body);
+        print(body);
+
+        Widget _botonLogin () {
+          return StreamBuilder(
+        builder: (BuildContext context, AsyncSnapshot snapshot){
+          return RaisedButton(
+              child: Container(
+                padding: EdgeInsets.symmetric(horizontal: 90.0, vertical: 20.0),
+                child:
+                Text('Iniciar Sesión',
+                style: TextStyle(
+                  color: Colors.white
+                ),),
+              ),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(20),
+              ),
+              color: Color(0xffFE1EF8),
+              onPressed: (){
+                if(body['error'] == false){
+                  final String token = body['token'];
+                  print(token);
+                  UserSimplePreferences.setUserName(userName);
+                  UserSimplePreferences.setToken(token);
+                  UserService().listPerfilService(token);
+                  UserService().listMenuService(token);
+                  Navigator.of(context).pushNamed('/principal');
+
+                }else if (body['error'] == true){
+                  final String mensaje = body['msg'];
+                  // aquí se pone la alerta!
+                  showDialog(
+                    context: context,
+                    builder: (context) => alertaError(
+                    title: 'Error',
+                    description: '$mensaje',
+                  )
+                  );
+                }
+                //UserService().loginUser(usu, pass);
+              },
+          );
+        }
+    );
+        }
+  }*/
    
   // JZETINA-ADMIN
 }
 
-  class alertaError extends StatelessWidget {
+/*class alertaError extends StatelessWidget {
     String title,description, buttonText;
     Image image;
     
@@ -334,4 +403,4 @@ class _login extends State<loginScreen> {
         ],
       );
     }
-  }
+}*/
