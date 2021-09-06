@@ -38,11 +38,13 @@ class UserService{
           listPerfilService(token);
           
           listMenuService(token);
-          
+          return true;
           
 
         }else if (body['error'] == true){
           final String mensaje = body['msg'];
+
+          return false;
           // aquí se pone la alerta!
           // dialogContent(BuildContext context){
           //   showDialog(
@@ -155,6 +157,27 @@ class UserService{
     
     return usersResponseFromJson(responseJson).users;
   }
+
+ Future <LoginResponseModel> login (String userName, String password) async {
+
+    final http.Response response = await http.post(Uri.parse(url+"/loginUser"),
+      headers: <String,String>{ "Content-Type": "application/json"},
+      body: jsonEncode({"nombre_usuario": userName, "clave": password, "key": "12345"}));
+      
+        final body = json.decode(response.body);
+
+        if(response.statusCode == 200 || response.statusCode == 202){
+          print(body);
+          final String token = body['token'];
+          UserSimplePreferences.setToken(token);
+          return LoginResponseModel.fromJson(json.decode(response.body));
+        }else{
+          print("Error");
+          throw Exception('Failed to load');
+        }
+  }
+
+
 }
 
 
