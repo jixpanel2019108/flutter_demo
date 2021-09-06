@@ -178,8 +178,25 @@ class UserService{
         }
   }
 
-  Future <ForgotPasswordResponse> forgotPassword (String token) async{
+  Future <ForgotPasswordResponse> forgotPassword (String user) async{
+    var urlRequest = Uri.parse(url+"/forgotpassword");
+
+    var bodyRequest = jsonEncode({"user": user, "key": "12345"});
+    var responseJson;
     
+    final http.Response response = await http.post(urlRequest, 
+                                      headers: <String,String>{ "Content-Type": "application/json"},
+                                      body: bodyRequest);
+    final body = json.decode(response.body);
+
+    if(response.statusCode == 200 || response.statusCode == 202){
+      print(body);
+      return ForgotPasswordResponse.fromJson(json.decode(response.body));
+    }else{
+      print("Error");
+      throw Exception('Failed to load');
+    }
+
   }
 
 }
