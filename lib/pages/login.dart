@@ -18,12 +18,12 @@ class loginScreen extends StatefulWidget {
 // ignore: camel_case_types
 class _login extends State<loginScreen> {
 
-  @override
   final usuario = TextEditingController();
   final password = TextEditingController();
   String usu = '';
   String pass = '';
 
+  @override
   Widget build(BuildContext context) {
     
     return Scaffold(
@@ -222,8 +222,28 @@ class _login extends State<loginScreen> {
               onPressed: (){
                 usu = usuario.text;
                 pass = password.text;
-                UserService().loginUser(usu, pass);
-                Navigator.of(context).pushNamed('/principal');
+                UserService userService = new UserService();
+                
+                userService.login(usu,pass).then((response)=> {
+                  if (response.token.isNotEmpty) {
+                    print("si entre"),
+                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                    content:  Text(response.msg),
+                    duration: const Duration(seconds: 1),
+                    
+                  ))
+                  } else {
+                    print("no entre"),
+                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                    content:  Text(response.msg),
+                    duration: const Duration(seconds: 5),
+                    
+                  ))
+                  }
+                });
+
+                // UserService().loginUser(usu, pass);
+                // Navigator.of(context).pushNamed('/principal');
               },
           );
         }
