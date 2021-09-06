@@ -1,6 +1,7 @@
 // @dart=2.9
 
 import 'dart:async';
+import 'dart:io';
 import 'dart:js';
 
 import 'package:flutter/material.dart';
@@ -8,6 +9,8 @@ import 'package:flutter_demo/models/userModel.dart';
 import 'package:flutter_demo/pages/login.dart';
 import 'package:flutter_demo/services/api_base_helper.dart';
 import 'package:flutter_demo/models/loginModel.dart';
+import 'package:flutter_demo/services/app_exceptions.dart';
+import 'package:flutter_demo/utils/user_secure_storage.dart';
 import 'package:flutter_demo/utils/user_simple_preferences.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -15,7 +18,60 @@ import 'dart:convert';
 // const urlBase = "https://demo.s3.gt/WS_SEGURIDAD_CPE/ws/";
 
 class UserService{
+
   String url = "https://demo.s3.gt/WS_SEGURIDAD_CPE/ws/post";
+
+    Future <void> loginUser (String userName, String password) async {
+
+    final http.Response response = await http.post(Uri.parse(url+"/loginUser"),
+      headers: <String,String>{ "Content-Type": "application/json"},
+      body: jsonEncode({"nombre_usuario": userName, "clave": password, "key": "12345"}));
+      
+        final body = json.decode(response.body);
+        print(body);
+
+        Widget _botonLogin () {
+          return StreamBuilder(
+        builder: (BuildContext context, AsyncSnapshot snapshot){
+          return RaisedButton(
+              child: Container(
+                padding: EdgeInsets.symmetric(horizontal: 90.0, vertical: 20.0),
+                child:
+                Text('Iniciar Sesión',
+                style: TextStyle(
+                  color: Colors.white
+                ),),
+              ),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(20),
+              ),
+              color: Color(0xffFE1EF8),
+              onPressed: (){
+                if(body['error'] == false){
+                  final String token = body['token'];
+                  print(token);
+                  UserSimplePreferences.setUserName(userName);
+                  UserSimplePreferences.setToken(token);
+                  listPerfilService(token);
+                  listMenuService(token);
+                  Navigator.of(context).pushNamed('/principal');
+
+                }else if (body['error'] == true){
+                  final String mensaje = body['msg'];
+                  // aquí se pone la alerta!
+
+                }
+                //UserService().loginUser(usu, pass);
+              },
+          );
+        }
+    );
+        }
+  }
+   
+  // JZETINA-ADMIN
+
+  /*String url = "https://demo.s3.gt/WS_SEGURIDAD_CPE/ws/post";
   
   Future <void> loginUser (String userName, String password) async {
 
@@ -31,24 +87,29 @@ class UserService{
           print(token);
           await UserSimplePreferences.setUserName(userName);
           await UserSimplePreferences.setToken(token);
+
           listPerfilService(token);
+          
           listMenuService(token);
-          loginScreen();
+          return true;
+          
 
         }else if (body['error'] == true){
           final String mensaje = body['msg'];
+
+          return false;
           // aquí se pone la alerta!
-          dialogContent(BuildContext context){
-            showDialog(
-              context: context,
-              builder: (context) => alertaError(
-                title: 'Error',
-                description: '$mensaje',
-              )
-            );
-          }
+          // dialogContent(BuildContext context){
+          //   showDialog(
+          //     context: context,
+          //     builder: (context) => alertaError(
+          //       title: 'Error',
+          //       description: '$mensaje',
+          //     )
+          //   );
+          // }
         }
-  }
+  }*/
 
   Future <void> forgotPasswordService (String user) async {
     
@@ -76,6 +137,7 @@ class UserService{
   }
   
   Future <void> listPerfilService(String token) async {
+    // User usuario = new User();
     final http.Response response = await http.post(Uri.parse(url+"/listPerfil"),
                                     headers: <String,String>{ "Content-Type": "application/json"},
                                     body: jsonEncode({"key": "12345","token": token}));
@@ -84,7 +146,6 @@ class UserService{
     print(body);
       if(body['error'] == false){
 
-        User().username = "Hola";  
         final String last_name01 = body['last_name01'];
         final String name02 = body['name02'];
         final String last_name02 = body['last_name02'];
@@ -95,17 +156,18 @@ class UserService{
         final String id = body['id'];        
         final String email = body['email'];
 
-        await UserSimplePreferences.setLast_name01(last_name01);
-        await UserSimplePreferences.setName02(name02);
-        await UserSimplePreferences.setLast_name02(last_name02);
-        await UserSimplePreferences.setName01(name01);
-        await UserSimplePreferences.setRpas(rpas);
-        await UserSimplePreferences.setNickname(nickname);
-        await UserSimplePreferences.setPhoto(photo);
-        await UserSimplePreferences.setId(id);
-        await UserSimplePreferences.setEmail(email);
-
+        UserSimplePreferences.setLast_name01(last_name01);
+        UserSimplePreferences.setName02(name02);
+        UserSimplePreferences.setLast_name02(last_name02);
+        UserSimplePreferences.setName01(name01);
+        UserSimplePreferences.setRpas(rpas);
+        UserSimplePreferences.setNickname(nickname);
+        UserSimplePreferences.setPhoto(photo);
+        UserSimplePreferences.setId(id);
+        UserSimplePreferences.setEmail(email);
         
+        // loginScreen();
+        print(UserSimplePreferences.getUsername());
       }else if (body['error'] == true){
         
       }
@@ -131,7 +193,46 @@ class UserService{
 
   }
 
+  Future <List<User>> listPerfilPrueba(String token) async {
+    // User usuario = new User();
+    var responseJson;
+    
+    final http.Response response = await http.post(Uri.parse(url+"/listPerfil"),
+                                    headers: <String,String>{ "Content-Type": "application/json"},
+                                    body: jsonEncode({"key": "12345","token": token}));
+
+    final body = json.decode(response.body);
+    // responseJson = returnResponse(response);
+    print(body);
+    
+    
+    
+    
+    return usersResponseFromJson(responseJson).users;
+  }
+
+ Future <LoginResponseModel> login (String userName, String password) async {
+
+    final http.Response response = await http.post(Uri.parse(url+"/loginUser"),
+      headers: <String,String>{ "Content-Type": "application/json"},
+      body: jsonEncode({"nombre_usuario": userName, "clave": password, "key": "12345"}));
+      
+        final body = json.decode(response.body);
+
+        if(response.statusCode == 200 || response.statusCode == 202){
+          print(body);
+          final String token = body['token'];
+          UserSimplePreferences.setToken(token);
+          return LoginResponseModel.fromJson(json.decode(response.body));
+        }else{
+          print("Error");
+          throw Exception('Failed to load');
+        }
+  }
+
+
 }
+
 
 
 

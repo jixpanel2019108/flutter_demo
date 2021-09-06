@@ -1,56 +1,42 @@
 // @dart=2.9
 import 'dart:convert';
 
-class LoginUser {
-  // ignore: non_constant_identifier_names
-  String nombre_usuario;
-  String clave;
-  String key;
+class LoginResponseModel {
+    
+  final String msg;
+  final String code;
+  final String id;
+  final String token;
+  final bool error;
 
-  // ignore: non_constant_identifier_names
-  LoginUser({ this.nombre_usuario, this.clave, this.key});
+  LoginResponseModel({this.msg, this.code, this.id, this.token, this.error});
 
-  factory LoginUser.fromJson(Map<String, dynamic> json){
-    return LoginUser(
-      nombre_usuario: json["id"],
-      clave: json["clave"],
-      key: json["key"]
+  factory LoginResponseModel.fromJson(Map<String, dynamic> json) {
+    return LoginResponseModel(
+      msg: json["msg"] != null ? json["msg"] : "",
+      code: json["code"] != null ? json["code"] : "",
+      id: json["id"] != null ? json["id"] : "",
+      token: json["token"] != null ? json["token"] : "",
+      error: json["error"] != null ? json["error"] : "",
     );
   }
 }
 
-LoginResponse loginResponseFromJson(String str) => LoginResponse.fromJson(json.decode(str));
+class LoginRequestModel {
+  String email;
+  String password;
 
-String loginResponseToJson(LoginResponse data) => json.encode(data.toJson());
+  LoginRequestModel({
+    this.email,
+    this.password,
+  });
 
-class LoginResponse {
-    LoginResponse({
-        this.msg,
-        this.code,
-        this.id,
-        this.error,
-        this.token,
-    });
-
-    String msg;
-    String code;
-    String id;
-    bool error;
-    String token;
-
-    factory LoginResponse.fromJson(Map<String, dynamic> json) => LoginResponse(
-        msg: json["msg"],
-        code: json["code"],
-        id: json["id"],
-        error: json["error"],
-        token: json["token"],
-    );
-
-    Map<String, dynamic> toJson() => {
-        "msg": msg,
-        "code": code,
-        "id": id,
-        "error": error,
-        "token": token,
+  Map<String, dynamic> toJson() {
+    Map<String, dynamic> map = {
+      'email': email.trim(),
+      'password': password.trim(),
     };
+
+    return map;
+  }
 }
