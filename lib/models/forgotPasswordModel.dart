@@ -2,16 +2,16 @@
 // @dart=2.9
 import 'dart:convert';
 
-class forgotPasswordResponse {
+class ForgotPasswordResponse {
     
   final String msg;
   final String code;
   final bool error;
 
-  forgotPasswordResponse({this.msg, this.code, this.error});
+  ForgotPasswordResponse({this.msg, this.code, this.error});
 
-  factory forgotPasswordResponse.fromJson(Map<String, dynamic> json) {
-    return forgotPasswordResponse(
+  factory ForgotPasswordResponse.fromJson(Map<String, dynamic> json) {
+    return ForgotPasswordResponse(
       msg: json["msg"] != null ? json["msg"] : "",
       code: json["code"] != null ? json["code"] : "",
       error: json["error"] != null ? json["error"] : "",

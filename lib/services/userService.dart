@@ -5,6 +5,7 @@ import 'dart:io';
 import 'dart:js';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_demo/models/forgotPasswordModel.dart';
 import 'package:flutter_demo/models/userModel.dart';
 import 'package:flutter_demo/pages/login.dart';
 import 'package:flutter_demo/services/api_base_helper.dart';
@@ -158,7 +159,7 @@ class UserService{
     return usersResponseFromJson(responseJson).users;
   }
 
- Future <LoginResponseModel> login (String userName, String password) async {
+  Future <LoginResponseModel> login (String userName, String password) async {
 
     final http.Response response = await http.post(Uri.parse(url+"/loginUser"),
       headers: <String,String>{ "Content-Type": "application/json"},
@@ -177,6 +178,9 @@ class UserService{
         }
   }
 
+  Future <ForgotPasswordResponse> forgotPassword (String token) async{
+    
+  }
 
 }
 
