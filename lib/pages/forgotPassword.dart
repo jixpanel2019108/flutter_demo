@@ -2,6 +2,7 @@
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_demo/models/userModel.dart';
 import 'package:flutter_demo/services/userService.dart';
 import 'package:flutter_demo/utils/user_simple_preferences.dart';
 
@@ -145,7 +146,20 @@ class _forgotState extends State<forgotScreen> {
               onPressed: (){
                 usu = usuario.text;
                 print(usu);
-                UserService().forgotPasswordService(usu);
+                // UserService().forgotPasswordService(usu);
+                UserService userService = new UserService();
+
+                userService.forgotPassword(usu).then((response) => {
+                  if (response.error == false) {
+                    print(response.msg),
+                    // Insertar alerta de exito con el valor del response.msg 
+                    
+                  } else {
+                    print(response.msg),
+                    //Insertar alerta de error con el valor del response.msg
+                    
+                  }
+                }); 
               },
               icon: Icon(Icons.send,
               color: Colors.white,),
