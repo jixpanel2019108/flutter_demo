@@ -153,11 +153,20 @@ class _forgotState extends State<forgotScreen> {
                   if (response.error == false) {
                     print(response.msg),
                     // Insertar alerta de exito con el valor del response.msg 
-                    
+                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                    backgroundColor: Color(0xffFE1EF8),
+                    content:  Text(response.msg),
+                    duration: const Duration(seconds: 1),
+                  ))
                   } else {
                     print(response.msg),
                     //Insertar alerta de error con el valor del response.msg
+                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                    backgroundColor: Colors.redAccent,
+                    content:  Text(response.msg),
+                    duration: const Duration(seconds: 5),
                     
+                  ))
                   }
                 }); 
               },
