@@ -7,7 +7,7 @@ import 'package:flutter_demo/pages/forgotPassword.dart';
 import 'package:flutter_demo/utils/user_simple_preferences.dart';
 import 'package:flutter_demo/pages/principal.dart';
 
-Future main()async {
+void main() {
   WidgetsFlutterBinding.ensureInitialized();
   UserSimplePreferences.init();
   runApp(MyApp());
