@@ -227,14 +227,16 @@ class _login extends State<loginScreen> {
                 userService.login(usu,pass).then((response)=> {
                   if (response.token.isNotEmpty) {
                     print("si entre"),
+                    Navigator.of(context).pushNamed('/principal'),
                     ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                    backgroundColor: Color(0xffFE1EF8),
                     content:  Text(response.msg),
                     duration: const Duration(seconds: 1),
-                    
                   ))
                   } else {
                     print("no entre"),
                     ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                    backgroundColor: Colors.redAccent,
                     content:  Text(response.msg),
                     duration: const Duration(seconds: 5),
                     
