@@ -5,6 +5,7 @@ import 'dart:js';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_demo/models/userModel.dart';
 import 'package:flutter_demo/pages/menu.dart';
 import 'package:flutter_demo/pages/principal.dart';
 import 'package:flutter_demo/services/userService.dart';
@@ -225,32 +226,50 @@ class _login extends State<loginScreen> {
                 usu = usuario.text;
                 pass = password.text;
                 UserService userService = new UserService();
-                
+                User user = new User();
                 userService.login(usu,pass).then((response)=> {
+
                   if (response.token.isNotEmpty) {
-                    print("si entre"),
-                    // Navigator.of(context).pushNamed('/principal'),
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => HomeScreen(token: response.token),
+                    print("Token No está vacio"),
+                    
+                    userService.listPerfil(response.token).then((usuarioEncontrado)=>{
+
+                      if(response.error == false){
+                        print(usuarioEncontrado.perfil[0]),
+                        
+                        Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                        builder: (context) => HomeScreen(token: response.token,
+                                                        nickname:usuarioEncontrado.perfil[0]["nickname"],
+                                                        email: usuarioEncontrado.perfil[0]["email"] ),
                       ),
                     ),
+                      }else{
+                        print("Error true en list perfil en Login")
+                      }
+
+                    }),
+
                     
+
+                    //ALERTA
                     ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                     backgroundColor: Color(0xffFE1EF8),
                     content:  Text(response.msg),
                     duration: const Duration(seconds: 1),
                   ))
                   } else {
-                    print("no entre"),
+                    print("Token vacio"),
+
+                    //ALERTA
                     ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                     backgroundColor: Colors.redAccent,
                     content:  Text(response.msg),
                     duration: const Duration(seconds: 5),
-                    
-                  ))
+                    ))
                   }
+
                 });
 
                 // UserService().loginUser(usu, pass);
