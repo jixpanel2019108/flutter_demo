@@ -6,6 +6,7 @@ import 'dart:js';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_demo/models/forgotPasswordModel.dart';
+import 'package:flutter_demo/models/listPerfilModel.dart';
 import 'package:flutter_demo/models/userModel.dart';
 import 'package:flutter_demo/pages/login.dart';
 import 'package:flutter_demo/services/api_base_helper.dart';
@@ -91,7 +92,7 @@ class UserService{
                                     body: jsonEncode({"key": "12345","token": token}));
 
     final body = json.decode(response.body);
-    print(body);
+    // print(body);
       if(body['error'] == false){
 
         final String last_name01 = body['last_name01'];
@@ -141,24 +142,6 @@ class UserService{
 
   }
 
-  Future <List<User>> listPerfilPrueba(String token) async {
-    // User usuario = new User();
-    var responseJson;
-    
-    final http.Response response = await http.post(Uri.parse(url+"/listPerfil"),
-                                    headers: <String,String>{ "Content-Type": "application/json"},
-                                    body: jsonEncode({"key": "12345","token": token}));
-
-    final body = json.decode(response.body);
-    // responseJson = returnResponse(response);
-    print(body);
-    
-    
-    
-    
-    return usersResponseFromJson(responseJson).users;
-  }
-
   Future <LoginResponseModel> login (String userName, String password) async {
 
     final http.Response response = await http.post(Uri.parse(url+"/loginUser"),
@@ -173,16 +156,13 @@ class UserService{
           UserSimplePreferences.setToken(token);
           return LoginResponseModel.fromJson(json.decode(response.body));
         }else{
-          print("Error");
-          throw Exception('Failed to load');
+          throw Exception('Failed to load in login Service');
         }
   }
 
   Future <ForgotPasswordResponse> forgotPassword (String user) async{
     var urlRequest = Uri.parse(url+"/forgotpassword");
-
     var bodyRequest = jsonEncode({"user": user, "key": "12345"});
-    var responseJson;
     
     final http.Response response = await http.post(urlRequest, 
                                       headers: <String,String>{ "Content-Type": "application/json"},
@@ -194,9 +174,24 @@ class UserService{
       return ForgotPasswordResponse.fromJson(json.decode(response.body));
     }else{
       print("Error");
-      throw Exception('Failed to load');
+      throw Exception('Failed to load in forgotPassword Service');
     }
 
+  }
+
+    Future <ListPerfilResponseModel> listPerfil(String token) async {
+    
+    final http.Response response = await http.post(Uri.parse(url+"/listPerfil"),
+                                    headers: <String,String>{ "Content-Type": "application/json"},
+                                    body: jsonEncode({"key": "12345","token": token}));
+    final body = json.decode(response.body);
+    
+    if(response.statusCode == 200 || response.statusCode == 202){
+      // print(body);
+      return ListPerfilResponseModel.fromJson(json.decode(response.body));
+    }else{
+      throw Exception('Failed to load in listPerfil Service');
+    }
   }
 
 }
