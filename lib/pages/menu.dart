@@ -1,10 +1,13 @@
 //@dart=2.9
 
 import 'package:flutter/material.dart';
+import 'package:flutter_demo/services/userService.dart';
 
 class Menu extends StatefulWidget {
   final String token;
-  const Menu({ Key key, this.token }) : super(key: key);
+  final String nickname;
+  final String email;
+  const Menu({ Key key, this.token, this.nickname, this.email }) : super(key: key);
   @override
   _Menu createState() => _Menu();
 }
@@ -27,6 +30,7 @@ class _Menu extends   State<Menu> {
                       child: Image.asset('assets/logo_shoppertrace_blanco.png'),
                     ),
                     Text(widget.token),
+                    Text(widget.nickname)
                   ],
                 ),
               ), 

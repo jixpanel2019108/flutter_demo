@@ -7,7 +7,9 @@ import 'package:flutter_demo/pages/menu.dart';
 
 class HomeScreen extends StatefulWidget {
   final String token;
-  const HomeScreen({ Key key, this.token }) : super(key: key);
+  final String nickname;
+  final String email;
+  const HomeScreen({ Key key, this.token, this.nickname, this.email }) : super(key: key);
   
     @override
     _Home createState() => _Home();
@@ -23,7 +25,7 @@ class _Home extends State<HomeScreen> {
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(),
-        drawer: Menu(token: 'Holaaaaa',),
+        drawer: Menu(token: widget.token, nickname: widget.nickname,email:widget.email,),
       )
     );
   }

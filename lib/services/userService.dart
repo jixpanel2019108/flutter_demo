@@ -92,7 +92,7 @@ class UserService{
                                     body: jsonEncode({"key": "12345","token": token}));
 
     final body = json.decode(response.body);
-    print(body);
+    // print(body);
       if(body['error'] == false){
 
         final String last_name01 = body['last_name01'];
@@ -187,7 +187,7 @@ class UserService{
     final body = json.decode(response.body);
     
     if(response.statusCode == 200 || response.statusCode == 202){
-      print(body);
+      // print(body);
       return ListPerfilResponseModel.fromJson(json.decode(response.body));
     }else{
       throw Exception('Failed to load in listPerfil Service');
