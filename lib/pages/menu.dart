@@ -20,10 +20,11 @@ class _Menu extends   State<Menu> {
             padding: EdgeInsets.zero,
             children: <Widget>[
               Container(
+                color: Color(0xffFE1EF8),
                 child:DrawerHeader(
-                decoration: BoxDecoration(
+                /*decoration: BoxDecoration(
                   color: Color(0xffFE1EF8)
-                ),
+                ),*/
                 child: Column(
                   children: [
                     Expanded(
