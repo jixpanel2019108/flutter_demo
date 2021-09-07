@@ -226,30 +226,44 @@ class _login extends State<loginScreen> {
                 UserService userService = new UserService();
                 
                 userService.login(usu,pass).then((response)=> {
+
                   if (response.token.isNotEmpty) {
-                    print("si entre"),
-                    // Navigator.of(context).pushNamed('/principal'),
+                    print("Token No está vacio"),
+                    
+                    userService.listPerfil(response.token).then((usuarioEncontrado)=>{
+
+                      if(response.error == false){
+                        print(usuarioEncontrado.perfil[0])
+                      }else{
+                        print("Error true en list perfil en Login")
+                      }
+
+                    }),
+
                     Navigator.push(
                       context,
                       MaterialPageRoute(
                         builder: (context) => HomeScreen(token: response.token),
                       ),
                     ),
-                    
+
+                    //ALERTA
                     ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                     backgroundColor: Color(0xffFE1EF8),
                     content:  Text(response.msg),
                     duration: const Duration(seconds: 1),
                   ))
                   } else {
-                    print("no entre"),
+                    print("Token vacio"),
+
+                    //ALERTA
                     ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                     backgroundColor: Colors.redAccent,
                     content:  Text(response.msg),
                     duration: const Duration(seconds: 5),
-                    
-                  ))
+                    ))
                   }
+
                 });
 
                 // UserService().loginUser(usu, pass);
