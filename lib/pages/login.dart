@@ -5,6 +5,7 @@ import 'dart:js';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_demo/pages/principal.dart';
 import 'package:flutter_demo/services/userService.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 //import 'package:flutter_demo/pages/forgotPassword.dart';
@@ -227,7 +228,14 @@ class _login extends State<loginScreen> {
                 userService.login(usu,pass).then((response)=> {
                   if (response.token.isNotEmpty) {
                     print("si entre"),
-                    Navigator.of(context).pushNamed('/principal'),
+                    // Navigator.of(context).pushNamed('/principal'),
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => HomeScreen(token: response.token),
+                      ),
+                    ),
+                    
                     ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                     backgroundColor: Color(0xffFE1EF8),
                     content:  Text(response.msg),
