@@ -1,3 +1,6 @@
+//@dart=2.9
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_demo/main.dart';
 import 'package:flutter_demo/services/userService.dart';
@@ -5,13 +8,19 @@ import 'package:flutter_demo/utils/user_secure_storage.dart';
 import 'package:flutter_demo/utils/user_simple_preferences.dart';
 import 'package:http/http.dart';
 
-class homeScreen extends StatefulWidget {
+
+class HomeScreen extends StatefulWidget {
+  final String token;
+  const HomeScreen({ Key key, this.token }) : super(key: key);
+  
   @override
-  _home createState() => _home();
+  _Home createState() => _Home();
 }
 
 // ignore: camel_case_types
-class _home extends State<homeScreen> {
+class _Home extends State<HomeScreen> {
+
+  
 
   @override
 
@@ -38,8 +47,7 @@ class _home extends State<homeScreen> {
                       child: Image.asset('assets/logo_shoppertrace_blanco.png'),
                     ),
                     
-                    // Text('$username'),
-                    Text('$email'),
+                    Text(widget.token),
                   ],
                 ),
               ), 
