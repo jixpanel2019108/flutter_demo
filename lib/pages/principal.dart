@@ -20,15 +20,12 @@ class _Home extends State<HomeScreen> {
 
   Widget build(BuildContext context) {
     //final String email = UserSimplePreferences.getEmail();
-    return Scaffold(
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            Menu()
-        ],)
-        
-        ,)
-      
+    return SafeArea(
+      child: Scaffold(
+        appBar: AppBar(),
+        drawer: Menu(token: 'Holaaaaa',),
+      )
     );
   }
+
 }

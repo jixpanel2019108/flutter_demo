@@ -12,13 +12,7 @@ class Menu extends StatefulWidget {
 class _Menu extends   State<Menu> {
   @override
   Widget build(BuildContext context){
-        return SafeArea(
-      child: Scaffold(
-        appBar: AppBar(
-
-        ),
-
-        drawer: Drawer(
+        return Drawer(
           child: ListView(
             padding: EdgeInsets.zero,
             children: <Widget>[
@@ -32,7 +26,7 @@ class _Menu extends   State<Menu> {
                     Expanded(
                       child: Image.asset('assets/logo_shoppertrace_blanco.png'),
                     ),
-                    //Text(widget.token),
+                    Text(widget.token),
                   ],
                 ),
               ), 
@@ -52,10 +46,6 @@ class _Menu extends   State<Menu> {
               )
             ],
           )
-        ),
-      
-      )
-        
     );
   }
 }
