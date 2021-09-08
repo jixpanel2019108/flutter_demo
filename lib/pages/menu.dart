@@ -19,6 +19,7 @@ class _Menu extends   State<Menu> {
           child: ListView(
             padding: EdgeInsets.zero,
             children: <Widget>[
+              buildHeader(),
               /*Container(
                 color: Color(0xffFE1EF8),
                 child:DrawerHeader(
