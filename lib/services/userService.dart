@@ -194,6 +194,22 @@ class UserService{
     }
   }
 
+  Future <void> listMenu(String token) async {
+    final http.Response response = await http.post(Uri.parse(url+"/listMenuApp"),
+                                headers: <String,String>{ "Content-Type": "application/json"},
+                                body: jsonEncode({"key": "12345","token": token}));
+    
+    final body = json.decode(response.body);
+    print(body);
+
+    if(response.statusCode == 200 || response.statusCode == 202){
+      
+    } else {
+
+    }
+
+  }
+
 }
 
 
