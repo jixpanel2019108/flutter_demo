@@ -19,12 +19,12 @@ class _Menu extends   State<Menu> {
           child: ListView(
             padding: EdgeInsets.zero,
             children: <Widget>[
-              Container(
+              /*Container(
                 color: Color(0xffFE1EF8),
                 child:DrawerHeader(
-                /*decoration: BoxDecoration(
+                decoration: BoxDecoration(
                   color: Color(0xffFE1EF8)
-                ),*/
+                ),
                 child: Column(
                   children: [
                     Expanded(
@@ -35,7 +35,8 @@ class _Menu extends   State<Menu> {
                   ],
                 ),
               ), 
-              ),
+              ),*/
+              
               Container(
                 color: Color(0xffFE1EF8),
                 child: Column(
@@ -53,4 +54,29 @@ class _Menu extends   State<Menu> {
           )
     );
   }
+
+  Widget buildHeader() =>
+      InkWell(
+        child: Container(
+          child: Row(
+            children: [
+              SizedBox(width: 20),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    widget.nickname,
+                    style: TextStyle(fontSize: 20, color: Colors.white),
+                  ),
+                  const SizedBox(height: 4),
+                  Text(
+                    widget.email,
+                    style: TextStyle(fontSize: 14, color: Colors.white),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
+      );
 }
