@@ -13,71 +13,78 @@ class Menu extends StatefulWidget {
 }
 
 class _Menu extends   State<Menu> {
+  final padding = EdgeInsets.symmetric(horizontal: 20);
   @override
   Widget build(BuildContext context){
-        return Drawer(
-          child: ListView(
-            padding: EdgeInsets.zero,
-            children: <Widget>[
-              buildHeader(),
-              /*Container(
-                color: Color(0xffFE1EF8),
-                child:DrawerHeader(
-                decoration: BoxDecoration(
-                  color: Color(0xffFE1EF8)
-                ),
-                child: Column(
-                  children: [
-                    Expanded(
-                      child: Image.asset('assets/logo_shoppertrace_blanco.png'),
-                    ),
-                    Text(widget.token),
-                    Text(widget.nickname)
-                  ],
-                ),
-              ), 
-              ),*/
-              
-              Container(
-                color: Color(0xffFE1EF8),
-                child: Column(
-                  children: [
-                    ListTile(
-                      title: Text('Contactos'),
-                    ),
-                    ListTile(
-                      title: Text('Contactos'),
-                    )
-                  ],
-                ),
-              )
-            ],
-          )
+
+    return Drawer(
+      child: Material(
+        color: Color(0xffFE1EF8),
+        child: ListView(
+          padding: padding,
+          children: <Widget> [
+            const SizedBox(height: 48),
+            Image.asset('assets/logo_shoppertrace_blanco.png', height: 75.0,),
+            const SizedBox(height: 16),
+            Text(widget.nickname, style: TextStyle(color: Colors.white), textAlign: TextAlign.center,),
+            Text(widget.email, style: TextStyle(color: Colors.white), textAlign: TextAlign.center,),
+            //buildMenuItem(),
+            const SizedBox(height: 30),
+            Divider(color: Colors.white70),
+            const SizedBox(height: 24),
+            buildMenuItem(
+              text: 'Conteos',
+              icon: Icons.people
+            ),
+            const SizedBox(height: 16,),
+            buildMenuItem(
+              text: 'Conteos',
+              icon: Icons.people
+            ),
+            const SizedBox(height: 16,),
+            buildMenuItem(
+              text: 'Conteos',
+              icon: Icons.exit_to_app
+            ),
+            const SizedBox(height: 16,),
+            buildMenuItem(
+              text: 'Conteos',
+              icon: Icons.people
+            ),
+            const SizedBox(height: 24),
+            Divider(color: Colors.white70),
+            const SizedBox(height: 24),
+          ],
+        ),
+      ),
     );
   }
 
-  Widget buildHeader() =>
-      InkWell(
-        child: Container(
-          child: Row(
-            children: [
-              SizedBox(width: 20),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    widget.nickname,
-                    style: TextStyle(fontSize: 20, color: Colors.white),
-                  ),
-                  const SizedBox(height: 4),
-                  Text(
-                    widget.email,
-                    style: TextStyle(fontSize: 14, color: Colors.white),
-                  ),
-                ],
-              ),
-            ],
-          ),
-        ),
-      );
+  Widget buildMenuItem({
+    String text,
+    IconData icon,
+  }) {
+    final color = Colors.white;
+    final hoverColor = Color(0xffAF00FB);
+
+    return ListTile(
+      leading: Icon(icon, color: color),
+      title: Text(text, style: TextStyle(color: color)),
+      hoverColor: hoverColor,
+      onTap: () {},
+    );
+  }
+
+  void selectedItem(BuildContext context, int index) {
+    Navigator.of(context).pop();
+
+    switch (index) {
+      case 0:
+        Navigator.of(context).pushNamed('/forgotPassword');
+        break;
+      case 1:
+        Navigator.of(context).pushNamed('/forgotPassword');
+        break;
+    }
+  }
 }
