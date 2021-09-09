@@ -1,18 +1,20 @@
 //@dart=2.9
 
 import 'package:flutter/material.dart';
+import 'package:flutter_demo/models/listMenuModel.dart';
 import 'package:flutter_demo/services/userService.dart';
 
-class Menu extends StatefulWidget {
+class MenuPage extends StatefulWidget {
   final String token;
   final String nickname;
   final String email;
-  const Menu({ Key key, this.token, this.nickname, this.email }) : super(key: key);
+  final List<Menu> menu;
+  const MenuPage({ Key key, this.token, this.nickname, this.email, this.menu }) : super(key: key);
   @override
-  _Menu createState() => _Menu();
+  _MenuPage createState() => _MenuPage();
 }
 
-class _Menu extends   State<Menu> {
+class _MenuPage extends   State<MenuPage> {
   final padding = EdgeInsets.symmetric(horizontal: 20);
   @override
   Widget build(BuildContext context){

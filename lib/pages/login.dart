@@ -6,7 +6,7 @@ import 'dart:js';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_demo/models/userModel.dart';
-import 'package:flutter_demo/models/listMenuModel.dart' as listMenu;
+import 'package:flutter_demo/models/listMenuModel.dart';
 import 'package:flutter_demo/pages/menu.dart';
 import 'package:flutter_demo/pages/principal.dart';
 import 'package:flutter_demo/services/userService.dart';
@@ -239,22 +239,23 @@ class _login extends State<loginScreen> {
                         userService.listMenu(response.token).then((menusEncontrados)=> {
                           
                           for(var value in menusEncontrados.menu){
+                            Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                            builder: (context) => HomeScreen(token: response.token,
+                                                            nickname:usuarioEncontrado.perfil[0]["nickname"],
+                                                            email: usuarioEncontrado.perfil[0]["email"],
+                                                            menu: menusEncontrados.menu  ),
+                      ),
+                    ),
 
-                              print(menusEncontrados.menu)
                           }
 
                         }),
 
                         // print(usuarioEncontrado.perfil[0]),
                         
-                        Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                        builder: (context) => HomeScreen(token: response.token,
-                                                        nickname:usuarioEncontrado.perfil[0]["nickname"],
-                                                        email: usuarioEncontrado.perfil[0]["email"] ),
-                      ),
-                    ),
+                        
                       }else{
                         print("Error true en list perfil en Login")
                       }

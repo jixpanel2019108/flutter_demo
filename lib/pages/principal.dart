@@ -2,6 +2,8 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_demo/pages/menu.dart';
+import 'package:flutter_demo/models/listMenuModel.dart';
+
 
 
 
@@ -26,7 +28,7 @@ class _Home extends State<HomeScreen> {
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(),
-        drawer: Menu(token: widget.token, nickname: widget.nickname,email:widget.email,),
+        drawer: MenuPage(token: widget.token, nickname: widget.nickname,email:widget.email,),
       )
     );
   }
