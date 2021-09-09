@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_demo/models/forgotPasswordModel.dart';
 import 'package:flutter_demo/models/listMenuModel.dart';
 import 'package:flutter_demo/models/listPerfilModel.dart';
+import 'package:flutter_demo/models/logoutModel.dart';
 import 'package:flutter_demo/models/userModel.dart';
 import 'package:flutter_demo/pages/login.dart';
 import 'package:flutter_demo/services/api_base_helper.dart';
@@ -17,8 +18,6 @@ import 'package:flutter_demo/utils/user_secure_storage.dart';
 import 'package:flutter_demo/utils/user_simple_preferences.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
-
-// const urlBase = "https://demo.s3.gt/WS_SEGURIDAD_CPE/ws/";
 
 class UserService{
   String url = "https://demo.s3.gt/WS_SEGURIDAD_CPE/ws/post";
@@ -180,7 +179,7 @@ class UserService{
 
   }
 
-    Future <ListPerfilResponseModel> listPerfil(String token) async {
+  Future <ListPerfilResponseModel> listPerfil(String token) async {
     
     final http.Response response = await http.post(Uri.parse(url+"/listPerfil"),
                                     headers: <String,String>{ "Content-Type": "application/json"},
@@ -207,6 +206,25 @@ class UserService{
       return ListMenuResponse.fromJson(json.decode(response.body));
     } else {
       throw('Failed to load in listMenu Service');
+    }
+
+  }
+
+  Future <LogoutResponse> logout (String token) async{
+    var urlRequest = Uri.parse(url+"/forgotpassword");
+    var bodyRequest = jsonEncode({"key": "12345", "token": token});
+    
+    final http.Response response = await http.post(urlRequest, 
+                                      headers: <String,String>{ "Content-Type": "application/json"},
+                                      body: bodyRequest);
+    final body = json.decode(response.body);
+
+    if(response.statusCode == 200 || response.statusCode == 202){
+      print(body);
+      return LogoutResponse.fromJson(json.decode(response.body));
+    }else{
+      print("Error");
+      throw Exception('Failed to load in logout Service');
     }
 
   }
