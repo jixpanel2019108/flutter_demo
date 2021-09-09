@@ -2,6 +2,8 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_demo/pages/menu.dart';
+import 'package:flutter_demo/models/listMenuModel.dart';
+
 
 
 
@@ -9,7 +11,8 @@ class HomeScreen extends StatefulWidget {
   final String token;
   final String nickname;
   final String email;
-  const HomeScreen({ Key key, this.token, this.nickname, this.email }) : super(key: key);
+  final List<Menu> menu;
+  const HomeScreen({ Key key, this.token, this.nickname, this.email, this.menu }) : super(key: key);
   
     @override
     _Home createState() => _Home();
@@ -25,7 +28,7 @@ class _Home extends State<HomeScreen> {
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(),
-        drawer: Menu(token: widget.token, nickname: widget.nickname,email:widget.email,),
+        drawer: MenuPage(token: widget.token, nickname: widget.nickname,email:widget.email,),
       )
     );
   }
