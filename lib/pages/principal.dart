@@ -9,7 +9,8 @@ class HomeScreen extends StatefulWidget {
   final String token;
   final String nickname;
   final String email;
-  const HomeScreen({ Key key, this.token, this.nickname, this.email }) : super(key: key);
+  final List<Menu> menu;
+  const HomeScreen({ Key key, this.token, this.nickname, this.email, this.menu }) : super(key: key);
   
     @override
     _Home createState() => _Home();
