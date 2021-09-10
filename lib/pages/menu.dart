@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_demo/models/listMenuModel.dart';
+import 'package:flutter_demo/models/userModel.dart';
 import 'package:flutter_demo/services/userService.dart';
 
 class MenuPage extends StatefulWidget {
@@ -56,6 +57,10 @@ class _MenuPage extends   State<MenuPage> {
             const SizedBox(height: 24),
             Divider(color: Colors.white70),
             const SizedBox(height: 24),
+            logoutApp(
+              text: 'Exit',
+              icon: Icons.exit_to_app
+            ),
           ],
         ),
       ),
@@ -73,7 +78,34 @@ class _MenuPage extends   State<MenuPage> {
       leading: Icon(icon, color: color),
       title: Text(text, style: TextStyle(color: color)),
       hoverColor: hoverColor,
-      onTap: () {},
+      onTap: () {
+        //LogoutResponse();
+      },
+    );
+  }
+
+  Widget logoutApp({
+    String text,
+    IconData icon,
+  }){
+    final color = Colors.white;
+    final hoverColor = Color(0xffAF00FB);
+
+    return ListTile(
+      leading: Icon(icon, color: color),
+      title: Text(text, style: TextStyle(color: color)),
+      hoverColor: hoverColor,
+      onTap: () {
+        UserService userService = new UserService();
+        userService.logout(widget.token).then((usuarioFuera) => {
+          if(usuarioFuera.error == false){
+            Navigator.of(context).pushNamed('/login')
+          }else{
+            throw Exception('Hubo un error al deslogearse')
+          }
+        });
+        //Navigator.of(context).pushNamed('/login');
+      },
     );
   }
 
