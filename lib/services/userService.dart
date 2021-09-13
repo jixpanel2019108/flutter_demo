@@ -6,6 +6,7 @@ import 'dart:js';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_demo/models/forgotPasswordModel.dart';
+import 'package:flutter_demo/models/listMenuAppModel.dart';
 import 'package:flutter_demo/models/listMenuModel.dart';
 import 'package:flutter_demo/models/listPerfilModel.dart';
 import 'package:flutter_demo/models/logoutModel.dart';
@@ -204,6 +205,22 @@ class UserService{
 
     if(response.statusCode == 200 || response.statusCode == 202){
       return ListMenuResponse.fromJson(json.decode(response.body));
+    } else {
+      throw('Failed to load in listMenu Service');
+    }
+
+  }
+
+  Future <ListMenuAppResponse> listMenuApp (String token) async {
+    final http.Response response = await http.post(Uri.parse(url+"/listMenuApp"),
+                                headers: <String,String>{ "Content-Type": "application/json"},
+                                body: jsonEncode({"key": "12345","token": token}));
+    
+    final body = json.decode(response.body);
+    print(body);
+
+    if(response.statusCode == 200 || response.statusCode == 202){
+      return ListMenuAppResponse.fromJson(json.decode(response.body));
     } else {
       throw('Failed to load in listMenu Service');
     }
