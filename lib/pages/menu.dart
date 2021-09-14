@@ -1,7 +1,8 @@
 //@dart=2.9
 
 import 'package:flutter/material.dart';
-import 'package:flutter_demo/models/listMenuModel.dart';
+import 'package:flutter_demo/models/userModel.dart';
+import 'package:flutter_demo/models/listMenuAppModel.dart';
 import 'package:flutter_demo/services/userService.dart';
 
 class MenuPage extends StatefulWidget {
@@ -16,6 +17,7 @@ class MenuPage extends StatefulWidget {
 
 class _MenuPage extends   State<MenuPage> {
   final padding = EdgeInsets.symmetric(horizontal: 20);
+  
   @override
   Widget build(BuildContext context){
 
@@ -34,28 +36,65 @@ class _MenuPage extends   State<MenuPage> {
             const SizedBox(height: 30),
             Divider(color: Colors.white70),
             const SizedBox(height: 24),
+            /*ListView.builder(
+              itemCount: widget.menu.length,
+              itemBuilder: (context, index){
+                return ListTile(
+                  title: Text(widget.menu[index].menu),
+                  onTap: (){
+                    switch(widget.menu[index].menu){
+                      case '5':{
+                        print('Menu numero 1');
+                      }
+                      break;
+                      case '6':{
+                        print('El siguiente al anterior');
+                      }
+                      break;
+                      case '8':{
+                        print('El siguiente al anterior del anterior');
+                      }
+                      break;
+                      default:{
+                        print('hola');
+                      }
+                    }
+            },
+          );
+        },
+            ),*/
+            //menuList(),
             buildMenuItem(
-              text: 'Conteos',
-              icon: Icons.people
+              text: 'Seguridad Usuarios',
+              icon: Icons.lock
             ),
             const SizedBox(height: 16,),
             buildMenuItem(
-              text: 'Conteos',
-              icon: Icons.people
+              text: 'Permisos',
+              icon: Icons.lock
             ),
             const SizedBox(height: 16,),
             buildMenuItem(
-              text: 'Conteos',
-              icon: Icons.exit_to_app
+              text: 'Conteos Personas',
+              icon: Icons.people_alt
             ),
             const SizedBox(height: 16,),
             buildMenuItem(
-              text: 'Conteos',
+              text: 'Conteos Parqueos',
+              icon: Icons.people_alt
+            ),
+            const SizedBox(height: 16,),
+            buildMenuItem(
+              text: 'Personas por año',
               icon: Icons.people
             ),
             const SizedBox(height: 24),
             Divider(color: Colors.white70),
             const SizedBox(height: 24),
+            logoutApp(
+              text: 'Exit',
+              icon: Icons.exit_to_app
+            ),
           ],
         ),
       ),
@@ -73,20 +112,67 @@ class _MenuPage extends   State<MenuPage> {
       leading: Icon(icon, color: color),
       title: Text(text, style: TextStyle(color: color)),
       hoverColor: hoverColor,
-      onTap: () {},
+      onTap: () {
+        //LogoutResponse();
+      },
     );
   }
 
-  void selectedItem(BuildContext context, int index) {
-    Navigator.of(context).pop();
+  Widget logoutApp({
+    String text,
+    IconData icon,
+  }){
+    final color = Colors.white;
+    final hoverColor = Color(0xffAF00FB);
 
-    switch (index) {
-      case 0:
-        Navigator.of(context).pushNamed('/forgotPassword');
-        break;
-      case 1:
-        Navigator.of(context).pushNamed('/forgotPassword');
-        break;
-    }
+    return ListTile(
+      leading: Icon(icon, color: color),
+      title: Text(text, style: TextStyle(color: color)),
+      hoverColor: hoverColor,
+      onTap: () {
+        UserService userService = new UserService();
+        userService.logout(widget.token).then((usuarioFuera) => {
+          if(usuarioFuera.error == false){
+            Navigator.of(context).pushNamed('/login')
+          }else{
+            throw Exception('Hubo un error al deslogearse')
+          }
+        });
+        //Navigator.of(context).pushNamed('/login');
+      },
+    );
   }
+
+  /*Widget menuList(){
+    return Scaffold(
+      body: ListView.builder(
+        itemCount: widget.menu.length,
+        itemBuilder: (context, index){
+          return ListTile(
+            title: Text(widget.menu[index].menu),
+            onTap: (){
+              switch(widget.menu[index].menu){
+                case '5':{
+                  print('Menu numero 1');
+                }
+                break;
+                case '6':{
+                  print('El siguiente al anterior');
+                }
+                break;
+                case '8':{
+                  print('El siguiente al anterior del anterior');
+                }
+                break;
+                default:{
+                  print('hola');
+                }
+              }
+            },
+          );
+        },
+      ),
+    );
+  }*/
+
 }
