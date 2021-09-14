@@ -228,7 +228,7 @@ class UserService{
   }
 
   Future <LogoutResponse> logout (String token) async{
-    var urlRequest = Uri.parse(url+"/forgotpassword");
+    var urlRequest = Uri.parse(url+"/logout");
     var bodyRequest = jsonEncode({"key": "12345", "token": token});
     
     final http.Response response = await http.post(urlRequest, 

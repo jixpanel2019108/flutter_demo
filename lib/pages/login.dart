@@ -6,7 +6,7 @@ import 'dart:js';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_demo/models/userModel.dart';
-import 'package:flutter_demo/models/listMenuModel.dart';
+import 'package:flutter_demo/models/listMenuAppModel.dart';
 import 'package:flutter_demo/pages/menu.dart';
 import 'package:flutter_demo/pages/principal.dart';
 import 'package:flutter_demo/services/userService.dart';
@@ -236,7 +236,7 @@ class _login extends State<loginScreen> {
                     userService.listPerfil(response.token).then((usuarioEncontrado)=>{
 
                       if(response.error == false){
-                        userService.listMenu(response.token).then((menusEncontrados)=> {
+                        userService.listMenuApp(response.token).then((menusEncontrados)=> {
                           
                           for(var value in menusEncontrados.menu){
                             Navigator.push(
