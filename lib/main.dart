@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_demo/pages/login.dart';
 import 'package:flutter_demo/pages/forgotPassword.dart';
+import 'package:flutter_demo/pages/conteoPersonas.dart';
 import 'package:flutter_demo/utils/user_simple_preferences.dart';
 import 'package:flutter_demo/pages/principal.dart';
 
@@ -24,7 +25,8 @@ class MyApp extends StatelessWidget {
       routes: {
        '/login': (context) => loginScreen(),
         '/forgotPassword': (context) => forgotScreen(),
-        '/principal' : (context) => HomeScreen()
+        '/principal' : (context) => HomeScreen(),
+        '/conteoPersonas' : (context) => PersonasPage(),
       },
     );
   }
