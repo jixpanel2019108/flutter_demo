@@ -7,6 +7,7 @@ import 'dart:js';
 import 'package:flutter/material.dart';
 import 'package:flutter_demo/models/catCentroComercialModel.dart';
 import 'package:flutter_demo/models/catRazonSocialModel.dart';
+import 'package:flutter_demo/models/conteoParqueosModel.dart';
 import 'package:flutter_demo/models/conteoPersonasModel.dart';
 import 'package:flutter_demo/models/forgotPasswordModel.dart';
 import 'package:flutter_demo/models/listMenuAppModel.dart';
@@ -188,7 +189,34 @@ class UserService{
       print(body);
       return ConteoPersonasResponseModel.fromJson(json.decode(response.body));
     }else{
-      throw Exception('Failed to load in listPerfil Service');
+      throw Exception('Failed to load in conteoPersonas Service');
+    }
+  }
+
+  Future <ConteoParqueosResponseModel> conteoParqueos (String token, String usuario, DateTime fecha, String razon, String ocupacion, String alerta, String comercial) async {
+    var urlRequest = Uri.parse(urlCargaInventario+"/conteoPersonas");
+    var bodyRequest = jsonEncode({
+                                  "key": "12345",
+                                  "token": token,
+                                  "usuario": usuario, 
+                                  "fecha": fecha,
+                                  "razon": razon,
+                                  "excel": "0",
+                                  "ocupacionMaximaAutorizada": ocupacion,
+                                  "alertaOcupacion": alerta,
+                                  "comercial": comercial
+                                  });
+    
+    final http.Response response = await http.post(urlRequest, 
+                                      headers: <String,String>{ "Content-Type": "application/json"},
+                                      body: bodyRequest);
+    final body = json.decode(response.body);
+
+    if(response.statusCode == 200 || response.statusCode == 202){
+      print(body);
+      return ConteoParqueosResponseModel.fromJson(json.decode(response.body));
+    }else{
+      throw Exception('Failed to load in conteoParqueos Service');
     }
   }
 
