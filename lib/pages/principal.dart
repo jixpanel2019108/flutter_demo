@@ -29,5 +29,4 @@ class _Home extends State<HomeScreen> {
       )
     );
   }
-
 }
