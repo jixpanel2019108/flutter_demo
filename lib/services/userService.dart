@@ -14,6 +14,7 @@ import 'package:flutter_demo/models/listMenuAppModel.dart';
 import 'package:flutter_demo/models/listMenuModel.dart';
 import 'package:flutter_demo/models/listPerfilModel.dart';
 import 'package:flutter_demo/models/logoutModel.dart';
+import 'package:flutter_demo/models/reportePersonasAnualModel.dart';
 import 'package:flutter_demo/models/userModel.dart';
 import 'package:flutter_demo/pages/login.dart';
 import 'package:flutter_demo/services/api_base_helper.dart';
@@ -149,9 +150,9 @@ class UserService{
     }
   }
   
-  Future <CatCentroComercialResponseModel> centroComercial (String token) async {
+  Future <CatCentroComercialResponseModel> centroComercial (String token, String razon) async {
     var urlRequest = Uri.parse(urlCatalogo+"/catCentroComercial");
-    var bodyRequest = jsonEncode({"key": "12345", "token": token});
+    var bodyRequest = jsonEncode({"key": "12345", "token": token, "razon": razon});
     
     final http.Response response = await http.post(urlRequest, 
                                       headers: <String,String>{ "Content-Type": "application/json"},
@@ -220,6 +221,29 @@ class UserService{
     }
   }
 
+  Future <ReportePersonasAnualResponseModel> reportePersonasAnual (String token, String inmueble, String fini, String ffin) async {
+    var urlRequest = Uri.parse(urlCargaInventario+"/conteoPersonas");
+    var bodyRequest = jsonEncode({
+                                  "key": "12345",
+                                  "token": token,
+                                  "inmueble": inmueble,
+                                  "excel": "0",
+                                  "fini": fini,
+                                  "ffin": ffin
+                                });
+    
+    final http.Response response = await http.post(urlRequest, 
+                                      headers: <String,String>{ "Content-Type": "application/json"},
+                                      body: bodyRequest);
+    final body = json.decode(response.body);
+
+    if(response.statusCode == 200 || response.statusCode == 202){
+      print(body);
+      return ReportePersonasAnualResponseModel.fromJson(json.decode(response.body));
+    }else{
+      throw Exception('Failed to load in conteoParqueos Service');
+    }
+  }
 }
 
 
