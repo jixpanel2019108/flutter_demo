@@ -1,6 +1,7 @@
 //@dart=2.9
 
 import 'package:flutter/material.dart';
+import 'package:flutter_demo/models/catCentroComercialModel.dart';
 import 'package:flutter_demo/models/userModel.dart';
 import 'package:flutter_demo/models/listMenuAppModel.dart';
 import 'package:flutter_demo/pages/conteoPersonas.dart';
@@ -101,16 +102,25 @@ class _MenuPage extends   State<MenuPage> {
           }
           break;
           case 3: {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => PersonasPage(
-                  token: widget.token,
-                  email: widget.email,
-                  nickname: widget.nickname,
-                )
-              )
-            );
+            UserService userService = new UserService();
+            userService.razonSocial(widget.token).then((peticionRazonSocial) => {
+              if(peticionRazonSocial.error == false){
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => PersonasPage(
+                      token: widget.token,
+                      email: widget.email,
+                      nickname: widget.nickname,
+                      listadoRazon: peticionRazonSocial.listado,
+                    )
+                  )
+                )   
+              }else{
+                print('Error en boton menu Conteo Personas')
+              }
+            });
+            
           }
           break;
           case 4: {

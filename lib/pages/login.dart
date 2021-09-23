@@ -237,19 +237,17 @@ class _login extends State<loginScreen> {
 
                       if(response.error == false){
                         userService.listMenuApp(response.token).then((menusEncontrados)=> {
-                          
-                          for(var value in menusEncontrados.menu){
-                            Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                            builder: (context) => HomeScreen(token: response.token,
-                                                            nickname:usuarioEncontrado.perfil[0]["nickname"],
-                                                            email: usuarioEncontrado.perfil[0]["email"],
-                                                            menu: menusEncontrados.menu  ),
+                          Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                          builder: (context) => HomeScreen(token: response.token,
+                                                          nickname:usuarioEncontrado.perfil[0]["nickname"],
+                                                          email: usuarioEncontrado.perfil[0]["email"],
+                                                          menu: menusEncontrados.menu  ),
                       ),
                     ),
 
-                          }
+                          
 
                         }),
 
