@@ -24,6 +24,7 @@ import 'package:flutter_demo/utils/user_secure_storage.dart';
 import 'package:flutter_demo/utils/user_simple_preferences.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'package:intl/intl.dart';
 
 class UserService{
   String url = "https://demo.s3.gt/WS_SEGURIDAD_CPE/ws/post";
@@ -168,6 +169,8 @@ class UserService{
   }
 
   Future <ConteoPersonasResponseModel> conteoPersonas (String token, String usuario, DateTime fecha, String razon, String ocupacion, String alerta, String comercial) async {
+    /*DateFormat dateFormat = DateFormat('yyyy-MM-dd');
+    String stringFecha = dateFormat.format(DateTime.now());*/
     var urlRequest = Uri.parse(urlCargaInventario+"/conteoPersonas");
     var bodyRequest = jsonEncode({
                                   "key": "12345",
