@@ -169,14 +169,15 @@ class UserService{
   }
 
   Future <ConteoPersonasResponseModel> conteoPersonas (String token, String usuario, DateTime fecha, String razon, String ocupacion, String alerta, String comercial) async {
-    /*DateFormat dateFormat = DateFormat('yyyy-MM-dd');
-    String stringFecha = dateFormat.format(DateTime.now());*/
+    final DateFormat formatter = DateFormat('yyyy-MM-dd');
+    final String fechaString = formatter.format(fecha);
+
     var urlRequest = Uri.parse(urlCargaInventario+"/conteoPersonas");
     var bodyRequest = jsonEncode({
                                   "key": "12345",
                                   "token": token,
                                   "usuario": usuario, 
-                                  "fecha": fecha,
+                                  "fecha": fechaString,
                                   "razon": razon,
                                   "excel": "0",
                                   "ocupacionMaximaAutorizada": ocupacion,

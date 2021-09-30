@@ -24,7 +24,9 @@ class PersonasPage extends StatefulWidget{
 
 class _PersonasPage extends State<PersonasPage> {
   DateTime _dateTime;
+  String fechaString;
   DateTime pruebafecha = DateTime.now();
+  String idRazon;
   String valueRazon;
   String valueInmueble;
   String razon;
@@ -114,8 +116,9 @@ class _PersonasPage extends State<PersonasPage> {
       ),
       color: Color(0xffFE1EF8),
       onPressed: (){
+        print(_dateTime);
         UserService userService = new UserService();
-        userService.conteoPersonas(widget.token, widget.nickname, _dateTime, valueRazon, ocupacionMaximaPersonas, alertaOcupacion, valueInmueble).then((conteo) => {
+        userService.conteoPersonas(widget.token, widget.nickname, _dateTime, idRazon, ocupacionMaximaPersonas, alertaOcupacion, this.id).then((conteo) => {
           if(conteo.error == true){
             print('Error al consultar sus resultados')
           }else{
@@ -157,7 +160,11 @@ class _PersonasPage extends State<PersonasPage> {
                 
               ).then((date){
                 setState(() {
+                  
+                  print(date);
                   _dateTime = date;
+
+
                 });
               });
             } 
@@ -220,6 +227,7 @@ class _PersonasPage extends State<PersonasPage> {
             value: '${listado.value}',
             child: Text('${listado.value}'),
             onTap: (){
+              idRazon = listado.id;
               UserService userService = new UserService();
               userService.centroComercial(widget.token, listado.id).then((centrosComerciales) =>{
                 if(centrosComerciales.error == true){
