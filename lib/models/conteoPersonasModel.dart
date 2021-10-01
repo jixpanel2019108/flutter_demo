@@ -31,6 +31,7 @@ class ConteoPersonasResponseModel {
     List<dynamic> listadoD;
     List<dynamic> listado2;
     List<dynamic> listado3;
+    List<Listado1> listadoTabla;
 
     factory ConteoPersonasResponseModel.fromJson(Map<String, dynamic> json) => ConteoPersonasResponseModel(
         msg: json["msg"],

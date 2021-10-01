@@ -1,8 +1,10 @@
 //@dart=2.9
 
 import 'package:flutter/material.dart';
+import 'package:flutter_demo/models/catCentroComercialModel.dart';
 import 'package:flutter_demo/models/userModel.dart';
 import 'package:flutter_demo/models/listMenuAppModel.dart';
+import 'package:flutter_demo/pages/conteoPersonas.dart';
 import 'package:flutter_demo/services/userService.dart';
 
 class MenuPage extends StatefulWidget {
@@ -32,61 +34,37 @@ class _MenuPage extends   State<MenuPage> {
             const SizedBox(height: 16),
             Text(widget.nickname, style: TextStyle(color: Colors.white), textAlign: TextAlign.center,),
             Text(widget.email, style: TextStyle(color: Colors.white), textAlign: TextAlign.center,),
-            //buildMenuItem(),
             const SizedBox(height: 30),
             Divider(color: Colors.white70),
             const SizedBox(height: 24),
-            /*ListView.builder(
-              itemCount: widget.menu.length,
-              itemBuilder: (context, index){
-                return ListTile(
-                  title: Text(widget.menu[index].menu),
-                  onTap: (){
-                    switch(widget.menu[index].menu){
-                      case '5':{
-                        print('Menu numero 1');
-                      }
-                      break;
-                      case '6':{
-                        print('El siguiente al anterior');
-                      }
-                      break;
-                      case '8':{
-                        print('El siguiente al anterior del anterior');
-                      }
-                      break;
-                      default:{
-                        print('hola');
-                      }
-                    }
-            },
-          );
-        },
-            ),*/
-            //menuList(),
             buildMenuItem(
               text: 'Seguridad Usuarios',
-              icon: Icons.lock
+              icon: Icons.lock,
+              indice: 1
             ),
             const SizedBox(height: 16,),
             buildMenuItem(
               text: 'Permisos',
-              icon: Icons.lock
+              icon: Icons.lock,
+              indice: 2
             ),
             const SizedBox(height: 16,),
             buildMenuItem(
               text: 'Conteos Personas',
-              icon: Icons.people_alt
+              icon: Icons.people_alt,
+              indice: 3
             ),
             const SizedBox(height: 16,),
             buildMenuItem(
               text: 'Conteos Parqueos',
-              icon: Icons.people_alt
+              icon: Icons.people_alt,
+              indice: 4
             ),
             const SizedBox(height: 16,),
             buildMenuItem(
               text: 'Personas por año',
-              icon: Icons.people
+              icon: Icons.people,   
+              indice: 5
             ),
             const SizedBox(height: 24),
             Divider(color: Colors.white70),
@@ -104,6 +82,7 @@ class _MenuPage extends   State<MenuPage> {
   Widget buildMenuItem({
     String text,
     IconData icon,
+    int indice
   }) {
     final color = Colors.white;
     final hoverColor = Color(0xffAF00FB);
@@ -113,7 +92,42 @@ class _MenuPage extends   State<MenuPage> {
       title: Text(text, style: TextStyle(color: color)),
       hoverColor: hoverColor,
       onTap: () {
-        //LogoutResponse();
+        switch(indice){
+          case 1: {
+
+          }
+          break;
+          case 2: {
+
+          }
+          break;
+          case 3: {
+            UserService userService = new UserService();
+            userService.razonSocial(widget.token).then((peticionRazonSocial) => {
+              if(peticionRazonSocial.error == false){
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => PersonasPage(
+                      token: widget.token,
+                      email: widget.email,
+                      nickname: widget.nickname,
+                      listadoRazon: peticionRazonSocial.listado,
+                    )
+                  )
+                )   
+              }else{
+                print('Error en boton menu Conteo Personas')
+              }
+            });
+            
+          }
+          break;
+          case 4: {
+
+          }
+          break;
+        }
       },
     );
   }
@@ -176,3 +190,4 @@ class _MenuPage extends   State<MenuPage> {
   }*/
 
 }
+  

@@ -1,8 +1,13 @@
 //@dart=2.9
 
+import 'dart:convert';
+import 'dart:html';
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_demo/models/catCentroComercialModel.dart' as comercial;
 import 'package:flutter_demo/models/catRazonSocialModel.dart' as razon;
+import 'package:flutter_demo/models/conteoParqueosModel.dart';
 import 'package:flutter_demo/models/conteoPersonasModel.dart' as personas;
 import 'package:flutter_demo/models/userModel.dart';
 import 'package:intl/intl.dart';
@@ -31,7 +36,7 @@ class _PersonasPage extends State<PersonasPage> {
   String razon;
   String prueba = 'hola';
   List<comercial.Listado> listadoComercial;
-  List<personas.Listado1> listadoTabla;
+  List<personas.Listado1> listadoTabla = [];
   List pruebalista = [];
   String alertaVerde;
   String alertaOcupacion;
@@ -41,7 +46,6 @@ class _PersonasPage extends State<PersonasPage> {
   String id;
   String value;
   String alertaAmarilla;
-  
 
   @override
   Widget build(BuildContext context){
@@ -83,7 +87,7 @@ class _PersonasPage extends State<PersonasPage> {
             style: TextStyle(color: Color(0xffAF00FB), fontSize: 45,),
           ),
           const SizedBox(height: 15.0,),
-          Text('Usuario: '+ '$widget.nickname'),
+          Text('Usuario: '+ widget.nickname),
           const SizedBox(height: 25.0,),
           Text('Ultima Actualización:'),
           const SizedBox(height: 25.0,),
@@ -95,7 +99,9 @@ class _PersonasPage extends State<PersonasPage> {
           const SizedBox(height: 15,),
           unionFe(),
           const SizedBox(height: 25,),
-          botonConsulta()
+          botonConsulta(),
+          const SizedBox(height: 25,),
+          tabla()
         ],
       ),
     );
@@ -115,14 +121,41 @@ class _PersonasPage extends State<PersonasPage> {
       ),
       color: Color(0xffFE1EF8),
       onPressed: (){
-        print(_dateTime);
         UserService userService = new UserService();
         userService.conteoPersonas(widget.token, widget.nickname, _dateTime, idRazon, ocupacionMaximaPersonas, alertaOcupacion, this.id).then((conteo) => {
           if(conteo.error == true){
             print('Error al consultar sus resultados')
           }else{
-            //tabla(),
+            /*print('buenas'),
+            print(listadoTabla),
+            print(conteo.msg),*/
 
+            //listadoTabla = conteo.listado1,
+            
+
+            conteo.listado1.forEach((element) {
+              print(element.acumuladoSalidas);
+              personas.Listado1 lista = new personas.Listado1();
+              lista.cc = element.cc;
+              lista.entradas = element.entradas;
+              lista.fecha = element.fecha;
+              lista.hora = element.hora;
+              lista.ocupacionInstantanea = element.ocupacionInstantanea;
+              lista.ocupacionMaximaAutorizada = element.ocupacionMaximaAutorizada;
+              lista.porcentajeOcupacion = element.porcentajeOcupacion;
+              lista.salidas = element.salidas;
+              lista.acumuladoSalidas = element.acumuladoSalidas;
+              lista.alertaOcupacion = element.alertaOcupacion;
+              listadoTabla.add(lista);
+            }),
+            tabla(),
+            setState(() {})
+            
+            //Listado1 listado1 = new Listado1(),
+              /*listadoTabla.map((personas.Listado1 valores) => {
+                print('hola mundo')
+              }),*/
+              //print('hoola')
           }
         });
       },
@@ -159,11 +192,8 @@ class _PersonasPage extends State<PersonasPage> {
                 
               ).then((date){
                 setState(() {
-                  
                   print(date);
                   _dateTime = date;
-
-
                 });
               });
             } 
@@ -289,27 +319,41 @@ class _PersonasPage extends State<PersonasPage> {
     );
   }
 
+
+  List <DataColumn> getColumns(List<String> columns) => columns
+      .map((String column) => DataColumn(
+        label: Text(column, style: TextStyle(color: Colors.white),),
+      ))
+
+    .toList();
+
   Widget tabla(){
     final columns = ['CC','Fecha','Acumulado Salidas','Alerta Ocupación','Ocupacion Instantanea','Hora','Entradas', 'Ocupación Max.','Porcentaje Ocup.','Salidas', 'Acumulados Entradas'];
-    return DataTable(
-      columns: getColumns(columns),
-      rows: getRows(listadoTabla)
+    print('listadoTabla');
+    return Container(
+      child: DataTable(
+        decoration: BoxDecoration(
+          color: Color(0xffFE1EF8),
+          border: Border.all(color: Colors.black, width: 2),
+          borderRadius: BorderRadius.circular(15)
+        ),
+        columns: getColumns(columns) ?? '',
+        //rows: getRows() ?? '',
+        rows: getRows(listadoTabla) ?? ''
+      )
     );
   }
 
-  List <DataColumn> getColumns(List<String> columns) => columns
-    .map((String column) => DataColumn(
-      label: Text(column),
-    ))
+  
 
-  .toList();
+  List <DataCell> getCells(List<dynamic> cells) => cells.map((data) => DataCell(Text('$data' ?? 'nada'))).toList();
 
-  List <DataRow> getRows (List<personas.Listado1> row) => row.map((personas.Listado1 hola) {
+
+    
+  List <DataRow> getRows (List<personas.Listado1> row) => row.map((personas.Listado1 hola,) {
     final cells = [hola.cc, hola.fecha, hola.hora, hola.entradas, hola.salidas, hola.acumuladoEntradas, hola.acumuladoSalidas ,hola.ocupacionInstantanea, hola.ocupacionMaximaAutorizada, hola.porcentajeOcupacion, hola.alertaOcupacion];
     return DataRow(cells: getCells(cells));
   }).toList();
-    
-  List <DataCell> getCells(List<dynamic> cells) => cells.map((data) => DataCell(Text('$data'))).toList();
   
   
 }
