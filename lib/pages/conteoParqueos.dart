@@ -16,18 +16,18 @@ import 'package:flutter_demo/models/listMenuAppModel.dart';
 import 'package:flutter_demo/pages/menu.dart';
 import 'package:flutter_holo_date_picker/flutter_holo_date_picker.dart';
 
-class PersonasPage extends StatefulWidget{
+class ParqueosPage extends StatefulWidget{
   final String token;
   final String nickname;
   final String email;
   final List<razon.Listado> listadoRazon;
 
-  const PersonasPage({ Key key, this.token, this.nickname, this.email, this.listadoRazon}) :  super(key: key);
+  const ParqueosPage({ Key key, this.token, this.nickname, this.email, this.listadoRazon}) :  super(key: key);
   @override
-  _PersonasPage createState() => _PersonasPage();
+  _ParqueosPage createState() => _ParqueosPage();
 }
 
-class _PersonasPage extends State<PersonasPage> {
+class _ParqueosPage extends State<ParqueosPage> {
   DateTime _dateTime;
   String fechaString;
   DateTime pruebafecha = DateTime.now();
