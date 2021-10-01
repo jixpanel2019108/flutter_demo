@@ -14,7 +14,6 @@ import 'package:intl/intl.dart';
 import 'package:flutter_demo/services/userService.dart';
 import 'package:flutter_demo/models/listMenuAppModel.dart';
 import 'package:flutter_demo/pages/menu.dart';
-import 'package:flutter_holo_date_picker/flutter_holo_date_picker.dart';
 
 class PersonasPage extends StatefulWidget{
   final String token;
@@ -203,7 +202,6 @@ class _PersonasPage extends State<PersonasPage> {
       ),
     );
   }
-
 
   Widget union1(){
     return Container(
