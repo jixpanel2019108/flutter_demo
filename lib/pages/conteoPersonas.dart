@@ -268,6 +268,7 @@ class _PersonasPage extends State<PersonasPage> {
 
                   //this.pruebalista = this.listadoComercial,
                 }
+
               });
             },
           );
