@@ -52,7 +52,7 @@ class _PersonasPage extends State<PersonasPage> {
     return Scaffold(
       appBar: AppBar(),
       drawer: MenuPage(token: widget.token, nickname: widget.nickname,email:widget.email,),
-      body: SingleChildScrollView(
+      body: Expanded(
         child: Container(
           child: Column(
             children: [
@@ -83,7 +83,7 @@ class _PersonasPage extends State<PersonasPage> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           Text( 
-            'Conteos',
+            'Conteo Personas',
             style: TextStyle(color: Color(0xffAF00FB), fontSize: 45,),
           ),
           const SizedBox(height: 15.0,),
@@ -235,6 +235,7 @@ class _PersonasPage extends State<PersonasPage> {
         border: Border.all(color: Color(0xffFE1EF8), width: 2),
         borderRadius: BorderRadius.circular(20)
       ),
+
       child: DropdownButton(
         hint: Text('Selecciona una Razón', style: TextStyle(fontSize: 15, color: Colors.black),),
         dropdownColor: Colors.grey,
@@ -338,7 +339,6 @@ class _PersonasPage extends State<PersonasPage> {
           borderRadius: BorderRadius.circular(15)
         ),
         columns: getColumns(columns) ?? '',
-        //rows: getRows() ?? '',
         rows: getRows(listadoTabla) ?? ''
       )
     );

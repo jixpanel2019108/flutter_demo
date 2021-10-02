@@ -199,6 +199,15 @@ class UserService{
   }
 
   Future <ConteoParqueosResponseModel> conteoParqueos (String token, String usuario, DateTime fecha, String razon, String ocupacion, String alerta, String comercial) async {
+    print('****************************************************');
+    print(token);
+    print(usuario);
+    print(fecha);
+    print(razon);
+    print(ocupacion);
+    print(alerta);
+    print(comercial);
+    print('****************************************************');
     final DateFormat formatter = DateFormat('yyyy-MM-dd');
     final String fechaString = formatter.format(fecha);
     var urlRequest = Uri.parse(urlCargaInventario+"/conteoPersonas");

@@ -31,7 +31,7 @@ class _login extends State<loginScreen> {
   Widget build(BuildContext context) {
     
     return Scaffold(
-      body: SingleChildScrollView(
+      body: Expanded(
         child: Column(
           children: [
             _cuerpo(),
