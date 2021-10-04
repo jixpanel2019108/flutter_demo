@@ -7,26 +7,27 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_demo/models/catCentroComercialModel.dart' as comercial;
 import 'package:flutter_demo/models/catRazonSocialModel.dart' as razon;
-import 'package:flutter_demo/models/conteoParqueosModel.dart';
+import 'package:flutter_demo/models/conteoParqueosModel.dart' as parqueos;
 import 'package:flutter_demo/models/conteoPersonasModel.dart' as personas;
 import 'package:flutter_demo/models/userModel.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter_demo/services/userService.dart';
 import 'package:flutter_demo/models/listMenuAppModel.dart';
 import 'package:flutter_demo/pages/menu.dart';
+import 'package:flutter_holo_date_picker/flutter_holo_date_picker.dart';
 
-class PersonasPage extends StatefulWidget{
+class ParqueosPage extends StatefulWidget{
   final String token;
   final String nickname;
   final String email;
   final List<razon.Listado> listadoRazon;
 
-  const PersonasPage({ Key key, this.token, this.nickname, this.email, this.listadoRazon}) :  super(key: key);
+  const ParqueosPage({ Key key, this.token, this.nickname, this.email, this.listadoRazon}) :  super(key: key);
   @override
-  _PersonasPage createState() => _PersonasPage();
+  _ParqueosPage createState() => _ParqueosPage();
 }
 
-class _PersonasPage extends State<PersonasPage> {
+class _ParqueosPage extends State<ParqueosPage> {
   DateTime _dateTime;
   String fechaString;
   DateTime pruebafecha = DateTime.now();
@@ -36,8 +37,8 @@ class _PersonasPage extends State<PersonasPage> {
   String razon;
   String prueba = 'hola';
   List<comercial.Listado> listadoComercial;
-  List<personas.Listado1> listadoTabla = [];
-  List pruebalista = [];
+  List<parqueos.Listado1> listadoTabla = [];
+  List listaComerciales = [];
   String alertaVerde;
   String alertaOcupacion;
   String alertaRoja;
@@ -83,7 +84,7 @@ class _PersonasPage extends State<PersonasPage> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           Text( 
-            'Conteo Personas',
+            'Conteo Parqueos',
             style: TextStyle(color: Color(0xffAF00FB), fontSize: 45,),
           ),
           const SizedBox(height: 15.0,),
@@ -122,13 +123,14 @@ class _PersonasPage extends State<PersonasPage> {
       color: Color(0xffFE1EF8),
       onPressed: (){
         UserService userService = new UserService();
-
-        userService.conteoPersonas(widget.token, widget.nickname, _dateTime, idRazon, ocupacionMaximaPersonas, alertaOcupacion, this.id).then((conteo) => {
+        userService.conteoParqueos(widget.token, widget.nickname, _dateTime, idRazon, ocupacionMaximaParqueos, alertaOcupacion, this.id).then((conteo) => {
           if(conteo.error == true){
             print('Error al consultar sus resultados')
           }else{
+
             conteo.listado1.forEach((element) {
-              personas.Listado1 lista = new personas.Listado1();
+              print(element.acumuladoSalidas);
+              parqueos.Listado1 lista = new parqueos.Listado1();
               lista.cc = element.cc;
               lista.entradas = element.entradas;
               lista.fecha = element.fecha;
@@ -142,7 +144,13 @@ class _PersonasPage extends State<PersonasPage> {
               listadoTabla.add(lista);
             }),
             tabla(),
-            setState(() {    })
+            setState(() {})
+            
+            //Listado1 listado1 = new Listado1(),
+              /*listadoTabla.map((personas.Listado1 valores) => {
+                print('hola mundo')
+              }),*/
+              //print('hoola')
           }
         });
       },
@@ -190,6 +198,7 @@ class _PersonasPage extends State<PersonasPage> {
     );
   }
 
+
   Widget union1(){
     return Container(
       child: Row(
@@ -222,7 +231,6 @@ class _PersonasPage extends State<PersonasPage> {
         border: Border.all(color: Color(0xffFE1EF8), width: 2),
         borderRadius: BorderRadius.circular(20)
       ),
-
       child: DropdownButton(
         hint: Text('Selecciona una Razón', style: TextStyle(fontSize: 15, color: Colors.black),),
         dropdownColor: Colors.grey,
@@ -244,7 +252,7 @@ class _PersonasPage extends State<PersonasPage> {
             value: '${listado.value}',
             child: Text('${listado.value}'),
             onTap: (){
-              idRazon = listado.id;
+              idRazon = listado.value;
               UserService userService = new UserService();
               userService.centroComercial(widget.token, listado.id).then((centrosComerciales) =>{
                 if(centrosComerciales.error == true){
@@ -252,9 +260,10 @@ class _PersonasPage extends State<PersonasPage> {
                 }else{
                   this.listadoComercial = centrosComerciales.listado,
                   this.listadoComercial = this.listadoComercial,
-                  this.pruebalista = listadoComercial != null? listadoComercial : <comercial.Listado>[]
-                }
+                  this.listaComerciales = listadoComercial != null? listadoComercial : <comercial.Listado>[]
 
+                  //this.pruebalista = this.listadoComercial,
+                }
               });
             },
           );
@@ -286,7 +295,7 @@ class _PersonasPage extends State<PersonasPage> {
             valueInmueble = newValue;
           });
         },
-        items: pruebalista.map((valueItem){
+        items: listaComerciales.map((valueItem){
           return DropdownMenuItem(
             value: '${valueItem.value}',
             child: Text('${valueItem.value}'),
@@ -317,19 +326,17 @@ class _PersonasPage extends State<PersonasPage> {
   Widget tabla(){
     final columns = ['CC','Fecha','Acumulado Salidas','Alerta Ocupación','Ocupacion Instantanea','Hora','Entradas', 'Ocupación Max.','Porcentaje Ocup.','Salidas', 'Acumulados Entradas'];
     print('listadoTabla');
-    return SingleChildScrollView(
-      scrollDirection: Axis.horizontal,
-      child: Container(
-        child: DataTable(
-          decoration: BoxDecoration(
-            border: Border.all(color: Colors.black, width: 2),
-            color: Colors.grey,
-            borderRadius: BorderRadius.circular(15)
-          ),
-          columns: getColumns(columns) ?? '', dataTextStyle: TextStyle(color: Colors.white),
-          rows: getRows(listadoTabla) ?? '',
-        )
-      ),
+    return Container(
+      child: DataTable(
+        decoration: BoxDecoration(
+          color: Color(0xffFE1EF8),
+          border: Border.all(color: Colors.black, width: 2),
+          borderRadius: BorderRadius.circular(15)
+        ),
+        columns: getColumns(columns) ?? '',
+        //rows: getRows() ?? '',
+        rows: getRows(listadoTabla) ?? ''
+      )
     );
   }
 
@@ -339,8 +346,7 @@ class _PersonasPage extends State<PersonasPage> {
 
 
     
-  List <DataRow> getRows (List<personas.Listado1> row,) => row.map((personas.Listado1 hola,) {
-
+  List <DataRow> getRows (List<parqueos.Listado1> row) => row.map((parqueos.Listado1 hola,) {
     final cells = [hola.cc, hola.fecha, hola.acumuladoSalidas, hola.alertaOcupacion, hola.ocupacionInstantanea, hola.hora, hola.entradas, hola.ocupacionMaximaAutorizada, hola.porcentajeOcupacion, hola.salidas, hola.acumuladoEntradas, ];
     return DataRow(cells: getCells(cells));
   }).toList();

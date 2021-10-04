@@ -77,7 +77,7 @@ class Listado1 {
         this.acumuladoEntradas,
     });
 
-    Cc cc;
+    String cc;
     DateTime fecha;
     String acumuladoSalidas;
     String alertaOcupacion;
@@ -90,7 +90,7 @@ class Listado1 {
     String acumuladoEntradas;
 
     factory Listado1.fromJson(Map<String, dynamic> json) => Listado1(
-        cc: ccValues.map[json["cc"]],
+        cc: json["cc"],
         fecha: DateTime.parse(json["fecha"]),
         acumuladoSalidas: json["acumuladoSalidas"],
         alertaOcupacion: json["alertaOcupacion"],
@@ -104,7 +104,7 @@ class Listado1 {
     );
 
     Map<String, dynamic> toJson() => {
-        "cc": ccValues.reverse[cc],
+        "cc": cc,
         "fecha": "${fecha.year.toString().padLeft(4, '0')}-${fecha.month.toString().padLeft(2, '0')}-${fecha.day.toString().padLeft(2, '0')}",
         "acumuladoSalidas": acumuladoSalidas,
         "alertaOcupacion": alertaOcupacion,
@@ -118,22 +118,3 @@ class Listado1 {
     };
 }
 
-enum Cc { MIRAFLORES }
-
-final ccValues = EnumValues({
-    "MIRAFLORES": Cc.MIRAFLORES
-});
-
-class EnumValues<T> {
-    Map<String, T> map;
-    Map<T, String> reverseMap;
-
-    EnumValues(this.map);
-
-    Map<T, String> get reverse {
-        if (reverseMap == null) {
-            reverseMap = map.map((k, v) => new MapEntry(v, k));
-        }
-        return reverseMap;
-    }
-}

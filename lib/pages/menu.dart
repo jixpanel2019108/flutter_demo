@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_demo/models/catCentroComercialModel.dart';
 import 'package:flutter_demo/models/userModel.dart';
 import 'package:flutter_demo/models/listMenuAppModel.dart';
+import 'package:flutter_demo/pages/conteoParqueos.dart';
 import 'package:flutter_demo/pages/conteoPersonas.dart';
 import 'package:flutter_demo/services/userService.dart';
 
@@ -124,7 +125,24 @@ class _MenuPage extends   State<MenuPage> {
           }
           break;
           case 4: {
-
+            UserService userService = new UserService();
+            userService.razonSocial(widget.token).then((peticionParqueos) => {
+              if(peticionParqueos.error == false){
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => ParqueosPage(
+                      token: widget.token,
+                      email: widget.email,
+                      nickname: widget.nickname,
+                      listadoRazon: peticionParqueos.listado,
+                    )
+                  )
+                )
+              }else{
+                print('Error en boton menu Conteo Parqueos')
+              }
+            });
           }
           break;
         }
