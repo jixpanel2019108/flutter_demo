@@ -52,7 +52,7 @@ class _PersonasPage extends State<PersonasPage> {
     return Scaffold(
       appBar: AppBar(),
       drawer: MenuPage(token: widget.token, nickname: widget.nickname,email:widget.email,),
-      body: Expanded(
+      body: SingleChildScrollView(
         child: Container(
           child: Column(
             children: [
@@ -122,19 +122,12 @@ class _PersonasPage extends State<PersonasPage> {
       color: Color(0xffFE1EF8),
       onPressed: (){
         UserService userService = new UserService();
+
         userService.conteoPersonas(widget.token, widget.nickname, _dateTime, idRazon, ocupacionMaximaPersonas, alertaOcupacion, this.id).then((conteo) => {
           if(conteo.error == true){
             print('Error al consultar sus resultados')
           }else{
-            /*print('buenas'),
-            print(listadoTabla),
-            print(conteo.msg),*/
-
-            //listadoTabla = conteo.listado1,
-            
-
             conteo.listado1.forEach((element) {
-              print(element.acumuladoSalidas);
               personas.Listado1 lista = new personas.Listado1();
               lista.cc = element.cc;
               lista.entradas = element.entradas;
@@ -149,13 +142,7 @@ class _PersonasPage extends State<PersonasPage> {
               listadoTabla.add(lista);
             }),
             tabla(),
-            setState(() {})
-            
-            //Listado1 listado1 = new Listado1(),
-              /*listadoTabla.map((personas.Listado1 valores) => {
-                print('hola mundo')
-              }),*/
-              //print('hoola')
+            setState(() {    })
           }
         });
       },
@@ -266,8 +253,6 @@ class _PersonasPage extends State<PersonasPage> {
                   this.listadoComercial = centrosComerciales.listado,
                   this.listadoComercial = this.listadoComercial,
                   this.pruebalista = listadoComercial != null? listadoComercial : <comercial.Listado>[]
-
-                  //this.pruebalista = this.listadoComercial,
                 }
               });
             },
@@ -331,16 +316,19 @@ class _PersonasPage extends State<PersonasPage> {
   Widget tabla(){
     final columns = ['CC','Fecha','Acumulado Salidas','Alerta Ocupación','Ocupacion Instantanea','Hora','Entradas', 'Ocupación Max.','Porcentaje Ocup.','Salidas', 'Acumulados Entradas'];
     print('listadoTabla');
-    return Container(
-      child: DataTable(
-        decoration: BoxDecoration(
-          color: Color(0xffFE1EF8),
-          border: Border.all(color: Colors.black, width: 2),
-          borderRadius: BorderRadius.circular(15)
-        ),
-        columns: getColumns(columns) ?? '',
-        rows: getRows(listadoTabla) ?? ''
-      )
+    return SingleChildScrollView(
+      scrollDirection: Axis.horizontal,
+      child: Container(
+        child: DataTable(
+          decoration: BoxDecoration(
+            border: Border.all(color: Colors.black, width: 2),
+            color: Colors.grey,
+            borderRadius: BorderRadius.circular(15)
+          ),
+          columns: getColumns(columns) ?? '', dataTextStyle: TextStyle(color: Colors.white),
+          rows: getRows(listadoTabla) ?? '',
+        )
+      ),
     );
   }
 
@@ -350,7 +338,8 @@ class _PersonasPage extends State<PersonasPage> {
 
 
     
-  List <DataRow> getRows (List<personas.Listado1> row) => row.map((personas.Listado1 hola,) {
+  List <DataRow> getRows (List<personas.Listado1> row,) => row.map((personas.Listado1 hola,) {
+
     final cells = [hola.cc, hola.fecha, hola.acumuladoSalidas, hola.alertaOcupacion, hola.ocupacionInstantanea, hola.hora, hola.entradas, hola.ocupacionMaximaAutorizada, hola.porcentajeOcupacion, hola.salidas, hola.acumuladoEntradas, ];
     return DataRow(cells: getCells(cells));
   }).toList();

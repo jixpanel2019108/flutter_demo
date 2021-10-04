@@ -29,9 +29,8 @@ class _login extends State<loginScreen> {
 
   @override
   Widget build(BuildContext context) {
-    
     return Scaffold(
-      body: Expanded(
+      body: SingleChildScrollView(
         child: Column(
           children: [
             _cuerpo(),
@@ -43,32 +42,38 @@ class _login extends State<loginScreen> {
   }
 
   Widget _cuerpo(){
-    return Container(
-      decoration: BoxDecoration(
-        color: const Color(0xff000000),
-          image: DecorationImage( image: AssetImage('assets/login-bg.jpg',),
-          alignment: Alignment(0.0, 3.0),
-              colorFilter: new ColorFilter.mode(Colors.black.withOpacity(0.5), BlendMode.dstATop),
-              fit: BoxFit.cover
-          )
-      ),
-      child: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-         children: [
-           SizedBox(height: 100.0,),
-           _logo(),
-           SizedBox(height: 150.0,),
-           _userTextField(),
-           SizedBox(height: 15.0,),
-           _passwordTextField(),
-           SizedBox(height: 30.0,),
-           _forgot(),
-           SizedBox(height: 150.0,),
-           _botonLogin(),
-           SizedBox(height: 150.0,),
-           _powered(),
-         ],
+    return Center(
+      child: Container(
+        decoration: BoxDecoration(
+          color: const Color(0xff000000),
+            image: DecorationImage(
+              image: AssetImage('assets/login-bg.jpg',),
+              fit: BoxFit.cover,
+            alignment: Alignment(0.0, 3.0),
+                colorFilter: new ColorFilter.mode(Colors.black.withOpacity(0.5), BlendMode.dstATop),
+                
+            )
+        ),
+        child: Container(
+          child: Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+             children: [
+               SizedBox(height: 100.0,),
+               _logo(),
+               SizedBox(height: 150.0,),
+               _userTextField(),
+               SizedBox(height: 15.0,),
+               _passwordTextField(),
+               SizedBox(height: 30.0,),
+               _forgot(),
+               SizedBox(height: 150.0,),
+               _botonLogin(),
+               SizedBox(height: 150.0,),
+               _powered(),
+             ],
+            ),
+          ),
         ),
       ),
     );
