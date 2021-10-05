@@ -255,6 +255,7 @@ class _PersonasPage extends State<PersonasPage> {
                   //this.listadoComercial = this.listadoComercial,
                   this.pruebalista = listadoComercial != null? listadoComercial : <comercial.Listado>[]
                 }
+
               });
             },
           );
