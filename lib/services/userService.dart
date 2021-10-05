@@ -229,9 +229,13 @@ class UserService{
 
   Future <ReportePersonasAnualResponseModel> reportePersonasAnual (String token, String inmueble, String fini, String ffin) async {
 
-    
 
-    var urlRequest = Uri.parse(urlCargaInventario+"/conteoPersonas");
+    print(token);
+    print(inmueble);
+    print(fini);
+    print(ffin);
+
+    var urlRequest = Uri.parse(urlCargaInventario+"/reportePersonasAnual");
     var bodyRequest = jsonEncode({
                                   "key": "12345",
                                   "token": token,

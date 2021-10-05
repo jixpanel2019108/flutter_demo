@@ -10,6 +10,8 @@ import 'package:flutter_demo/models/catRazonSocialModel.dart' as razon;
 import 'package:flutter_demo/models/conteoPersonasModel.dart' as personas;
 import 'package:flutter_demo/pages/menu.dart';
 import 'package:charts_flutter/flutter.dart' as charts;
+import 'package:syncfusion_flutter_charts/charts.dart';
+import 'package:syncfusion_flutter_charts/sparkcharts.dart';
 
 class ReportePersonasAnual extends StatefulWidget {
   final String token;
@@ -90,6 +92,7 @@ class _ReportePersonasAnualState extends State<ReportePersonasAnual> {
           const SizedBox(height: 25,),
           botonConsulta(),
           const SizedBox(height: 25,),
+          columnChart()
           // charts.BarChart(
           //   _createSampleData(),
           //   animate: true,
@@ -129,6 +132,10 @@ class _ReportePersonasAnualState extends State<ReportePersonasAnual> {
           }
         });
 
+        
+        setState(() {
+          columnChart();
+        });
       },
     );
   }
@@ -356,7 +363,18 @@ class _ReportePersonasAnualState extends State<ReportePersonasAnual> {
 
   }
   
-  
+  Widget columnChart(){
+    return SfCartesianChart(
+                        series: <ChartSeries>[
+                            // Renders column chart
+                            ColumnSeries<reporte.Listado, int>(
+                                dataSource: listadoGrafica,
+                                xValueMapper: (reporte.Listado sales, _) => int.parse(sales.fecha),
+                                yValueMapper: (reporte.Listado sales, _) => int.parse(sales.conteo)
+                            )
+                        ]
+                    );
+  }
 
   
   
