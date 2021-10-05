@@ -7,14 +7,13 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_demo/models/catCentroComercialModel.dart' as comercial;
 import 'package:flutter_demo/models/catRazonSocialModel.dart' as razon;
-import 'package:flutter_demo/models/conteoParqueosModel.dart' as parqueos;
+import 'package:flutter_demo/models/conteoParqueosModel.dart';
 import 'package:flutter_demo/models/conteoPersonasModel.dart' as personas;
 import 'package:flutter_demo/models/userModel.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter_demo/services/userService.dart';
 import 'package:flutter_demo/models/listMenuAppModel.dart';
 import 'package:flutter_demo/pages/menu.dart';
-import 'package:flutter_holo_date_picker/flutter_holo_date_picker.dart';
 
 class ParqueosPage extends StatefulWidget{
   final String token;
@@ -37,8 +36,8 @@ class _ParqueosPage extends State<ParqueosPage> {
   String razon;
   String prueba = 'hola';
   List<comercial.Listado> listadoComercial;
-  List<parqueos.Listado1> listadoTabla = [];
-  List listaComerciales = [];
+  List<personas.Listado1> listadoTabla = [];
+  List pruebalista = [];
   String alertaVerde;
   String alertaOcupacion;
   String alertaRoja;
@@ -84,7 +83,7 @@ class _ParqueosPage extends State<ParqueosPage> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           Text( 
-            'Conteo Parqueos',
+            'Conteo Personas',
             style: TextStyle(color: Color(0xffAF00FB), fontSize: 45,),
           ),
           const SizedBox(height: 15.0,),
@@ -123,14 +122,13 @@ class _ParqueosPage extends State<ParqueosPage> {
       color: Color(0xffFE1EF8),
       onPressed: (){
         UserService userService = new UserService();
+        listadoTabla = [];
         userService.conteoParqueos(widget.token, widget.nickname, _dateTime, idRazon, ocupacionMaximaParqueos, alertaOcupacion, this.id).then((conteo) => {
           if(conteo.error == true){
             print('Error al consultar sus resultados')
           }else{
-
             conteo.listado1.forEach((element) {
-              print(element.acumuladoSalidas);
-              parqueos.Listado1 lista = new parqueos.Listado1();
+              personas.Listado1 lista = new personas.Listado1();
               lista.cc = element.cc;
               lista.entradas = element.entradas;
               lista.fecha = element.fecha;
@@ -141,16 +139,11 @@ class _ParqueosPage extends State<ParqueosPage> {
               lista.salidas = element.salidas;
               lista.acumuladoSalidas = element.acumuladoSalidas;
               lista.alertaOcupacion = element.alertaOcupacion;
+              lista.acumuladoEntradas = element.acumuladoEntradas;
               listadoTabla.add(lista);
             }),
             tabla(),
             setState(() {})
-            
-            //Listado1 listado1 = new Listado1(),
-              /*listadoTabla.map((personas.Listado1 valores) => {
-                print('hola mundo')
-              }),*/
-              //print('hoola')
           }
         });
       },
@@ -198,7 +191,6 @@ class _ParqueosPage extends State<ParqueosPage> {
     );
   }
 
-
   Widget union1(){
     return Container(
       child: Row(
@@ -231,6 +223,7 @@ class _ParqueosPage extends State<ParqueosPage> {
         border: Border.all(color: Color(0xffFE1EF8), width: 2),
         borderRadius: BorderRadius.circular(20)
       ),
+
       child: DropdownButton(
         hint: Text('Selecciona una Razón', style: TextStyle(fontSize: 15, color: Colors.black),),
         dropdownColor: Colors.grey,
@@ -252,7 +245,7 @@ class _ParqueosPage extends State<ParqueosPage> {
             value: '${listado.value}',
             child: Text('${listado.value}'),
             onTap: (){
-              idRazon = listado.value;
+              idRazon = listado.id;
               UserService userService = new UserService();
               userService.centroComercial(widget.token, listado.id).then((centrosComerciales) =>{
                 if(centrosComerciales.error == true){
@@ -260,9 +253,7 @@ class _ParqueosPage extends State<ParqueosPage> {
                 }else{
                   this.listadoComercial = centrosComerciales.listado,
                   this.listadoComercial = this.listadoComercial,
-                  this.listaComerciales = listadoComercial != null? listadoComercial : <comercial.Listado>[]
-
-                  //this.pruebalista = this.listadoComercial,
+                  this.pruebalista = listadoComercial != null? listadoComercial : <comercial.Listado>[]
                 }
               });
             },
@@ -295,7 +286,7 @@ class _ParqueosPage extends State<ParqueosPage> {
             valueInmueble = newValue;
           });
         },
-        items: listaComerciales.map((valueItem){
+        items: pruebalista.map((valueItem){
           return DropdownMenuItem(
             value: '${valueItem.value}',
             child: Text('${valueItem.value}'),
@@ -326,17 +317,31 @@ class _ParqueosPage extends State<ParqueosPage> {
   Widget tabla(){
     final columns = ['CC','Fecha','Acumulado Salidas','Alerta Ocupación','Ocupacion Instantanea','Hora','Entradas', 'Ocupación Max.','Porcentaje Ocup.','Salidas', 'Acumulados Entradas'];
     print('listadoTabla');
-    return Container(
-      child: DataTable(
-        decoration: BoxDecoration(
-          color: Color(0xffFE1EF8),
-          border: Border.all(color: Colors.black, width: 2),
-          borderRadius: BorderRadius.circular(15)
-        ),
-        columns: getColumns(columns) ?? '',
-        //rows: getRows() ?? '',
-        rows: getRows(listadoTabla) ?? ''
-      )
+    return SingleChildScrollView(
+      scrollDirection: Axis.horizontal,
+      child: Container(
+        child: DataTable(
+          dataRowColor: MaterialStateProperty.resolveWith<Color>((Set<MaterialState> states) {
+            if(states.contains(MaterialState.selected))
+              return Colors.grey;
+            return null;
+          }),
+          decoration: BoxDecoration(
+            border: Border.all(color: Colors.black, width: 0.5),
+            color: Theme.of(context).colorScheme.primary.withOpacity(0.8),
+            borderRadius: BorderRadius.circular(5)
+          ),
+          columns: getColumns(columns) ?? '', 
+          dataTextStyle: TextStyle(color: Colors.white),
+          rows: getRows(listadoTabla) ?? '',
+          
+          headingRowColor: MaterialStateProperty.resolveWith<Color>((Set<MaterialState> states) {
+            if(states.contains(MaterialState.selected))
+              return Theme.of(context).colorScheme.primary.withOpacity(0.08);
+            return null;
+          }),
+        )
+      ),
     );
   }
 
@@ -346,7 +351,8 @@ class _ParqueosPage extends State<ParqueosPage> {
 
 
     
-  List <DataRow> getRows (List<parqueos.Listado1> row) => row.map((parqueos.Listado1 hola,) {
+  List <DataRow> getRows (List<personas.Listado1> row,) => row.map((personas.Listado1 hola,) {
+
     final cells = [hola.cc, hola.fecha, hola.acumuladoSalidas, hola.alertaOcupacion, hola.ocupacionInstantanea, hola.hora, hola.entradas, hola.ocupacionMaximaAutorizada, hola.porcentajeOcupacion, hola.salidas, hola.acumuladoEntradas, ];
     return DataRow(cells: getCells(cells));
   }).toList();

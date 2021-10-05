@@ -6,6 +6,7 @@ import 'package:flutter_demo/models/userModel.dart';
 import 'package:flutter_demo/models/listMenuAppModel.dart';
 import 'package:flutter_demo/pages/conteoParqueos.dart';
 import 'package:flutter_demo/pages/conteoPersonas.dart';
+import 'package:flutter_demo/pages/reportePersonasAnual.dart';
 import 'package:flutter_demo/services/userService.dart';
 
 class MenuPage extends StatefulWidget {
@@ -63,7 +64,7 @@ class _MenuPage extends   State<MenuPage> {
             ),
             const SizedBox(height: 16,),
             buildMenuItem(
-              text: 'Personas por año',
+              text: 'Reporte Personas Anual',
               icon: Icons.people,   
               indice: 5
             ),
@@ -126,8 +127,8 @@ class _MenuPage extends   State<MenuPage> {
           break;
           case 4: {
             UserService userService = new UserService();
-            userService.razonSocial(widget.token).then((peticionParqueos) => {
-              if(peticionParqueos.error == false){
+            userService.razonSocial(widget.token).then((peticionRazonSocial) => {
+              if(peticionRazonSocial.error == false){
                 Navigator.push(
                   context,
                   MaterialPageRoute(
@@ -135,7 +136,7 @@ class _MenuPage extends   State<MenuPage> {
                       token: widget.token,
                       email: widget.email,
                       nickname: widget.nickname,
-                      listadoRazon: peticionParqueos.listado,
+                      listadoRazon: peticionRazonSocial.listado,
                     )
                   )
                 )
@@ -145,6 +146,26 @@ class _MenuPage extends   State<MenuPage> {
             });
           }
           break;
+          case 5: {
+            UserService userService = new UserService();
+            userService.razonSocial(widget.token).then((peticionRazonSocial) => {
+              if(peticionRazonSocial.error == false){
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => ReportePersonasAnual(
+                      token: widget.token,
+                      email: widget.email,
+                      nickname: widget.nickname,
+                      listadoRazon: peticionRazonSocial.listado,
+                    )
+                  )
+                )
+              }else{
+                print('Error en boton menu Conteo Parqueos')
+              }
+            });
+          }
         }
       },
     );
