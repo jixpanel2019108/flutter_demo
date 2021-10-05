@@ -1,5 +1,7 @@
 // @dart=2.9
 
+import 'dart:js';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_demo/pages/login.dart';
@@ -7,6 +9,7 @@ import 'package:flutter_demo/pages/forgotPassword.dart';
 import 'package:flutter_demo/pages/conteoPersonas.dart';
 import 'package:flutter_demo/pages/conteoParqueos.dart';
 import 'package:flutter_demo/utils/user_simple_preferences.dart';
+import 'package:flutter_demo/pages/reportePersonasAnual.dart';
 import 'package:flutter_demo/pages/principal.dart';
 
 void main() {
@@ -29,6 +32,7 @@ class MyApp extends StatelessWidget {
         '/principal' : (context) => HomeScreen(),
         '/conteoPersonas' : (context) => PersonasPage(),
         '/conteoParqueos' : (context) => ParqueosPage(),
+        '/reporteAnual' : (context) => ReportePersonasAnual(),
       },
     );
   }
