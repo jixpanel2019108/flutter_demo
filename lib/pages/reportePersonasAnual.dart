@@ -2,7 +2,6 @@
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_demo/models/conteoParqueosModel.dart';
 import 'package:flutter_demo/services/userService.dart';
 import 'package:charts_flutter/flutter.dart' as charts;
 import 'package:flutter_demo/models/reportePersonasAnualModel.dart' as reporte;
@@ -10,17 +9,17 @@ import 'package:flutter_demo/models/catCentroComercialModel.dart' as comercial;
 import 'package:flutter_demo/models/catRazonSocialModel.dart' as razon;
 import 'package:flutter_demo/models/conteoPersonasModel.dart' as personas;
 import 'package:flutter_demo/pages/menu.dart';
+import 'package:charts_flutter/flutter.dart' as charts;
 
 class ReportePersonasAnual extends StatefulWidget {
   final String token;
   final String nickname;
   final String email;
-  final List<reporte.Listado> listadoGrafica;
   final List<razon.Listado> listadoRazon;
   final List<charts.Series> grafica;
   final bool animacion;
 
-  const ReportePersonasAnual({ Key key, this.token, this.nickname, this.email, this.listadoRazon, this.listadoGrafica, this.animacion, this.grafica}) :  super(key: key);
+  const ReportePersonasAnual({ Key key, this.token, this.nickname, this.email, this.listadoRazon, this.animacion, this.grafica}) :  super(key: key);
 
   @override
   _ReportePersonasAnualState createState() => _ReportePersonasAnualState();
@@ -42,8 +41,12 @@ class _ReportePersonasAnualState extends State<ReportePersonasAnual> {
   String alertaAmarilla;
   List<comercial.Listado> listadoComercial;
   List<personas.Listado1> listadoPersonas;
+  List<reporte.Listado> listadoGrafica = [];
   List listaDropdownInmueble = [];
   List listadoTabla = [];
+
+  String fini;
+  String ffin;
   
   @override
   Widget build(BuildContext context) {
@@ -87,6 +90,10 @@ class _ReportePersonasAnualState extends State<ReportePersonasAnual> {
           const SizedBox(height: 25,),
           botonConsulta(),
           const SizedBox(height: 25,),
+          // charts.BarChart(
+          //   _createSampleData(),
+          //   animate: true,
+          // )
           //tabla()
         ],
       ),
@@ -107,6 +114,20 @@ class _ReportePersonasAnualState extends State<ReportePersonasAnual> {
       ),
       color: Color(0xffFE1EF8),
       onPressed: (){
+
+        UserService userService = new UserService();
+        userService.reportePersonasAnual(widget.token, this.id, "2018", "2021").then((reporteObtenido) => {
+          if(reporteObtenido.error == true){
+            print('Error al hacer la consula en page reportePersonasAnual')
+          }else{
+            reporteObtenido.listado.forEach((element) {
+              reporte.Listado listado = new reporte.Listado();
+              listado.conteo = element.conteo;
+              listado.fecha = element.fecha;
+              listadoGrafica.add(listado);
+            })
+          }
+        });
 
       },
     );
@@ -259,14 +280,6 @@ class _ReportePersonasAnualState extends State<ReportePersonasAnual> {
     );
   }
 
-
-  List <DataColumn> getColumns(List<String> columns) => columns
-      .map((String column) => DataColumn(
-        label: Text(column, style: TextStyle(color: Colors.white),),
-      ))
-
-    .toList();
-
   Widget tabla(){
     final columns = ['CC','Fecha','Acumulado Salidas','Alerta Ocupación','Ocupacion Instantanea','Hora','Entradas', 'Ocupación Max.','Porcentaje Ocup.','Salidas', 'Acumulados Entradas'];
     print('listadoTabla');
@@ -298,18 +311,52 @@ class _ReportePersonasAnualState extends State<ReportePersonasAnual> {
     );
   }
 
-  
+  List <DataColumn> getColumns(List<String> columns) => columns
+      .map((String column) => DataColumn(
+        label: Text(column, style: TextStyle(color: Colors.white),),
+      ))
 
+    .toList();
+ 
   List <DataCell> getCells(List<dynamic> cells) => cells.map((data) => DataCell(Text('$data' ?? 'nada'))).toList();
-
-
-    
+ 
   List <DataRow> getRows (List<personas.Listado1> row,) => row.map((personas.Listado1 hola,) {
 
     final cells = [hola.cc, hola.fecha, hola.acumuladoSalidas, hola.alertaOcupacion, hola.ocupacionInstantanea, hola.hora, hola.entradas, hola.ocupacionMaximaAutorizada, hola.porcentajeOcupacion, hola.salidas, hola.acumuladoEntradas, ];
     return DataRow(cells: getCells(cells));
   }).toList();
 
+
+  Widget grafica(){
+
+    List<charts.Series<reporte.Listado,String>> series = [
+      charts.Series(
+        id: "Financial",
+        data: listadoGrafica,
+        domainFn: (reporte.Listado series, _) => series.fecha,
+        measureFn: (reporte.Listado series, _) => int.parse(series.conteo),
+        colorFn: (_, __) => charts.MaterialPalette.blue.shadeDefault),
+      
+    ];
+    
+  
+
+  }
+
+ 
+  List<charts.Series<reporte.Listado, String>> _createSampleData() {
+
+    return [new charts.Series<reporte.Listado, String>(
+                  id: 'Reporte',
+                  colorFn: (_, __) => charts.MaterialPalette.blue.shadeDefault,
+                  domainFn: (reporte.Listado listado, _) => listado.fecha,
+                  measureFn: (reporte.Listado listado, _) => int.parse(listado.conteo),
+                  data: this.listadoGrafica,
+                )];
+
+  }
+  
+  
 
   
   
