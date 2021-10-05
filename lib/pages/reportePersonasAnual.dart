@@ -117,7 +117,7 @@ class _ReportePersonasAnualState extends State<ReportePersonasAnual> {
       ),
       color: Color(0xffFE1EF8),
       onPressed: (){
-
+        listadoGrafica = [];
         UserService userService = new UserService();
         userService.reportePersonasAnual(widget.token, this.id, "2018", "2021").then((reporteObtenido) => {
           if(reporteObtenido.error == true){
@@ -128,14 +128,15 @@ class _ReportePersonasAnualState extends State<ReportePersonasAnual> {
               listado.conteo = element.conteo;
               listado.fecha = element.fecha;
               listadoGrafica.add(listado);
+              setState(() {
+                  columnChart();
+              });
             })
           }
         });
 
         
-        setState(() {
-          columnChart();
-        });
+        
       },
     );
   }
@@ -219,6 +220,7 @@ class _ReportePersonasAnualState extends State<ReportePersonasAnual> {
         onChanged: (newValue){
           setState(() {
             nombreRazon = newValue;
+            dropdown2();
           });
         },
         items: widget.listadoRazon.map((listado){
@@ -235,6 +237,8 @@ class _ReportePersonasAnualState extends State<ReportePersonasAnual> {
                   this.listadoComercial = centrosComerciales.listado,
                   //this.listadoComercial = this.listadoComercial,
                   this.listaDropdownInmueble = listadoComercial != null? listadoComercial : <comercial.Listado>[]
+
+                  
                 }
               });
             },
@@ -365,12 +369,24 @@ class _ReportePersonasAnualState extends State<ReportePersonasAnual> {
   
   Widget columnChart(){
     return SfCartesianChart(
+      primaryXAxis: CategoryAxis(
+                            // Y axis labels will be rendered with currency format
+                            // labelPlacement: LabelPlacement.onTicks
+                            arrangeByIndex: true
+                        ),
                         series: <ChartSeries>[
                             // Renders column chart
+                            
                             ColumnSeries<reporte.Listado, int>(
                                 dataSource: listadoGrafica,
                                 xValueMapper: (reporte.Listado sales, _) => int.parse(sales.fecha),
-                                yValueMapper: (reporte.Listado sales, _) => int.parse(sales.conteo)
+                                yValueMapper: (reporte.Listado sales, __) => int.parse(sales.conteo),
+                                color: Theme.of(context).primaryColor,
+                                dataLabelSettings: DataLabelSettings(
+                                    isVisible: true,
+                                    // Positioning the data label
+                                    labelAlignment: ChartDataLabelAlignment.top
+                                )
                             )
                         ]
                     );
