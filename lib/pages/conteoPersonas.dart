@@ -7,7 +7,6 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_demo/models/catCentroComercialModel.dart' as comercial;
 import 'package:flutter_demo/models/catRazonSocialModel.dart' as razon;
-import 'package:flutter_demo/models/conteoParqueosModel.dart';
 import 'package:flutter_demo/models/conteoPersonasModel.dart' as personas;
 import 'package:flutter_demo/models/userModel.dart';
 import 'package:intl/intl.dart';
@@ -27,9 +26,9 @@ class PersonasPage extends StatefulWidget{
 }
 
 class _PersonasPage extends State<PersonasPage> {
-  DateTime _dateTime;
+  DateTime pruebafecha = new DateTime.now();
+  DateTime _dateTime; 
   String fechaString;
-  DateTime pruebafecha = DateTime.now();
   String idRazon;
   String valueRazon;
   String valueInmueble;
@@ -49,6 +48,7 @@ class _PersonasPage extends State<PersonasPage> {
 
   @override
   Widget build(BuildContext context){
+     
     return Scaffold(
       appBar: AppBar(),
       drawer: MenuPage(token: widget.token, nickname: widget.nickname,email:widget.email,),
@@ -108,6 +108,7 @@ class _PersonasPage extends State<PersonasPage> {
   }
 
   Widget botonConsulta(){
+    
     return RaisedButton(
       child: Center(
         //padding: EdgeInsets.symmetric(horizontal: 90, vertical: 20),
@@ -122,8 +123,10 @@ class _PersonasPage extends State<PersonasPage> {
       color: Color(0xffFE1EF8),
       onPressed: (){
         UserService userService = new UserService();
+        String formatoFecha = new DateFormat('yyyy-MM-dd').format(pruebafecha);
+        pruebafecha = DateTime.parse('$formatoFecha');
         listadoTabla = [];
-        userService.conteoPersonas(widget.token, widget.nickname, _dateTime, idRazon, ocupacionMaximaPersonas, alertaOcupacion, this.id).then((conteo) => {
+        userService.conteoPersonas(widget.token, widget.nickname, pruebafecha, idRazon, ocupacionMaximaPersonas, alertaOcupacion, this.id).then((conteo) => {
           if(conteo.error == true){
             print('Error al consultar sus resultados')
           }else{
@@ -143,7 +146,9 @@ class _PersonasPage extends State<PersonasPage> {
               listadoTabla.add(lista);
             }),
             tabla(),
-            setState(() {})
+            setState(() {
+              
+            })
           }
         });
       },
@@ -151,19 +156,12 @@ class _PersonasPage extends State<PersonasPage> {
   }
 
   Widget unionFe(){
+    String formatoFecha = new DateFormat('yyyy-MM-dd').format(pruebafecha);
     return Container(
-      /*initialDate: _dateTime == null ? DateTime.now() : _dateTime,
-      firstDate: DateTime(2001),
-      lastDate: DateTime.now(),
-      dateFormat: 'dd-MM-yyyy',
-      locale: DatePicker.localeFromString('es'),
-      pickerTheme: DateTimePickerTheme(
-        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-        dividerColor: Theme.of(context).primaryColorDark
-      ),*/
       child: Row(
         children: <Widget>[
-          Text( _dateTime == null ? 'No has seleccionado fecha' : _dateTime.toString(),),
+          Text( pruebafecha == DateTime.now() ? 'No has seleccionado fecha' : formatoFecha),
+          //Text('$texto'),
           SizedBox(height: 15, width: 15,),
           RaisedButton(
             child: Text('Selecciona una fecha', style: TextStyle(color: Colors.white),),
@@ -174,14 +172,14 @@ class _PersonasPage extends State<PersonasPage> {
             onPressed: (){
               showDatePicker(
                 context: context,
-                initialDate: _dateTime == null ? DateTime.now() : _dateTime,
+                initialDate: pruebafecha == DateTime.now() ? DateTime.now() : pruebafecha,
                 firstDate: DateTime(2001),
                 lastDate: DateTime.now(),
                 
               ).then((date){
                 setState(() {
-                  print(date);
-                  _dateTime = date;
+                  pruebafecha = date;
+                  formatoFecha = pruebafecha.toString();
                 });
               });
             } 
