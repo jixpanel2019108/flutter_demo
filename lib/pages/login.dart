@@ -26,6 +26,7 @@ class _login extends State<loginScreen> {
   final password = TextEditingController();
   String usu = '';
   String pass = '';
+  bool security = true;
 
   @override
   Widget build(BuildContext context) {
@@ -157,8 +158,7 @@ class _login extends State<loginScreen> {
             focusedBorder: OutlineInputBorder(
               borderSide: BorderSide(color: Color(0xffFE1EF8), width: 5.0),
             ),
-            icon: Icon(Icons.account_circle_outlined,
-              color: Color(0xffFE1EF8),),
+            suffixIcon: Icon(Icons.account_circle_outlined,) ,
             labelText: 'Correo Electronico',
             hintStyle: TextStyle(
               //decoration: ,
@@ -179,6 +179,7 @@ class _login extends State<loginScreen> {
   }
 
   Widget _passwordTextField() {
+    
     return StreamBuilder(
         builder: (BuildContext context, AsyncSnapshot snapshot) {
           return Container(
@@ -188,13 +189,20 @@ class _login extends State<loginScreen> {
                 Padding(padding: EdgeInsets.all(10.0), child: TextFormField(
                   controller: password,
                   keyboardType: TextInputType.emailAddress,
-                  obscureText: true,
                   decoration: InputDecoration(
                     focusedBorder: OutlineInputBorder(
                       borderSide: BorderSide(color: Color(0xffFE1EF8), width: 5.0),
                     ),
-                    icon: Icon(Icons.lock_outline_rounded,
-                      color: Color(0xffFE1EF8),),
+                    suffixIcon: IconButton(
+                      icon: Icon(
+                        security ? Icons.remove_red_eye : Icons.remove_red_eye_outlined,
+                      ),
+                      onPressed: (){
+                        setState(() {
+                          security = !security;
+                        });
+                      },
+                    ),
                     labelText: 'Contraseña',
                     //alignLabelWithHint: ,
                     hintStyle: TextStyle(
@@ -203,7 +211,8 @@ class _login extends State<loginScreen> {
                     labelStyle: TextStyle(
                         color: Colors.white
                     ),
-                ),
+                  ),
+                  obscureText: security,
                 ),)
               ]
             ),

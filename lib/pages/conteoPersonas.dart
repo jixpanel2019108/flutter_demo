@@ -50,7 +50,10 @@ class _PersonasPage extends State<PersonasPage> {
   Widget build(BuildContext context){
      
     return Scaffold(
-      appBar: AppBar(),
+      backgroundColor: Color(0xff313131),
+      appBar: AppBar(
+        backgroundColor: Colors.transparent,
+      ),
       drawer: MenuPage(token: widget.token, nickname: widget.nickname,email:widget.email,),
       body: SingleChildScrollView(
         child: Container(
@@ -84,14 +87,14 @@ class _PersonasPage extends State<PersonasPage> {
         children: <Widget>[
           Text( 
             'Conteo Personas',
-            style: TextStyle(color: Color(0xffAF00FB), fontSize: 45,),
+            style: TextStyle(color: Color(0xff890e8a), fontSize: 45,),
           ),
-          const SizedBox(height: 15.0,),
-          Text('Usuario: '+ widget.nickname),
           const SizedBox(height: 25.0,),
-          Text('Ultima Actualización:'),
+          Text('Usuario: '+ widget.nickname, style: TextStyle(fontWeight: FontWeight.bold ,color: Color(0xffe1c0ea)),),
           const SizedBox(height: 25.0,),
-          Text('Ocupación Máxima Autorizada:'),
+          Text('Ultima Actualización:', style: TextStyle(fontWeight: FontWeight.bold ,color: Color(0xffe1c0ea)),),
+          const SizedBox(height: 25.0,),
+          Text('Ocupación Máxima Autorizada:', style: TextStyle(fontWeight: FontWeight.bold ,color: Color(0xffe1c0ea)),),
           const SizedBox(height: 25,),
           union1(),
           const SizedBox(height: 15,),
@@ -118,9 +121,9 @@ class _PersonasPage extends State<PersonasPage> {
         )
       ),
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(20) 
+        borderRadius: BorderRadius.circular(5) 
       ),
-      color: Color(0xffFE1EF8),
+      color: Color(0xff890e8a),
       onPressed: (){
         UserService userService = new UserService();
         String formatoFecha = new DateFormat('yyyy-MM-dd').format(pruebafecha);
@@ -160,7 +163,7 @@ class _PersonasPage extends State<PersonasPage> {
     return Container(
       child: Row(
         children: <Widget>[
-          Text( pruebafecha == DateTime.now() ? 'No has seleccionado fecha' : formatoFecha),
+          Text( pruebafecha == DateTime.now() ? 'No has seleccionado fecha' : formatoFecha, style: TextStyle(color: Color(0xffe1c0ea)),),
           //Text('$texto'),
           SizedBox(height: 15, width: 15,),
           RaisedButton(
@@ -168,7 +171,7 @@ class _PersonasPage extends State<PersonasPage> {
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(20)
             ),
-            color: Color(0xffFE1EF8),
+            color: Color(0xff890e8a),
             onPressed: (){
               showDatePicker(
                 context: context,
@@ -193,7 +196,7 @@ class _PersonasPage extends State<PersonasPage> {
     return Container(
       child: Row(
         children: [
-          Text('Seleccione una Razon:', style: TextStyle(fontWeight: FontWeight.bold),),
+          Text('Seleccione una Razon:', style: TextStyle(fontWeight: FontWeight.bold, color: Color(0xffe1c0ea)),),
           SizedBox(height: 15, width: 15,),
           dropdown1(),
           SizedBox(width: 15,),
@@ -206,7 +209,7 @@ class _PersonasPage extends State<PersonasPage> {
     return Container(
       child: Row(
         children: [
-          Text('Seleccione un Inmueble:',  style: TextStyle(fontWeight: FontWeight.bold),),
+          Text('Seleccione un Inmueble:',  style: TextStyle(fontWeight: FontWeight.bold, color: Color(0xffe1c0ea)),),
           SizedBox(height: 15, width: 15,),
           dropdown2()
         ],
@@ -219,11 +222,11 @@ class _PersonasPage extends State<PersonasPage> {
       padding: EdgeInsets.only(left: 16, right: 16),
       decoration: BoxDecoration(
         border: Border.all(color: Color(0xffFE1EF8), width: 2),
-        borderRadius: BorderRadius.circular(20)
+        borderRadius: BorderRadius.circular(10)
       ),
 
       child: DropdownButton(
-        hint: Text('Selecciona una Razón', style: TextStyle(fontSize: 15, color: Colors.black),),
+        hint: Text('Selecciona una Razón', style: TextStyle(fontSize: 15, color: Color(0xffe1c0ea)),),
         dropdownColor: Colors.grey,
         icon: Icon(Icons.arrow_drop_down),
         iconSize: 36,
@@ -241,7 +244,7 @@ class _PersonasPage extends State<PersonasPage> {
         items: widget.listadoRazon.map((listado){
           return DropdownMenuItem(
             value: '${listado.value}',
-            child: Text('${listado.value}'),
+            child: Text('${listado.value}', style: TextStyle(color: Color(0xffe1c0ea)),),
             onTap: (){
               idRazon = listado.id;
               UserService userService = new UserService();
@@ -267,10 +270,10 @@ class _PersonasPage extends State<PersonasPage> {
       padding: EdgeInsets.only(left: 16, right: 16),
       decoration: BoxDecoration(
         border: Border.all(color: Color(0xffFE1EF8), width: 2),
-        borderRadius: BorderRadius.circular(20)
+        borderRadius: BorderRadius.circular(10)
       ),
       child: DropdownButton(
-        hint: Text('Selecciona un Inmueble', style: TextStyle(fontSize: 15, color: Colors.black),),
+        hint: Text('Selecciona un Inmueble', style: TextStyle(fontSize: 15, color: Color(0xffe1c0ea)),),
         dropdownColor: Colors.grey,
         icon: Icon(Icons.arrow_drop_down),
         iconSize: 36,
@@ -288,7 +291,7 @@ class _PersonasPage extends State<PersonasPage> {
         items: pruebalista.map((valueItem){
           return DropdownMenuItem(
             value: '${valueItem.value}',
-            child: Text('${valueItem.value}'),
+            child: Text('${valueItem.value}', style: TextStyle(color: Color(0xffe1c0ea)),),
             onTap: (){
               this.alertaVerde = valueItem.alertaVerde;
               this.alertaOcupacion = valueItem.alertaOcupacion;
@@ -318,7 +321,8 @@ class _PersonasPage extends State<PersonasPage> {
     print('listadoTabla');
     return SingleChildScrollView(
       scrollDirection: Axis.horizontal,
-      child: Container(
+      child: Center(
+        //padding: EdgeInsets.symmetric(horizontal: 40.0),
         child: DataTable(
           dataRowColor: MaterialStateProperty.resolveWith<Color>((Set<MaterialState> states) {
             if(states.contains(MaterialState.selected))
@@ -326,8 +330,7 @@ class _PersonasPage extends State<PersonasPage> {
             return null;
           }),
           decoration: BoxDecoration(
-            border: Border.all(color: Colors.black, width: 0.5),
-            color: Theme.of(context).colorScheme.primary.withOpacity(0.8),
+            color: Colors.transparent,
             borderRadius: BorderRadius.circular(5)
           ),
           columns: getColumns(columns) ?? '', 
