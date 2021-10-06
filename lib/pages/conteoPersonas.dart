@@ -318,7 +318,8 @@ class _PersonasPage extends State<PersonasPage> {
     print('listadoTabla');
     return SingleChildScrollView(
       scrollDirection: Axis.horizontal,
-      child: Container(
+      child: Center(
+        //padding: EdgeInsets.symmetric(horizontal: 40.0),
         child: DataTable(
           dataRowColor: MaterialStateProperty.resolveWith<Color>((Set<MaterialState> states) {
             if(states.contains(MaterialState.selected))

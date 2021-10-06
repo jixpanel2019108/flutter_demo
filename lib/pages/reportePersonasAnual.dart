@@ -202,35 +202,32 @@ class _ReportePersonasAnualState extends State<ReportePersonasAnual> {
     );
   }
 
-   Widget initialDate() {
+  Widget initialDate() {
     return Container(
       child: StreamBuilder(
           builder: (BuildContext context, AsyncSnapshot snapshot) {
             return Container(
-              padding: EdgeInsets.symmetric(horizontal: 5),
               child: Column(
                 children: <Widget>[
                   Padding(padding: EdgeInsets.all(3), child: TextFormField(
-                  keyboardType: TextInputType.number,
-              decoration: InputDecoration(
-              hoverColor: Colors.black,
-              fillColor: Colors.black,
-              focusColor: Colors.black,
-              labelText: 'Fecha Inicial',
-              hintStyle: TextStyle(
-                color: Colors.black
-              ),
-              labelStyle: TextStyle(
-                fontSize: 15,
-                color: Colors.black
-              ),
-    
-            ),
-            ),)
+                    keyboardType: TextInputType.number,
+                    decoration: InputDecoration(
+                      hoverColor: Colors.black,
+                      fillColor: Colors.black,
+                      focusColor: Colors.black,
+                      labelText: 'Año Inicial',
+                      hintStyle: TextStyle(
+                        color: Colors.black
+                      ),
+                      labelStyle: TextStyle(
+                        fontSize: 15,
+                        color: Colors.black
+                      ),
+                    ),
+                  ),)
                 ],
-    
-            ),
-              );
+              ),
+            );
           }
       ),
     );
@@ -247,7 +244,7 @@ class _ReportePersonasAnualState extends State<ReportePersonasAnual> {
                   Padding(padding: EdgeInsets.all(10.0), child: TextFormField(
                     keyboardType: TextInputType.number,
                     decoration: InputDecoration(
-                      labelText: 'Fecha Final',
+                      labelText: 'Año Final',
                       //alignLabelWithHint: ,
                       hintStyle: TextStyle(
                         color: Colors.black
@@ -303,8 +300,6 @@ class _ReportePersonasAnualState extends State<ReportePersonasAnual> {
                   this.listadoComercial = centrosComerciales.listado,
                   //this.listadoComercial = this.listadoComercial,
                   this.listaDropdownInmueble = listadoComercial != null? listadoComercial : <comercial.Listado>[]
-
-                  
                 }
               });
             },
@@ -358,11 +353,11 @@ class _ReportePersonasAnualState extends State<ReportePersonasAnual> {
   }
 
   Widget tabla(){
-    final columns = ['Fecha','Suma'];
-    print('listadoTabla');
+    final columns = ['Fecha','Conteo'];
     return SingleChildScrollView(
       scrollDirection: Axis.horizontal,
       child: Container(
+        padding: EdgeInsets.symmetric(horizontal: 140,),
         child: DataTable(
           dataRowColor: MaterialStateProperty.resolveWith<Color>((Set<MaterialState> states) {
             if(states.contains(MaterialState.selected))
