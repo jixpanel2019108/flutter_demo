@@ -7,6 +7,7 @@ import 'package:flutter_demo/models/listMenuAppModel.dart';
 import 'package:flutter_demo/pages/conteoParqueos.dart';
 import 'package:flutter_demo/pages/conteoPersonas.dart';
 import 'package:flutter_demo/pages/reportePersonasAnual.dart';
+import 'package:flutter_demo/pages/reportePersonasDiario.dart';
 import 'package:flutter_demo/services/userService.dart';
 
 class MenuPage extends StatefulWidget {
@@ -70,9 +71,9 @@ class _MenuPage extends   State<MenuPage> {
             ),
             const SizedBox(height: 16,),
             buildMenuItem(
-              text: 'Reporte Personas Mensual',
+              text: 'Reporte Personas Diario',
               icon: Icons.people,   
-              indice: 5
+              indice: 6
             ),
             const SizedBox(height: 24),
             Divider(color: Colors.white70),
@@ -174,6 +175,28 @@ class _MenuPage extends   State<MenuPage> {
               }
             });
           }
+          break;
+          case 6: {
+            UserService userService = new UserService();
+            userService.razonSocial(widget.token).then((peticionRazonSocial) => {
+              if(peticionRazonSocial.error == false){
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => ReportePersonasDiario(
+                      token: widget.token,
+                      email: widget.email,
+                      nickname: widget.nickname,
+                      listadoRazon: peticionRazonSocial.listado,
+                    )
+                  )
+                )
+              }else{
+                print('Error en boton menu Conteo Parqueos')
+              }
+            });
+          }
+          break;
         }
       },
     );

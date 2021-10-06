@@ -14,7 +14,7 @@ import 'package:charts_flutter/flutter.dart' as charts;
 import 'package:syncfusion_flutter_charts/charts.dart';
 import 'package:syncfusion_flutter_charts/sparkcharts.dart';
 
-class ReportePersonasAnual extends StatefulWidget {
+class ReportePersonasDiario extends StatefulWidget {
   final String token;
   final String nickname;
   final String email;
@@ -23,13 +23,13 @@ class ReportePersonasAnual extends StatefulWidget {
   final bool animacion;
   
 
-  const ReportePersonasAnual({ Key key, this.token, this.nickname, this.email, this.listadoRazon, this.animacion, this.grafica}) :  super(key: key);
+  const ReportePersonasDiario({ Key key, this.token, this.nickname, this.email, this.listadoRazon, this.animacion, this.grafica}) :  super(key: key);
 
   @override
-  _ReportePersonasAnualState createState() => _ReportePersonasAnualState();
+  _ReportePersonasDiario createState() => _ReportePersonasDiario();
 }
 
-class _ReportePersonasAnualState extends State<ReportePersonasAnual> {
+class _ReportePersonasDiario extends State<ReportePersonasDiario> {
 
   DateTime _dateTime;
   String nombreRazon;
@@ -156,37 +156,6 @@ class _ReportePersonasAnualState extends State<ReportePersonasAnual> {
     );
   }
 
-  Widget unionFe(){
-    return Container(
-      child: Row(
-        children: <Widget>[
-          Text( _dateTime == null ? 'No has seleccionado fecha' : _dateTime.toString(),),
-          SizedBox(height: 15, width: 15,),
-          RaisedButton(
-            child: Text('Selecciona una fecha', style: TextStyle(color: Colors.white),),
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(5)
-            ),
-            color: Color(0xff890e8a),
-            onPressed: (){
-              showDatePicker(
-                context: context,
-                initialDate: _dateTime == null ? DateTime.now() : _dateTime,
-                firstDate: DateTime(2001),
-                lastDate: DateTime.now(),
-                
-              ).then((date){
-                setState(() {
-                  print(date);
-                  _dateTime = date;
-                });
-              });
-            } 
-          )
-        ],
-      ),
-    );
-  }
 
   Widget union1(){
     return Container(
@@ -261,7 +230,7 @@ class _ReportePersonasAnualState extends State<ReportePersonasAnual> {
                   TextFormField(
                     controller: fechafinal,
                     inputFormatters: [
-                      LengthLimitingTextInputFormatter(4),
+                      LengthLimitingTextInputFormatter(2),
                     ],
                     style: TextStyle(color: Colors.white, fontSize: 15),
                     keyboardType: TextInputType.number,
