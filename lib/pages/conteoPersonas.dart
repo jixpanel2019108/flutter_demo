@@ -163,7 +163,7 @@ class _PersonasPage extends State<PersonasPage> {
     return Container(
       child: Row(
         children: <Widget>[
-          Text( pruebafecha == DateTime.now() ? 'No has seleccionado fecha' : formatoFecha, style: TextStyle(color: Color(0xffe1c0ea)),),
+          Text( pruebafecha == DateTime.now() ? 'No has seleccionado fecha' : 'La fecha es: ' + formatoFecha, style: TextStyle(color: Color(0xffe1c0ea)),),
           //Text('$texto'),
           SizedBox(height: 15, width: 15,),
           RaisedButton(

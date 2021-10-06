@@ -68,6 +68,12 @@ class _MenuPage extends   State<MenuPage> {
               icon: Icons.people,   
               indice: 5
             ),
+            const SizedBox(height: 16,),
+            buildMenuItem(
+              text: 'Reporte Personas Mensual',
+              icon: Icons.people,   
+              indice: 5
+            ),
             const SizedBox(height: 24),
             Divider(color: Colors.white70),
             const SizedBox(height: 24),
@@ -91,7 +97,9 @@ class _MenuPage extends   State<MenuPage> {
 
     return ListTile(
       leading: Icon(icon, color: color),
-      title: Text(text, style: TextStyle(color: color)),
+      title: Text(text, style: TextStyle(color: color, 
+      fontFamily: 'Gotic'
+      )),
       hoverColor: hoverColor,
       onTap: () {
         switch(indice){

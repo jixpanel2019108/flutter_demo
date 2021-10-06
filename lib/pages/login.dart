@@ -109,7 +109,9 @@ class _login extends State<loginScreen> {
                 },
                 child: Text('¿Has olvidado tu contraseña?',
                 style: TextStyle(
-                  color: Colors.white
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
+                  fontFamily: 'Gotic'
                 ),
                 ),
               )
