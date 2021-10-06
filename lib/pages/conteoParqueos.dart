@@ -50,7 +50,10 @@ class _ParqueosPage extends State<ParqueosPage> {
   @override
   Widget build(BuildContext context){
     return Scaffold(
-      appBar: AppBar(),
+      backgroundColor: Color(0xff313131),
+      appBar: AppBar(
+        backgroundColor: Colors.transparent,
+      ),
       drawer: MenuPage(token: widget.token, nickname: widget.nickname,email:widget.email,),
       body: SingleChildScrollView(
         child: Container(
@@ -83,15 +86,15 @@ class _ParqueosPage extends State<ParqueosPage> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           Text( 
-            'Conteo Personas',
-            style: TextStyle(color: Color(0xffAF00FB), fontSize: 45,),
+            'Conteo Parqueos',
+            style: TextStyle(color: Color(0xff890e8a), fontSize: 45,),
           ),
-          const SizedBox(height: 15.0,),
-          Text('Usuario: '+ widget.nickname),
           const SizedBox(height: 25.0,),
-          Text('Ultima Actualización:'),
+          Text('Usuario: '+ widget.nickname, style: TextStyle(fontWeight: FontWeight.bold ,color: Color(0xffe1c0ea)),),
           const SizedBox(height: 25.0,),
-          Text('Ocupación Máxima Autorizada:'),
+          Text('Ultima Actualización:', style: TextStyle(fontWeight: FontWeight.bold ,color: Color(0xffe1c0ea)),),
+          const SizedBox(height: 25.0,),
+          Text('Ocupación Máxima Autorizada:', style: TextStyle(fontWeight: FontWeight.bold ,color: Color(0xffe1c0ea)),),
           const SizedBox(height: 25,),
           union1(),
           const SizedBox(height: 15,),
@@ -119,7 +122,7 @@ class _ParqueosPage extends State<ParqueosPage> {
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(20) 
       ),
-      color: Color(0xffFE1EF8),
+      color: Color(0xff890e8a),
       onPressed: (){
         UserService userService = new UserService();
         listadoTabla = [];
@@ -152,18 +155,9 @@ class _ParqueosPage extends State<ParqueosPage> {
 
   Widget unionFe(){
     return Container(
-      /*initialDate: _dateTime == null ? DateTime.now() : _dateTime,
-      firstDate: DateTime(2001),
-      lastDate: DateTime.now(),
-      dateFormat: 'dd-MM-yyyy',
-      locale: DatePicker.localeFromString('es'),
-      pickerTheme: DateTimePickerTheme(
-        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-        dividerColor: Theme.of(context).primaryColorDark
-      ),*/
       child: Row(
         children: <Widget>[
-          Text( _dateTime == null ? 'No has seleccionado fecha' : _dateTime.toString(),),
+          Text( _dateTime == null ? 'No has seleccionado fecha' : _dateTime.toString(), style: TextStyle(color: Color(0xffe1c0ea)),),
           SizedBox(height: 15, width: 15,),
           RaisedButton(
             child: Text('Selecciona una fecha', style: TextStyle(color: Colors.white),),
@@ -195,7 +189,7 @@ class _ParqueosPage extends State<ParqueosPage> {
     return Container(
       child: Row(
         children: [
-          Text('Seleccione una Razon:', style: TextStyle(fontWeight: FontWeight.bold),),
+          Text('Seleccione una Razon:', style: TextStyle(fontWeight: FontWeight.bold, color: Color(0xffe1c0ea)),),
           SizedBox(height: 15, width: 15,),
           dropdown1(),
           SizedBox(width: 15,),
@@ -208,7 +202,7 @@ class _ParqueosPage extends State<ParqueosPage> {
     return Container(
       child: Row(
         children: [
-          Text('Seleccione un Inmueble:',  style: TextStyle(fontWeight: FontWeight.bold),),
+          Text('Seleccione un Inmueble:',  style: TextStyle(fontWeight: FontWeight.bold, color: Color(0xffe1c0ea)),),
           SizedBox(height: 15, width: 15,),
           dropdown2()
         ],
@@ -225,7 +219,7 @@ class _ParqueosPage extends State<ParqueosPage> {
       ),
 
       child: DropdownButton(
-        hint: Text('Selecciona una Razón', style: TextStyle(fontSize: 15, color: Colors.black),),
+        hint: Text('Selecciona una Razón', style: TextStyle(fontSize: 15, color: Color(0xffe1c0ea)),),
         dropdownColor: Colors.grey,
         icon: Icon(Icons.arrow_drop_down),
         iconSize: 36,
@@ -243,7 +237,7 @@ class _ParqueosPage extends State<ParqueosPage> {
         items: widget.listadoRazon.map((listado){
           return DropdownMenuItem(
             value: '${listado.value}',
-            child: Text('${listado.value}'),
+            child: Text('${listado.value}', style: TextStyle(color: Color(0xffe1c0ea)),),
             onTap: (){
               idRazon = listado.id;
               UserService userService = new UserService();
@@ -271,7 +265,7 @@ class _ParqueosPage extends State<ParqueosPage> {
         borderRadius: BorderRadius.circular(20)
       ),
       child: DropdownButton(
-        hint: Text('Selecciona un Inmueble', style: TextStyle(fontSize: 15, color: Colors.black),),
+        hint: Text('Selecciona un Inmueble', style: TextStyle(fontSize: 15, color: Color(0xffe1c0ea)),),
         dropdownColor: Colors.grey,
         icon: Icon(Icons.arrow_drop_down),
         iconSize: 36,
@@ -289,7 +283,7 @@ class _ParqueosPage extends State<ParqueosPage> {
         items: pruebalista.map((valueItem){
           return DropdownMenuItem(
             value: '${valueItem.value}',
-            child: Text('${valueItem.value}'),
+            child: Text('${valueItem.value}', style: TextStyle(color: Color(0xffe1c0ea)),),
             onTap: (){
               this.alertaVerde = valueItem.alertaVerde;
               this.alertaOcupacion = valueItem.alertaOcupacion;
@@ -327,8 +321,7 @@ class _ParqueosPage extends State<ParqueosPage> {
             return null;
           }),
           decoration: BoxDecoration(
-            border: Border.all(color: Colors.black, width: 0.5),
-            color: Theme.of(context).colorScheme.primary.withOpacity(0.8),
+            color: Colors.transparent,
             borderRadius: BorderRadius.circular(5)
           ),
           columns: getColumns(columns) ?? '', 

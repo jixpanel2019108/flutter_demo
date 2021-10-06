@@ -24,7 +24,10 @@ class _Home extends State<HomeScreen> {
     //final String email = UserSimplePreferences.getEmail();
     return SafeArea(
       child: Scaffold(
-        appBar: AppBar(),
+        backgroundColor: Color(0xff313131),
+        appBar: AppBar(
+          backgroundColor: Colors.transparent,
+        ),
         drawer: MenuPage(token: widget.token, nickname: widget.nickname,email:widget.email,),
       )
     );

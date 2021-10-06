@@ -2,6 +2,7 @@
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.Dart';
 import 'package:flutter_demo/services/userService.dart';
 import 'package:charts_flutter/flutter.dart' as charts;
 import 'package:flutter_demo/models/reportePersonasAnualModel.dart' as reporte;
@@ -20,6 +21,7 @@ class ReportePersonasAnual extends StatefulWidget {
   final List<razon.Listado> listadoRazon;
   final List<charts.Series> grafica;
   final bool animacion;
+  
 
   const ReportePersonasAnual({ Key key, this.token, this.nickname, this.email, this.listadoRazon, this.animacion, this.grafica}) :  super(key: key);
 
@@ -49,11 +51,19 @@ class _ReportePersonasAnualState extends State<ReportePersonasAnual> {
 
   String fini;
   String ffin;
+
+  final fechainicial = TextEditingController();
+  final fechafinal = TextEditingController();
+  String fein;
+  String fefi;
   
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(),
+      backgroundColor: Color(0xff313131),
+      appBar: AppBar(
+        backgroundColor: Colors.transparent,
+      ),
       drawer: MenuPage(token: widget.token, nickname: widget.nickname,email:widget.email,),
       body: SingleChildScrollView(
         child: Container(
@@ -74,15 +84,15 @@ class _ReportePersonasAnualState extends State<ReportePersonasAnual> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           Text( 
-            'Conteo Personas',
-            style: TextStyle(color: Color(0xffAF00FB), fontSize: 45,),
+            'Reporte Personas Anual',
+            style: TextStyle(color: Color(0xff890e8a), fontSize: 45,),
           ),
-          const SizedBox(height: 15.0,),
-          Text('Usuario: '+ widget.nickname),
           const SizedBox(height: 25.0,),
-          Text('Ultima Actualización:'),
+          Text('Usuario: '+ widget.nickname, style: TextStyle(fontWeight: FontWeight.bold ,color: Color(0xffe1c0ea)),),
           const SizedBox(height: 25.0,),
-          Text('Ocupación Máxima Autorizada:'),
+          Text('Ultima Actualización:', style: TextStyle(color: Color(0xffe1c0ea),fontWeight: FontWeight.bold)),
+          const SizedBox(height: 25.0,),
+          Text('Ocupación Máxima Autorizada:', style: TextStyle(color: Color(0xffe1c0ea),fontWeight: FontWeight.bold)),
           const SizedBox(height: 25,),
           union1(),
           const SizedBox(height: 15,),
@@ -117,13 +127,15 @@ class _ReportePersonasAnualState extends State<ReportePersonasAnual> {
         )
       ),
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(20) 
+        borderRadius: BorderRadius.circular(5) 
       ),
-      color: Color(0xffFE1EF8),
+      color: Color(0xff890e8a),
       onPressed: (){
+        fein = fechainicial.text;
+        fefi = fechafinal.text;
         listadoGrafica = [];
         UserService userService = new UserService();
-        userService.reportePersonasAnual(widget.token, this.id, "2018", "2021").then((reporteObtenido) => {
+        userService.reportePersonasAnual(widget.token, this.id, fein, fefi).then((reporteObtenido) => {
           if(reporteObtenido.error == true){
             print('Error al hacer la consula en page reportePersonasAnual')
           }else{
@@ -153,9 +165,9 @@ class _ReportePersonasAnualState extends State<ReportePersonasAnual> {
           RaisedButton(
             child: Text('Selecciona una fecha', style: TextStyle(color: Colors.white),),
             shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(20)
+              borderRadius: BorderRadius.circular(5)
             ),
-            color: Color(0xffFE1EF8),
+            color: Color(0xff890e8a),
             onPressed: (){
               showDatePicker(
                 context: context,
@@ -180,7 +192,7 @@ class _ReportePersonasAnualState extends State<ReportePersonasAnual> {
     return Container(
       child: Row(
         children: <Widget> [
-          Text('Seleccione una Razon:', style: TextStyle(fontWeight: FontWeight.bold),),
+          Text('Seleccione una Razon:', style: TextStyle(fontWeight: FontWeight.bold, color: Color(0xffe1c0ea)),),
           SizedBox(height: 15, width: 15,),
           dropdown1(),
           SizedBox(width: 15,),
@@ -194,7 +206,7 @@ class _ReportePersonasAnualState extends State<ReportePersonasAnual> {
     return Container(
       child: Row(
         children: [
-          Text('Seleccione un Inmueble:',  style: TextStyle(fontWeight: FontWeight.bold),),
+          Text('Seleccione un Inmueble:',  style: TextStyle(fontWeight: FontWeight.bold, color: Color(0xffe1c0ea)),),
           SizedBox(height: 15, width: 15,),
           dropdown2()
         ],
@@ -204,27 +216,31 @@ class _ReportePersonasAnualState extends State<ReportePersonasAnual> {
 
   Widget initialDate() {
     return Container(
+      margin: EdgeInsets.only(right: 250),
       child: StreamBuilder(
           builder: (BuildContext context, AsyncSnapshot snapshot) {
             return Container(
               child: Column(
                 children: <Widget>[
-                  Padding(padding: EdgeInsets.all(3), child: TextFormField(
+                  TextFormField(
+                    controller: fechainicial,
+                    inputFormatters: [
+                      LengthLimitingTextInputFormatter(4),
+                    ],
+                    style: TextStyle(color: Colors.white, fontSize: 15),
                     keyboardType: TextInputType.number,
+                    cursorColor: Colors.white,
                     decoration: InputDecoration(
-                      hoverColor: Colors.black,
-                      fillColor: Colors.black,
-                      focusColor: Colors.black,
                       labelText: 'Año Inicial',
                       hintStyle: TextStyle(
-                        color: Colors.black
+                        color: Colors.white
                       ),
                       labelStyle: TextStyle(
-                        fontSize: 15,
-                        color: Colors.black
+                        color: Color(0xffe1c0ea)
                       ),
                     ),
-                  ),)
+                  ),
+                  
                 ],
               ),
             );
@@ -235,25 +251,30 @@ class _ReportePersonasAnualState extends State<ReportePersonasAnual> {
 
   Widget lastDate() {
     return Container(
+      margin: EdgeInsets.only(right: 250),
       child: StreamBuilder(
           builder: (BuildContext context, AsyncSnapshot snapshot) {
             return Container(
-              padding: EdgeInsets.symmetric(horizontal: 40.0),
+              //padding: EdgeInsets.symmetric(horizontal: 40.0),
               child: Column(
                 children: <Widget>[
-                  Padding(padding: EdgeInsets.all(10.0), child: TextFormField(
+                  TextFormField(
+                    controller: fechafinal,
+                    inputFormatters: [
+                      LengthLimitingTextInputFormatter(4),
+                    ],
+                    style: TextStyle(color: Colors.white, fontSize: 15),
                     keyboardType: TextInputType.number,
                     decoration: InputDecoration(
                       labelText: 'Año Final',
-                      //alignLabelWithHint: ,
                       hintStyle: TextStyle(
-                        color: Colors.black
+                        color: Color(0xffe1c0ea)
                       ),
                       labelStyle: TextStyle(
-                        color: Colors.black
+                        color: Color(0xffe1c0ea)
                       ),
                     ),
-                  ),)
+                  ),
                 ]
               ),
             );
@@ -266,11 +287,11 @@ class _ReportePersonasAnualState extends State<ReportePersonasAnual> {
     return Container(
       padding: EdgeInsets.only(left: 16, right: 16),
       decoration: BoxDecoration(
-        border: Border.all(color: Color(0xffFE1EF8), width: 2),
-        borderRadius: BorderRadius.circular(20)
+        border: Border.all(color: Color(0xff890e8a), width: 2),
+        borderRadius: BorderRadius.circular(10)
       ),
       child: DropdownButton(
-        hint: Text('Selecciona una Razón', style: TextStyle(fontSize: 15, color: Colors.black),),
+        hint: Text('Selecciona una Razón', style: TextStyle(fontSize: 15, color: Color(0xffe1c0ea)),),
         dropdownColor: Colors.grey,
         icon: Icon(Icons.arrow_drop_down),
         iconSize: 36,
@@ -289,7 +310,7 @@ class _ReportePersonasAnualState extends State<ReportePersonasAnual> {
         items: widget.listadoRazon.map((listado){
           return DropdownMenuItem(
             value: '${listado.value}',
-            child: Text('${listado.value}'),
+            child: Text('${listado.value}', style: TextStyle(color: Color(0xffe1c0ea)),),
             onTap: (){
               idRazon = listado.id;
               UserService userService = new UserService();
@@ -313,11 +334,11 @@ class _ReportePersonasAnualState extends State<ReportePersonasAnual> {
     return Container(
       padding: EdgeInsets.only(left: 16, right: 16),
       decoration: BoxDecoration(
-        border: Border.all(color: Color(0xffFE1EF8), width: 2),
-        borderRadius: BorderRadius.circular(20)
+        border: Border.all(color: Color(0xff890e8a), width: 2),
+        borderRadius: BorderRadius.circular(10)
       ),
       child: DropdownButton(
-        hint: Text('Selecciona un Inmueble', style: TextStyle(fontSize: 15, color: Colors.black),),
+        hint: Text('Selecciona un Inmueble', style: TextStyle(fontSize: 15, color: Color(0xffe1c0ea)),),
         dropdownColor: Colors.grey,
         icon: Icon(Icons.arrow_drop_down),
         iconSize: 36,
@@ -335,7 +356,7 @@ class _ReportePersonasAnualState extends State<ReportePersonasAnual> {
         items: listaDropdownInmueble.map((valueItem){
           return DropdownMenuItem(
             value: '${valueItem.value}',
-            child: Text('${valueItem.value}'),
+            child: Text('${valueItem.value}', style: TextStyle(color: Color(0xffe1c0ea)),),
             onTap: (){
               this.alertaVerde = valueItem.alertaVerde;
               this.alertaOcupacion = valueItem.alertaOcupacion;
@@ -365,8 +386,7 @@ class _ReportePersonasAnualState extends State<ReportePersonasAnual> {
             return null;
           }),
           decoration: BoxDecoration(
-            border: Border.all(color: Colors.black, width: 0.5),
-            color: Theme.of(context).colorScheme.primary.withOpacity(0.8),
+            color: Colors.transparent,
             borderRadius: BorderRadius.circular(5)
           ),
           columns: getColumns(columns) ?? '', 
