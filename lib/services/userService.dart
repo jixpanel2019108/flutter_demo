@@ -1,10 +1,7 @@
 // @dart=2.9
 
 import 'dart:async';
-import 'dart:io';
-import 'dart:js';
 
-import 'package:flutter/material.dart';
 import 'package:flutter_demo/models/catCentroComercialModel.dart';
 import 'package:flutter_demo/models/catRazonSocialModel.dart';
 import 'package:flutter_demo/models/conteoParqueosModel.dart';
@@ -15,12 +12,7 @@ import 'package:flutter_demo/models/listMenuModel.dart';
 import 'package:flutter_demo/models/listPerfilModel.dart';
 import 'package:flutter_demo/models/logoutModel.dart';
 import 'package:flutter_demo/models/reportePersonasAnualModel.dart';
-import 'package:flutter_demo/models/userModel.dart';
-import 'package:flutter_demo/pages/login.dart';
-import 'package:flutter_demo/services/api_base_helper.dart';
 import 'package:flutter_demo/models/loginModel.dart';
-import 'package:flutter_demo/services/app_exceptions.dart';
-import 'package:flutter_demo/utils/user_secure_storage.dart';
 import 'package:flutter_demo/utils/user_simple_preferences.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
