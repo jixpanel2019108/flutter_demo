@@ -4,8 +4,9 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.Dart';
 import 'package:flutter_demo/services/userService.dart';
+import 'package:flutter_demo/services/reportService.dart';
 import 'package:charts_flutter/flutter.dart' as charts;
-import 'package:flutter_demo/models/reportePersonasAnualModel.dart' as reporte;
+import 'package:flutter_demo/models/reportePersonaDiaModel.dart' as reporte;
 import 'package:flutter_demo/models/catCentroComercialModel.dart' as comercial;
 import 'package:flutter_demo/models/catRazonSocialModel.dart' as razon;
 import 'package:flutter_demo/models/conteoPersonasModel.dart' as personas;
@@ -134,14 +135,15 @@ class _ReportePersonasDiario extends State<ReportePersonasDiario> {
         fein = fechainicial.text;
         fefi = fechafinal.text;
         listadoGrafica = [];
-        UserService userService = new UserService();
-        userService.reportePersonasAnual(widget.token, this.id, fein, fefi).then((reporteObtenido) => {
+        ReportService reportService = new ReportService();
+        reportService.reportePersonaDia(widget.token, this.id, fein, fefi).then((reporteObtenido) => {
           if(reporteObtenido.error == true){
-            print('Error al hacer la consula en page reportePersonasAnual')
+            print('Error al hacer la consulta en page reportePersonasDia')
           }else{
             reporteObtenido.listado.forEach((element) {
+              print(element);
               reporte.Listado listado = new reporte.Listado();
-              listado.conteo = element.conteo;
+              listado.entradas = element.entradas;
               listado.fecha = element.fecha;
               listadoGrafica.add(listado);
 
@@ -383,7 +385,7 @@ class _ReportePersonasDiario extends State<ReportePersonasDiario> {
  
   List <DataRow> getRows (List<reporte.Listado> row,) => row.map((reporte.Listado hola,) {
 
-    final cells = [hola.fecha, hola.conteo];
+    final cells = [hola.fecha, hola.entradas];
     return DataRow(cells: getCells(cells));
   }).toList();
 
@@ -394,8 +396,8 @@ class _ReportePersonasDiario extends State<ReportePersonasDiario> {
       charts.Series(
         id: "Financial",
         data: listadoGrafica,
-        domainFn: (reporte.Listado series, _) => series.fecha,
-        measureFn: (reporte.Listado series, _) => int.parse(series.conteo),
+        domainFn: (reporte.Listado series, _) => series.fecha.toString(),
+        measureFn: (reporte.Listado series, _) => int.parse(series.entradas),
         colorFn: (_, __) => charts.MaterialPalette.blue.shadeDefault),
       
     ];
@@ -410,8 +412,8 @@ class _ReportePersonasDiario extends State<ReportePersonasDiario> {
     return [new charts.Series<reporte.Listado, String>(
                   id: 'Reporte',
                   colorFn: (_, __) => charts.MaterialPalette.blue.shadeDefault,
-                  domainFn: (reporte.Listado listado, _) => listado.fecha,
-                  measureFn: (reporte.Listado listado, _) => int.parse(listado.conteo),
+                  domainFn: (reporte.Listado listado, _) => listado.fecha.toString(),
+                  measureFn: (reporte.Listado listado, _) => int.parse(listado.entradas),
                   data: this.listadoGrafica,
                 )];
 
@@ -429,8 +431,8 @@ class _ReportePersonasDiario extends State<ReportePersonasDiario> {
                             
                             ColumnSeries<reporte.Listado, int>(
                                 dataSource: listadoGrafica,
-                                xValueMapper: (reporte.Listado sales, _) => int.parse(sales.fecha),
-                                yValueMapper: (reporte.Listado sales, __) => int.parse(sales.conteo),
+                                xValueMapper: (reporte.Listado sales, _) => int.parse(sales.fecha.toString()),
+                                yValueMapper: (reporte.Listado sales, __) => int.parse(sales.entradas),
                                 color: Theme.of(context).primaryColor,
                                 dataLabelSettings: DataLabelSettings(
                                     isVisible: true,
