@@ -157,7 +157,7 @@ class _ParqueosPage extends State<ParqueosPage> {
     return Container(
       child: Row(
         children: <Widget>[
-          Text( _dateTime == null ? 'No has seleccionado fecha' : _dateTime.toString(), style: TextStyle(color: Color(0xffe1c0ea)),),
+          Text( _dateTime == null ? 'No has seleccionado fecha' : 'La fecha es: ' + _dateTime.toString(), style: TextStyle(color: Color(0xffe1c0ea)),),
           SizedBox(height: 15, width: 15,),
           RaisedButton(
             child: Text('Selecciona una fecha', style: TextStyle(color: Colors.white),),
@@ -342,8 +342,6 @@ class _ParqueosPage extends State<ParqueosPage> {
 
   List <DataCell> getCells(List<dynamic> cells) => cells.map((data) => DataCell(Text('$data' ?? 'nada'))).toList();
 
-
-    
   List <DataRow> getRows (List<personas.Listado1> row,) => row.map((personas.Listado1 hola,) {
 
     final cells = [hola.cc, hola.fecha, hola.acumuladoSalidas, hola.alertaOcupacion, hola.ocupacionInstantanea, hola.hora, hola.entradas, hola.ocupacionMaximaAutorizada, hola.porcentajeOcupacion, hola.salidas, hola.acumuladoEntradas, ];
