@@ -47,16 +47,16 @@ class Listado {
         this.entradas,
     });
 
-    DateTime fecha;
+    String fecha;
     String entradas;
 
     factory Listado.fromJson(Map<String, dynamic> json) => Listado(
-        fecha: DateTime.parse(json["fecha"]),
+        fecha: json["fecha"],
         entradas: json["entradas"],
     );
 
     Map<String, dynamic> toJson() => {
-        "fecha": "${fecha.year.toString().padLeft(4, '0')}-${fecha.month.toString().padLeft(2, '0')}-${fecha.day.toString().padLeft(2, '0')}",
+        "fecha": fecha,
         "entradas": entradas,
     };
 }

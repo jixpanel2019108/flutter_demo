@@ -10,7 +10,9 @@ class ReportService{
   String urlReporte = "https://demo.s3.gt/cargainventarios/ws/post";
 
   Future <ReportePersonaDia> reportePersonaDia (String token, String inmueble, String mes, String year) async{
-
+    print(inmueble);
+    print(mes);
+    print(year);
     var urlRequest = Uri.parse(urlReporte+"/reportePersonaDia");
     var bodyRequest = jsonEncode({"key": "12345", 
                                   "token": token, 
