@@ -7,7 +7,7 @@ import 'package:flutter_demo/models/listMenuAppModel.dart';
 import 'package:flutter_demo/pages/conteoParqueos.dart';
 import 'package:flutter_demo/pages/conteoPersonas.dart';
 import 'package:flutter_demo/pages/reportePersonasAnual.dart';
-import 'package:flutter_demo/pages/reportePersonasDiario.dart';
+import 'package:flutter_demo/pages/reportePersonasDia.dart';
 import 'package:flutter_demo/services/userService.dart';
 
 class MenuPage extends StatefulWidget {
@@ -183,7 +183,7 @@ class _MenuPage extends   State<MenuPage> {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => ReportePersonasDiario(
+                    builder: (context) => ReportePersonasDia(
                       token: widget.token,
                       email: widget.email,
                       nickname: widget.nickname,

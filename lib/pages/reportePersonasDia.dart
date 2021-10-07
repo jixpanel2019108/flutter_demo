@@ -11,11 +11,12 @@ import 'package:flutter_demo/models/catCentroComercialModel.dart' as comercial;
 import 'package:flutter_demo/models/catRazonSocialModel.dart' as razon;
 import 'package:flutter_demo/models/conteoPersonasModel.dart' as personas;
 import 'package:flutter_demo/pages/menu.dart';
+import 'package:intl/intl.dart';
 import 'package:charts_flutter/flutter.dart' as charts;
 import 'package:syncfusion_flutter_charts/charts.dart';
 import 'package:syncfusion_flutter_charts/sparkcharts.dart';
 
-class ReportePersonasDiario extends StatefulWidget {
+class ReportePersonasDia extends StatefulWidget {
   final String token;
   final String nickname;
   final String email;
@@ -24,13 +25,13 @@ class ReportePersonasDiario extends StatefulWidget {
   final bool animacion;
   
 
-  const ReportePersonasDiario({ Key key, this.token, this.nickname, this.email, this.listadoRazon, this.animacion, this.grafica}) :  super(key: key);
+  const ReportePersonasDia({ Key key, this.token, this.nickname, this.email, this.listadoRazon, this.animacion, this.grafica}) :  super(key: key);
 
   @override
-  _ReportePersonasDiario createState() => _ReportePersonasDiario();
+  _ReportePersonasDia createState() => _ReportePersonasDia();
 }
 
-class _ReportePersonasDiario extends State<ReportePersonasDiario> {
+class _ReportePersonasDia extends State<ReportePersonasDia> {
 
   DateTime _dateTime;
   String nombreRazon;
@@ -41,7 +42,7 @@ class _ReportePersonasDiario extends State<ReportePersonasDiario> {
   String alertaRoja;
   String ocupacionMaximaPersonas;
   String ocupacionMaximaParqueos;
-  String id;
+  String idInmueble;
   String value;
   String alertaAmarilla;
   List<comercial.Listado> listadoComercial;
@@ -53,10 +54,10 @@ class _ReportePersonasDiario extends State<ReportePersonasDiario> {
   String fini;
   String ffin;
 
-  final fechainicial = TextEditingController();
-  final fechafinal = TextEditingController();
-  String fein;
-  String fefi;
+  final mesController = TextEditingController();
+  final anioController = TextEditingController();
+  String mes;
+  String anio;
   
   @override
   Widget build(BuildContext context) {
@@ -132,12 +133,24 @@ class _ReportePersonasDiario extends State<ReportePersonasDiario> {
       ),
       color: Color(0xff890e8a),
       onPressed: (){
-        fein = fechainicial.text;
-        fefi = fechafinal.text;
+        mes = mesController.text;
+        anio = anioController.text;
         listadoGrafica = [];
         ReportService reportService = new ReportService();
-        reportService.reportePersonaDia(widget.token, this.id, fein, fefi).then((reporteObtenido) => {
-          if(reporteObtenido.error == true){
+        reportService.reportePersonaDia(widget.token, this.idInmueble, mes, anio).then((reporteObtenido) => {
+          
+          reporteObtenido.listado.forEach((element) {
+              print(element);
+              reporte.Listado listado = new reporte.Listado();
+              listado.entradas = element.entradas;
+              listado.fecha = element.fecha;
+              listadoGrafica.add(listado);
+
+              setState(() {
+                columnChart();
+                tabla();
+              });
+            })/*if(reporteObtenido.error == true){
             print('Error al hacer la consulta en page reportePersonasDia')
           }else{
             reporteObtenido.listado.forEach((element) {
@@ -152,7 +165,7 @@ class _ReportePersonasDiario extends State<ReportePersonasDiario> {
                 tabla();
               });
             })
-          }
+          }*/
         });
       },
     );
@@ -194,15 +207,15 @@ class _ReportePersonasDiario extends State<ReportePersonasDiario> {
               child: Column(
                 children: <Widget>[
                   TextFormField(
-                    controller: fechainicial,
+                    controller: mesController,
                     inputFormatters: [
-                      LengthLimitingTextInputFormatter(4),
+                      LengthLimitingTextInputFormatter(2),
                     ],
                     style: TextStyle(color: Colors.white, fontSize: 15),
                     keyboardType: TextInputType.number,
                     cursorColor: Colors.white,
                     decoration: InputDecoration(
-                      labelText: 'Año Inicial',
+                      labelText: 'Mes',
                       hintStyle: TextStyle(
                         color: Colors.white
                       ),
@@ -230,14 +243,14 @@ class _ReportePersonasDiario extends State<ReportePersonasDiario> {
               child: Column(
                 children: <Widget>[
                   TextFormField(
-                    controller: fechafinal,
+                    controller: anioController,
                     inputFormatters: [
-                      LengthLimitingTextInputFormatter(2),
+                      LengthLimitingTextInputFormatter(4),
                     ],
                     style: TextStyle(color: Colors.white, fontSize: 15),
                     keyboardType: TextInputType.number,
                     decoration: InputDecoration(
-                      labelText: 'Año Final',
+                      labelText: 'A{o',
                       hintStyle: TextStyle(
                         color: Color(0xffe1c0ea)
                       ),
@@ -334,7 +347,7 @@ class _ReportePersonasDiario extends State<ReportePersonasDiario> {
               this.alertaRoja = valueItem.alertaRoja;
               this.ocupacionMaximaPersonas = valueItem.ocupacionMaximaPersonas;
               this.ocupacionMaximaParqueos = valueItem.ocupacionMaximaParqueos;
-              this.id = valueItem.id;
+              this.idInmueble = valueItem.id;
               this.value = valueItem.value;
               this.alertaAmarilla = valueItem.alertaAmarilla;
             },
@@ -349,7 +362,7 @@ class _ReportePersonasDiario extends State<ReportePersonasDiario> {
     return SingleChildScrollView(
       scrollDirection: Axis.horizontal,
       child: Container(
-        padding: EdgeInsets.symmetric(horizontal: 140,),
+        padding: EdgeInsets.symmetric(horizontal: 100,),
         child: DataTable(
           dataRowColor: MaterialStateProperty.resolveWith<Color>((Set<MaterialState> states) {
             if(states.contains(MaterialState.selected))
@@ -420,28 +433,38 @@ class _ReportePersonasDiario extends State<ReportePersonasDiario> {
   }
   
   Widget columnChart(){
-    return SfCartesianChart(
-      primaryXAxis: CategoryAxis(
-                            // Y axis labels will be rendered with currency format
-                            // labelPlacement: LabelPlacement.onTicks
-                            arrangeByIndex: true
-                        ),
-                        series: <ChartSeries>[
-                            // Renders column chart
-                            
-                            ColumnSeries<reporte.Listado, int>(
-                                dataSource: listadoGrafica,
-                                xValueMapper: (reporte.Listado sales, _) => int.parse(sales.fecha.toString()),
-                                yValueMapper: (reporte.Listado sales, __) => int.parse(sales.entradas),
-                                color: Theme.of(context).primaryColor,
-                                dataLabelSettings: DataLabelSettings(
-                                    isVisible: true,
-                                    // Positioning the data label
-                                    labelAlignment: ChartDataLabelAlignment.top
-                                )
-                            )
-                        ]
-                    );
+    final DateFormat formatter = DateFormat('yyyy-MM-dd');
+    DateTime fecha = DateTime.now();
+    final String fechaString = formatter.format(fecha);
+    return Container(
+      child: SfCartesianChart(
+        margin: EdgeInsets.all(0),
+        primaryXAxis: CategoryAxis(
+                              // Y axis labels will be rendered with currency format
+                              // labelPlacement: LabelPlacement.onTicks
+                              arrangeByIndex: true
+                          ),
+                          series: <ChartSeries>[
+                              // Renders column chart
+                              
+                              BarSeries<reporte.Listado, String>(
+                                  dataSource: listadoGrafica,
+                                  xValueMapper: (reporte.Listado sales, _) => sales.fecha,
+                                  yValueMapper: (reporte.Listado sales, __) => int.parse(sales.entradas),
+                                  color: Theme.of(context).primaryColor,
+                                  markerSettings: MarkerSettings(
+                                    height: 150,
+                                    width: 150
+                                  ),
+                                  dataLabelSettings: DataLabelSettings(
+                                      isVisible: true,
+                                      
+                                      labelAlignment: ChartDataLabelAlignment.top
+                                  )
+                              )
+                          ]
+                      ),
+    );
   }
 
   
