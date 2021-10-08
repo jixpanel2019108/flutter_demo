@@ -250,7 +250,7 @@ class _ReportePersonasDia extends State<ReportePersonasDia> {
                     style: TextStyle(color: Colors.white, fontSize: 15),
                     keyboardType: TextInputType.number,
                     decoration: InputDecoration(
-                      labelText: 'A{o',
+                      labelText: 'Año',
                       hintStyle: TextStyle(
                         color: Color(0xffe1c0ea)
                       ),
@@ -362,7 +362,7 @@ class _ReportePersonasDia extends State<ReportePersonasDia> {
     return SingleChildScrollView(
       scrollDirection: Axis.horizontal,
       child: Container(
-        padding: EdgeInsets.symmetric(horizontal: 100,),
+        padding: EdgeInsets.symmetric(horizontal: 120,),
         child: DataTable(
           dataRowColor: MaterialStateProperty.resolveWith<Color>((Set<MaterialState> states) {
             if(states.contains(MaterialState.selected))
@@ -458,7 +458,6 @@ class _ReportePersonasDia extends State<ReportePersonasDia> {
                                   ),
                                   dataLabelSettings: DataLabelSettings(
                                       isVisible: true,
-                                      
                                       labelAlignment: ChartDataLabelAlignment.top
                                   )
                               )
