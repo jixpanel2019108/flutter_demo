@@ -20,6 +20,7 @@ class MenuPage extends StatefulWidget {
 
 class _MenuPage extends   State<MenuPage> {
   final padding = EdgeInsets.symmetric(horizontal: 20);
+  List<Menu> menuIn = [];
   
   @override
   Widget build(BuildContext context){
@@ -89,6 +90,37 @@ class _MenuPage extends   State<MenuPage> {
           ],
         ),
 
+        // child: ListView(
+        //   // Important: Remove any padding from the ListView.
+        //   padding: EdgeInsets.zero,
+        //   children: [
+        //     DrawerHeader(
+        //       decoration: BoxDecoration(
+        //         color: Color(0xffFE1EF8),
+        //       ),
+        //       child: Column(
+        //         children: [
+        //           const SizedBox(height: 40),
+        //           Expanded(
+        //             child: Image.asset('assets/logo_shoppertrace_blanco.png'),
+        //           ),
+        //           const SizedBox(height: 10),
+        //           Text(widget.nickname, style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white),),
+        //           const SizedBox(height: 5),
+        //           Text(widget.email, style: TextStyle(color: Colors.white),)
+        //         ],
+        //       ),
+        //     ),
+        //     ListView.builder(
+        //       itemCount: menuIn.length ?? 0,
+        //           itemBuilder: (BuildContext context, int index) {
+        //             return ListTile(
+        //             title: Text('Item ${index + 1}'),
+        //            );
+        //           },
+        //       )
+        //   ],
+        // ),
         
       ),
     );
@@ -253,6 +285,8 @@ class _MenuPage extends   State<MenuPage> {
       },
     );
   }
+
+  
 
   /*Widget menuList(){
     return Scaffold(
