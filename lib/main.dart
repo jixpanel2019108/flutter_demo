@@ -8,6 +8,7 @@ import 'package:flutter_demo/pages/login.dart';
 import 'package:flutter_demo/pages/forgotPassword.dart';
 import 'package:flutter_demo/pages/conteoPersonas.dart';
 import 'package:flutter_demo/pages/conteoParqueos.dart';
+import 'package:flutter_demo/pages/reportePersonaAnualMes.dart';
 import 'package:flutter_demo/pages/reportePersonasDia.dart';
 import 'package:flutter_demo/utils/user_simple_preferences.dart';
 import 'package:flutter_demo/pages/reportePersonasAnual.dart';
@@ -35,6 +36,7 @@ class MyApp extends StatelessWidget {
         '/conteoParqueos' : (context) => ParqueosPage(),
         '/reporteAnual' : (context) => ReportePersonasAnual(),
         '/reporteDiario' : (context) => ReportePersonasDia(),
+        '/reporteAnualMes' : (context) => ReportePersonaAnualMes(),
       },
     );
   }

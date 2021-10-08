@@ -100,9 +100,11 @@ class _ReportePersonaAnualMes extends State<ReportePersonaAnualMes> {
           const SizedBox(height: 15,),
           union2(),
           const SizedBox(height: 15,),
-          initialDate(),
+          anioInicial(),
           const SizedBox(height: 15,),
-          lastDate(),
+          anioFinal(),
+          const SizedBox(height: 15,),
+          mesesito(),
           const SizedBox(height: 25,),
           botonConsulta(),
           const SizedBox(height: 25,),
@@ -139,7 +141,7 @@ class _ReportePersonaAnualMes extends State<ReportePersonaAnualMes> {
         listadoGrafica = [];
         ReportService reportService = new ReportService();
 
-        reportService.reportePesonaAnualMes(widget.token, widget.nickname, this.idInmueble, mes, anioIni, anioFin).then((reporteObtenido) => {
+        reportService.reportePesonaAnualMes(widget.token, widget.nickname, this.idInmueble, anioIni, anioFin, mes).then((reporteObtenido) => {
           
           cantidadColumnas = reporteObtenido.listado.length.toDouble(),
           reporteObtenido.listado.forEach((element) {
@@ -155,24 +157,6 @@ class _ReportePersonaAnualMes extends State<ReportePersonaAnualMes> {
                 tabla();
               });
             })
-            
-            
-            /*if(reporteObtenido.error == true){
-            print('Error al hacer la consulta en page ReportePersonaAnualMes')
-          }else{
-            reporteObtenido.listado.forEach((element) {
-              print(element);
-              reporte.Listado listado = new reporte.Listado();
-              listado.entradas = element.entradas;
-              listado.fecha = element.fecha;
-              listadoGrafica.add(listado);
-
-              setState(() {
-                columnChart();
-                tabla();
-              });
-            })
-          }*/
         });
       },
     );
@@ -205,7 +189,7 @@ class _ReportePersonaAnualMes extends State<ReportePersonaAnualMes> {
     );
   }
 
-  Widget initialDate() {
+  Widget anioInicial() {
     return Container(
       margin: EdgeInsets.only(right: 250),
       child: StreamBuilder(
@@ -216,13 +200,13 @@ class _ReportePersonaAnualMes extends State<ReportePersonaAnualMes> {
                   TextFormField(
                     controller: mesController,
                     inputFormatters: [
-                      LengthLimitingTextInputFormatter(2),
+                      LengthLimitingTextInputFormatter(4),
                     ],
                     style: TextStyle(color: Colors.white, fontSize: 15),
                     keyboardType: TextInputType.number,
                     cursorColor: Colors.white,
                     decoration: InputDecoration(
-                      labelText: 'Mes',
+                      labelText: 'Año Inicial',
                       hintStyle: TextStyle(
                         color: Colors.white
                       ),
@@ -251,13 +235,13 @@ class _ReportePersonaAnualMes extends State<ReportePersonaAnualMes> {
                   TextFormField(
                     controller: anioFinController,
                     inputFormatters: [
-                      LengthLimitingTextInputFormatter(2),
+                      LengthLimitingTextInputFormatter(4),
                     ],
                     style: TextStyle(color: Colors.white, fontSize: 15),
                     keyboardType: TextInputType.number,
                     cursorColor: Colors.white,
                     decoration: InputDecoration(
-                      labelText: 'Mes',
+                      labelText: 'Año Final',
                       hintStyle: TextStyle(
                         color: Colors.white
                       ),
@@ -275,7 +259,7 @@ class _ReportePersonaAnualMes extends State<ReportePersonaAnualMes> {
     );
   }
 
-  Widget lastDate() {
+  Widget mesesito() {
     return Container(
       margin: EdgeInsets.only(right: 250),
       child: StreamBuilder(
@@ -287,12 +271,12 @@ class _ReportePersonaAnualMes extends State<ReportePersonaAnualMes> {
                   TextFormField(
                     controller: anioIniController,
                     inputFormatters: [
-                      LengthLimitingTextInputFormatter(4),
+                      LengthLimitingTextInputFormatter(2),
                     ],
                     style: TextStyle(color: Colors.white, fontSize: 15),
                     keyboardType: TextInputType.number,
                     decoration: InputDecoration(
-                      labelText: 'Año',
+                      labelText: 'Mes',
                       hintStyle: TextStyle(
                         color: Color(0xffe1c0ea)
                       ),
