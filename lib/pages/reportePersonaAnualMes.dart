@@ -6,17 +6,14 @@ import 'package:flutter/services.Dart';
 import 'package:flutter_demo/services/userService.dart';
 import 'package:flutter_demo/services/reportService.dart';
 import 'package:charts_flutter/flutter.dart' as charts;
-import 'package:flutter_demo/models/reportePersonaDiaModel.dart' as reporte;
+import 'package:flutter_demo/models/reportePersonaAnualMesModel.dart' as reporte;
 import 'package:flutter_demo/models/catCentroComercialModel.dart' as comercial;
 import 'package:flutter_demo/models/catRazonSocialModel.dart' as razon;
 import 'package:flutter_demo/models/conteoPersonasModel.dart' as personas;
 import 'package:flutter_demo/pages/menu.dart';
-import 'package:intl/intl.dart';
-import 'package:charts_flutter/flutter.dart' as charts;
 import 'package:syncfusion_flutter_charts/charts.dart';
-import 'package:syncfusion_flutter_charts/sparkcharts.dart';
 
-class ReportePersonasDia extends StatefulWidget {
+class ReportePersonaAnualMes extends StatefulWidget {
   final String token;
   final String nickname;
   final String email;
@@ -25,13 +22,13 @@ class ReportePersonasDia extends StatefulWidget {
   final bool animacion;
   
 
-  const ReportePersonasDia({ Key key, this.token, this.nickname, this.email, this.listadoRazon, this.animacion, this.grafica}) :  super(key: key);
+  const ReportePersonaAnualMes({ Key key, this.token, this.nickname, this.email, this.listadoRazon, this.animacion, this.grafica}) :  super(key: key);
 
   @override
-  _ReportePersonasDia createState() => _ReportePersonasDia();
+  _ReportePersonaAnualMes createState() => _ReportePersonaAnualMes();
 }
 
-class _ReportePersonasDia extends State<ReportePersonasDia> {
+class _ReportePersonaAnualMes extends State<ReportePersonaAnualMes> {
 
   DateTime _dateTime;
   String nombreRazon;
@@ -56,9 +53,11 @@ class _ReportePersonasDia extends State<ReportePersonasDia> {
   String ffin;
 
   final mesController = TextEditingController();
-  final anioController = TextEditingController();
+  final anioIniController = TextEditingController();
+  final anioFinController = TextEditingController();
   String mes;
-  String anio;
+  String anioIni;
+  String anioFin;
   
   @override
   Widget build(BuildContext context) {
@@ -135,18 +134,20 @@ class _ReportePersonasDia extends State<ReportePersonasDia> {
       color: Color(0xff890e8a),
       onPressed: (){
         mes = mesController.text;
-        anio = anioController.text;
+        anioIni = anioIniController.text;
+        anioFin = anioFinController.text;
         listadoGrafica = [];
         ReportService reportService = new ReportService();
 
-        reportService.reportePersonaDia(widget.token, this.idInmueble, mes, anio).then((reporteObtenido) => {
+        reportService.reportePesonaAnualMes(widget.token, widget.nickname, this.idInmueble, mes, anioIni, anioFin).then((reporteObtenido) => {
           
           cantidadColumnas = reporteObtenido.listado.length.toDouble(),
           reporteObtenido.listado.forEach((element) {
               print(element);
               reporte.Listado listado = new reporte.Listado();
               listado.entradas = element.entradas;
-              listado.fecha = element.fecha;
+              listado.mes = element.mes;
+              listado.year = element.year;
               listadoGrafica.add(listado);
 
               setState(() {
@@ -157,7 +158,7 @@ class _ReportePersonasDia extends State<ReportePersonasDia> {
             
             
             /*if(reporteObtenido.error == true){
-            print('Error al hacer la consulta en page reportePersonasDia')
+            print('Error al hacer la consulta en page ReportePersonaAnualMes')
           }else{
             reporteObtenido.listado.forEach((element) {
               print(element);
@@ -239,6 +240,41 @@ class _ReportePersonasDia extends State<ReportePersonasDia> {
     );
   }
 
+  Widget anioFinal() {
+    return Container(
+      margin: EdgeInsets.only(right: 250),
+      child: StreamBuilder(
+          builder: (BuildContext context, AsyncSnapshot snapshot) {
+            return Container(
+              child: Column(
+                children: <Widget>[
+                  TextFormField(
+                    controller: anioFinController,
+                    inputFormatters: [
+                      LengthLimitingTextInputFormatter(2),
+                    ],
+                    style: TextStyle(color: Colors.white, fontSize: 15),
+                    keyboardType: TextInputType.number,
+                    cursorColor: Colors.white,
+                    decoration: InputDecoration(
+                      labelText: 'Mes',
+                      hintStyle: TextStyle(
+                        color: Colors.white
+                      ),
+                      labelStyle: TextStyle(
+                        color: Color(0xffe1c0ea)
+                      ),
+                    ),
+                  ),
+                  
+                ],
+              ),
+            );
+          }
+      ),
+    );
+  }
+
   Widget lastDate() {
     return Container(
       margin: EdgeInsets.only(right: 250),
@@ -249,7 +285,7 @@ class _ReportePersonasDia extends State<ReportePersonasDia> {
               child: Column(
                 children: <Widget>[
                   TextFormField(
-                    controller: anioController,
+                    controller: anioIniController,
                     inputFormatters: [
                       LengthLimitingTextInputFormatter(4),
                     ],
@@ -404,7 +440,7 @@ class _ReportePersonasDia extends State<ReportePersonasDia> {
  
   List <DataRow> getRows (List<reporte.Listado> row,) => row.map((reporte.Listado hola,) {
 
-    final cells = [hola.fecha, hola.entradas];
+    final cells = [hola.mes, hola.entradas, hola.year];
     return DataRow(cells: getCells(cells));
   }).toList();
 
@@ -415,7 +451,7 @@ class _ReportePersonasDia extends State<ReportePersonasDia> {
       charts.Series(
         id: "Financial",
         data: listadoGrafica,
-        domainFn: (reporte.Listado series, _) => series.fecha.toString(),
+        domainFn: (reporte.Listado series, _) => series.year.toString(),
         measureFn: (reporte.Listado series, _) => int.parse(series.entradas),
         colorFn: (_, __) => charts.MaterialPalette.blue.shadeDefault),
       
@@ -431,7 +467,7 @@ class _ReportePersonasDia extends State<ReportePersonasDia> {
     return [new charts.Series<reporte.Listado, String>(
                   id: 'Reporte',
                   colorFn: (_, __) => charts.MaterialPalette.blue.shadeDefault,
-                  domainFn: (reporte.Listado listado, _) => listado.fecha.toString(),
+                  domainFn: (reporte.Listado listado, _) => listado.year.toString(),
                   measureFn: (reporte.Listado listado, _) => int.parse(listado.entradas),
                   data: this.listadoGrafica,
                 )];
@@ -440,8 +476,8 @@ class _ReportePersonasDia extends State<ReportePersonasDia> {
   
   Widget columnChart(){
     // final DateFormat formatter = DateFormat('yyyy-MM-dd');
-    // DateTime fecha = DateTime.now();
-    // final String fechaString = formatter.format(fecha);
+    // DateTime year = DateTime.now();
+    // final String yearString = formatter.format(year);
     return SafeArea(
       child: SfCartesianChart(
         // margin: EdgeInsets.all(0),
@@ -459,7 +495,7 @@ class _ReportePersonasDia extends State<ReportePersonasDia> {
                               
                               LineSeries<reporte.Listado, String>(
                                   dataSource: listadoGrafica,
-                                  xValueMapper: (reporte.Listado sales, _) => sales.fecha,
+                                  xValueMapper: (reporte.Listado sales, _) => sales.year,
                                   yValueMapper: (reporte.Listado sales, __) => int.parse(sales.entradas),
                                   color: Theme.of(context).primaryColor,
                                   
@@ -485,7 +521,7 @@ class _ReportePersonasDia extends State<ReportePersonasDia> {
           // legend: Legend(isVisible: true),
           series: <ChartSeries>[
             BarSeries<reporte.Listado, String>(dataSource: listadoGrafica, 
-                      xValueMapper: (reporte.Listado sales, _) => sales.fecha,
+                      xValueMapper: (reporte.Listado sales, _) => sales.year,
                       yValueMapper: (reporte.Listado sales, __) => int.parse(sales.entradas),
                       color: Theme.of(context).primaryColor,
                       dataLabelSettings: DataLabelSettings(
