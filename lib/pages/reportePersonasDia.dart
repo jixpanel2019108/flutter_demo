@@ -50,6 +50,7 @@ class _ReportePersonasDia extends State<ReportePersonasDia> {
   List<reporte.Listado> listadoGrafica = [];
   List listaDropdownInmueble = [];
   List listadoTabla = [];
+  double cantidadColumnas = 0;
 
   String fini;
   String ffin;
@@ -68,7 +69,7 @@ class _ReportePersonasDia extends State<ReportePersonasDia> {
       ),
       drawer: MenuPage(token: widget.token, nickname: widget.nickname,email:widget.email,),
       body: SingleChildScrollView(
-        child: Container(
+        child: Container( 
           child: Column(
             children: [
               cuerpo(context),
@@ -106,9 +107,9 @@ class _ReportePersonasDia extends State<ReportePersonasDia> {
           const SizedBox(height: 25,),
           botonConsulta(),
           const SizedBox(height: 25,),
+          columnChart1(),
           tabla(),
-          const SizedBox(height: 25,),
-          columnChart()
+          
           // charts.BarChart(
           //   _createSampleData(),
           //   animate: true,
@@ -137,8 +138,10 @@ class _ReportePersonasDia extends State<ReportePersonasDia> {
         anio = anioController.text;
         listadoGrafica = [];
         ReportService reportService = new ReportService();
+
         reportService.reportePersonaDia(widget.token, this.idInmueble, mes, anio).then((reporteObtenido) => {
           
+          cantidadColumnas = reporteObtenido.listado.length.toDouble(),
           reporteObtenido.listado.forEach((element) {
               print(element);
               reporte.Listado listado = new reporte.Listado();
@@ -150,7 +153,10 @@ class _ReportePersonasDia extends State<ReportePersonasDia> {
                 columnChart();
                 tabla();
               });
-            })/*if(reporteObtenido.error == true){
+            })
+            
+            
+            /*if(reporteObtenido.error == true){
             print('Error al hacer la consulta en page reportePersonasDia')
           }else{
             reporteObtenido.listado.forEach((element) {
@@ -433,34 +439,35 @@ class _ReportePersonasDia extends State<ReportePersonasDia> {
   }
   
   Widget columnChart(){
-    final DateFormat formatter = DateFormat('yyyy-MM-dd');
-    DateTime fecha = DateTime.now();
-    final String fechaString = formatter.format(fecha);
-    return Container(
+    // final DateFormat formatter = DateFormat('yyyy-MM-dd');
+    // DateTime fecha = DateTime.now();
+    // final String fechaString = formatter.format(fecha);
+    return SafeArea(
       child: SfCartesianChart(
-        margin: EdgeInsets.all(0),
+        // margin: EdgeInsets.all(0),
+        title: ChartTitle(text: "Gráfica"),
+        // legend: Legend(isVisible: true),
+        // tooltipBehavior: _tooltipBehavior,
         primaryXAxis: CategoryAxis(
                               // Y axis labels will be rendered with currency format
                               // labelPlacement: LabelPlacement.onTicks
                               arrangeByIndex: true
                           ),
+                          
                           series: <ChartSeries>[
                               // Renders column chart
                               
-                              BarSeries<reporte.Listado, String>(
+                              LineSeries<reporte.Listado, String>(
                                   dataSource: listadoGrafica,
                                   xValueMapper: (reporte.Listado sales, _) => sales.fecha,
                                   yValueMapper: (reporte.Listado sales, __) => int.parse(sales.entradas),
                                   color: Theme.of(context).primaryColor,
-                                  markerSettings: MarkerSettings(
-                                    height: 150,
-                                    width: 150
-                                  ),
+                                  
                                   dataLabelSettings: DataLabelSettings(
-                                      isVisible: true,
-                                      
-                                      labelAlignment: ChartDataLabelAlignment.top
-                                  )
+                                    isVisible: true,
+                                    // Positioning the data label
+                                    labelAlignment: ChartDataLabelAlignment.middle
+                                )
                               )
                           ]
                       ),
@@ -468,5 +475,37 @@ class _ReportePersonasDia extends State<ReportePersonasDia> {
   }
 
   
-  
+  Widget columnChart1(){
+    return Container(
+    height: cantidadColumnas*30, // height of the Container widget
+     // width of the Container widget
+    child: Center(
+      child: SfCartesianChart(
+          title: ChartTitle(text:"Gráfica"),
+          // legend: Legend(isVisible: true),
+          series: <ChartSeries>[
+            BarSeries<reporte.Listado, String>(dataSource: listadoGrafica, 
+                      xValueMapper: (reporte.Listado sales, _) => sales.fecha,
+                      yValueMapper: (reporte.Listado sales, __) => int.parse(sales.entradas),
+                      color: Theme.of(context).primaryColor,
+                      dataLabelSettings: DataLabelSettings(
+                                    isVisible: true,
+                                    // Positioning the data label
+                                    labelAlignment: ChartDataLabelAlignment.top
+                    )
+                      )
+                      
+          ],
+          primaryXAxis: CategoryAxis(
+                            // Y axis labels will be rendered with currency format
+                            // labelPlacement: LabelPlacement.onTicks
+                            arrangeByIndex: true
+                            
+                        ),
+          
+        )
+      )
+    );
+    
+  }
 }
