@@ -198,7 +198,7 @@ class _ReportePersonaAnualMes extends State<ReportePersonaAnualMes> {
               child: Column(
                 children: <Widget>[
                   TextFormField(
-                    controller: mesController,
+                    controller: anioIniController,
                     inputFormatters: [
                       LengthLimitingTextInputFormatter(4),
                     ],
@@ -269,7 +269,7 @@ class _ReportePersonaAnualMes extends State<ReportePersonaAnualMes> {
               child: Column(
                 children: <Widget>[
                   TextFormField(
-                    controller: anioIniController,
+                    controller: mesController,
                     inputFormatters: [
                       LengthLimitingTextInputFormatter(2),
                     ],
@@ -384,7 +384,7 @@ class _ReportePersonaAnualMes extends State<ReportePersonaAnualMes> {
   }
 
   Widget tabla(){
-    final columns = ['Fecha','Conteo'];
+    final columns = ['Año','Mes','Conteo'];
     return SingleChildScrollView(
       scrollDirection: Axis.horizontal,
       child: Container(
@@ -424,7 +424,7 @@ class _ReportePersonaAnualMes extends State<ReportePersonaAnualMes> {
  
   List <DataRow> getRows (List<reporte.Listado> row,) => row.map((reporte.Listado hola,) {
 
-    final cells = [hola.mes, hola.entradas, hola.year];
+    final cells = [hola.year, hola.mes, hola.entradas];
     return DataRow(cells: getCells(cells));
   }).toList();
 
@@ -435,7 +435,7 @@ class _ReportePersonaAnualMes extends State<ReportePersonaAnualMes> {
       charts.Series(
         id: "Financial",
         data: listadoGrafica,
-        domainFn: (reporte.Listado series, _) => series.year.toString(),
+        domainFn: (reporte.Listado series, _) => series.year + series.mes,
         measureFn: (reporte.Listado series, _) => int.parse(series.entradas),
         colorFn: (_, __) => charts.MaterialPalette.blue.shadeDefault),
       
@@ -451,7 +451,7 @@ class _ReportePersonaAnualMes extends State<ReportePersonaAnualMes> {
     return [new charts.Series<reporte.Listado, String>(
                   id: 'Reporte',
                   colorFn: (_, __) => charts.MaterialPalette.blue.shadeDefault,
-                  domainFn: (reporte.Listado listado, _) => listado.year.toString(),
+                  domainFn: (reporte.Listado listado, _) => listado.year + listado.mes,
                   measureFn: (reporte.Listado listado, _) => int.parse(listado.entradas),
                   data: this.listadoGrafica,
                 )];
@@ -479,7 +479,7 @@ class _ReportePersonaAnualMes extends State<ReportePersonaAnualMes> {
                               
                               LineSeries<reporte.Listado, String>(
                                   dataSource: listadoGrafica,
-                                  xValueMapper: (reporte.Listado sales, _) => sales.year,
+                                  xValueMapper: (reporte.Listado sales, _) => sales.year + sales.mes,
                                   yValueMapper: (reporte.Listado sales, __) => int.parse(sales.entradas),
                                   color: Theme.of(context).primaryColor,
                                   
@@ -505,7 +505,7 @@ class _ReportePersonaAnualMes extends State<ReportePersonaAnualMes> {
           // legend: Legend(isVisible: true),
           series: <ChartSeries>[
             BarSeries<reporte.Listado, String>(dataSource: listadoGrafica, 
-                      xValueMapper: (reporte.Listado sales, _) => sales.year,
+                      xValueMapper: (reporte.Listado sales, _) => sales.year + sales.mes,
                       yValueMapper: (reporte.Listado sales, __) => int.parse(sales.entradas),
                       color: Theme.of(context).primaryColor,
                       dataLabelSettings: DataLabelSettings(
