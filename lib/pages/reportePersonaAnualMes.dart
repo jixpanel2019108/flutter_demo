@@ -100,9 +100,11 @@ class _ReportePersonaAnualMes extends State<ReportePersonaAnualMes> {
           const SizedBox(height: 15,),
           union2(),
           const SizedBox(height: 15,),
-          initialDate(),
+          anioInicial(),
           const SizedBox(height: 15,),
-          lastDate(),
+          anioFinal(),
+          const SizedBox(height: 15,),
+          mesesito(),
           const SizedBox(height: 25,),
           botonConsulta(),
           const SizedBox(height: 25,),
@@ -139,7 +141,7 @@ class _ReportePersonaAnualMes extends State<ReportePersonaAnualMes> {
         listadoGrafica = [];
         ReportService reportService = new ReportService();
 
-        reportService.reportePesonaAnualMes(widget.token, widget.nickname, this.idInmueble, mes, anioIni, anioFin).then((reporteObtenido) => {
+        reportService.reportePesonaAnualMes(widget.token, widget.nickname, this.idInmueble, anioIni, anioFin, mes).then((reporteObtenido) => {
           
           cantidadColumnas = reporteObtenido.listado.length.toDouble(),
           reporteObtenido.listado.forEach((element) {
@@ -155,24 +157,6 @@ class _ReportePersonaAnualMes extends State<ReportePersonaAnualMes> {
                 tabla();
               });
             })
-            
-            
-            /*if(reporteObtenido.error == true){
-            print('Error al hacer la consulta en page ReportePersonaAnualMes')
-          }else{
-            reporteObtenido.listado.forEach((element) {
-              print(element);
-              reporte.Listado listado = new reporte.Listado();
-              listado.entradas = element.entradas;
-              listado.fecha = element.fecha;
-              listadoGrafica.add(listado);
-
-              setState(() {
-                columnChart();
-                tabla();
-              });
-            })
-          }*/
         });
       },
     );
@@ -205,7 +189,7 @@ class _ReportePersonaAnualMes extends State<ReportePersonaAnualMes> {
     );
   }
 
-  Widget initialDate() {
+  Widget anioInicial() {
     return Container(
       margin: EdgeInsets.only(right: 250),
       child: StreamBuilder(
@@ -214,15 +198,15 @@ class _ReportePersonaAnualMes extends State<ReportePersonaAnualMes> {
               child: Column(
                 children: <Widget>[
                   TextFormField(
-                    controller: mesController,
+                    controller: anioIniController,
                     inputFormatters: [
-                      LengthLimitingTextInputFormatter(2),
+                      LengthLimitingTextInputFormatter(4),
                     ],
                     style: TextStyle(color: Colors.white, fontSize: 15),
                     keyboardType: TextInputType.number,
                     cursorColor: Colors.white,
                     decoration: InputDecoration(
-                      labelText: 'Mes',
+                      labelText: 'Año Inicial',
                       hintStyle: TextStyle(
                         color: Colors.white
                       ),
@@ -251,13 +235,13 @@ class _ReportePersonaAnualMes extends State<ReportePersonaAnualMes> {
                   TextFormField(
                     controller: anioFinController,
                     inputFormatters: [
-                      LengthLimitingTextInputFormatter(2),
+                      LengthLimitingTextInputFormatter(4),
                     ],
                     style: TextStyle(color: Colors.white, fontSize: 15),
                     keyboardType: TextInputType.number,
                     cursorColor: Colors.white,
                     decoration: InputDecoration(
-                      labelText: 'Mes',
+                      labelText: 'Año Final',
                       hintStyle: TextStyle(
                         color: Colors.white
                       ),
@@ -275,7 +259,7 @@ class _ReportePersonaAnualMes extends State<ReportePersonaAnualMes> {
     );
   }
 
-  Widget lastDate() {
+  Widget mesesito() {
     return Container(
       margin: EdgeInsets.only(right: 250),
       child: StreamBuilder(
@@ -285,14 +269,14 @@ class _ReportePersonaAnualMes extends State<ReportePersonaAnualMes> {
               child: Column(
                 children: <Widget>[
                   TextFormField(
-                    controller: anioIniController,
+                    controller: mesController,
                     inputFormatters: [
-                      LengthLimitingTextInputFormatter(4),
+                      LengthLimitingTextInputFormatter(2),
                     ],
                     style: TextStyle(color: Colors.white, fontSize: 15),
                     keyboardType: TextInputType.number,
                     decoration: InputDecoration(
-                      labelText: 'Año',
+                      labelText: 'Mes',
                       hintStyle: TextStyle(
                         color: Color(0xffe1c0ea)
                       ),
@@ -400,7 +384,7 @@ class _ReportePersonaAnualMes extends State<ReportePersonaAnualMes> {
   }
 
   Widget tabla(){
-    final columns = ['Fecha','Conteo'];
+    final columns = ['Año','Mes','Conteo'];
     return SingleChildScrollView(
       scrollDirection: Axis.horizontal,
       child: Container(
@@ -440,7 +424,7 @@ class _ReportePersonaAnualMes extends State<ReportePersonaAnualMes> {
  
   List <DataRow> getRows (List<reporte.Listado> row,) => row.map((reporte.Listado hola,) {
 
-    final cells = [hola.mes, hola.entradas, hola.year];
+    final cells = [hola.year, hola.mes, hola.entradas];
     return DataRow(cells: getCells(cells));
   }).toList();
 
@@ -451,7 +435,7 @@ class _ReportePersonaAnualMes extends State<ReportePersonaAnualMes> {
       charts.Series(
         id: "Financial",
         data: listadoGrafica,
-        domainFn: (reporte.Listado series, _) => series.year.toString(),
+        domainFn: (reporte.Listado series, _) => series.year + series.mes,
         measureFn: (reporte.Listado series, _) => int.parse(series.entradas),
         colorFn: (_, __) => charts.MaterialPalette.blue.shadeDefault),
       
@@ -467,7 +451,7 @@ class _ReportePersonaAnualMes extends State<ReportePersonaAnualMes> {
     return [new charts.Series<reporte.Listado, String>(
                   id: 'Reporte',
                   colorFn: (_, __) => charts.MaterialPalette.blue.shadeDefault,
-                  domainFn: (reporte.Listado listado, _) => listado.year.toString(),
+                  domainFn: (reporte.Listado listado, _) => listado.year + listado.mes,
                   measureFn: (reporte.Listado listado, _) => int.parse(listado.entradas),
                   data: this.listadoGrafica,
                 )];
@@ -495,7 +479,7 @@ class _ReportePersonaAnualMes extends State<ReportePersonaAnualMes> {
                               
                               LineSeries<reporte.Listado, String>(
                                   dataSource: listadoGrafica,
-                                  xValueMapper: (reporte.Listado sales, _) => sales.year,
+                                  xValueMapper: (reporte.Listado sales, _) => sales.year + sales.mes,
                                   yValueMapper: (reporte.Listado sales, __) => int.parse(sales.entradas),
                                   color: Theme.of(context).primaryColor,
                                   
@@ -521,7 +505,7 @@ class _ReportePersonaAnualMes extends State<ReportePersonaAnualMes> {
           // legend: Legend(isVisible: true),
           series: <ChartSeries>[
             BarSeries<reporte.Listado, String>(dataSource: listadoGrafica, 
-                      xValueMapper: (reporte.Listado sales, _) => sales.year,
+                      xValueMapper: (reporte.Listado sales, _) => sales.year + sales.mes,
                       yValueMapper: (reporte.Listado sales, __) => int.parse(sales.entradas),
                       color: Theme.of(context).primaryColor,
                       dataLabelSettings: DataLabelSettings(
