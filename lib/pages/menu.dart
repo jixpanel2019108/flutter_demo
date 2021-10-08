@@ -73,6 +73,12 @@ class _MenuPage extends   State<MenuPage> {
               icon: Icons.people,   
               indice: 6
             ),
+            const SizedBox(height: 16,),
+            buildMenuItem(
+              text: 'Reporte Personas Mes Anual',
+              icon: Icons.people,   
+              indice: 7
+            ),
             const SizedBox(height: 24),
             Divider(color: Colors.white70),
             const SizedBox(height: 24),
@@ -177,6 +183,27 @@ class _MenuPage extends   State<MenuPage> {
           }
           break;
           case 6: {
+            UserService userService = new UserService();
+            userService.razonSocial(widget.token).then((peticionRazonSocial) => {
+              if(peticionRazonSocial.error == false){
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => ReportePersonasDia(
+                      token: widget.token,
+                      email: widget.email,
+                      nickname: widget.nickname,
+                      listadoRazon: peticionRazonSocial.listado,
+                    )
+                  )
+                )
+              }else{
+                print('Error en boton menu Conteo Parqueos')
+              }
+            });
+          }
+          break;
+          case 7: {
             UserService userService = new UserService();
             userService.razonSocial(widget.token).then((peticionRazonSocial) => {
               if(peticionRazonSocial.error == false){
