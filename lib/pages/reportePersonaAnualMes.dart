@@ -55,7 +55,7 @@ class _ReportePersonaAnualMes extends State<ReportePersonaAnualMes> {
   final mesController = TextEditingController();
   final anioIniController = TextEditingController();
   final anioFinController = TextEditingController();
-  String mes;
+  String mes = "";
   String anioIni;
   String anioFin;
   
@@ -109,6 +109,8 @@ class _ReportePersonaAnualMes extends State<ReportePersonaAnualMes> {
           botonConsulta(),
           const SizedBox(height: 25,),
           columnChart1(),
+          const SizedBox(height: 15,),
+          Center(child:Text("Datos", style: TextStyle(color: Colors.white,fontFamily: 'Gotic', fontWeight: FontWeight.bold, fontSize: 14),)),
           tabla(),
           
           // charts.BarChart(
@@ -143,15 +145,16 @@ class _ReportePersonaAnualMes extends State<ReportePersonaAnualMes> {
 
         reportService.reportePesonaAnualMes(widget.token, widget.nickname, this.idInmueble, anioIni, anioFin, mes).then((reporteObtenido) => {
           
+
           cantidadColumnas = reporteObtenido.listado.length.toDouble(),
           reporteObtenido.listado.forEach((element) {
-              print(element);
+              print(element.year);
               reporte.Listado listado = new reporte.Listado();
               listado.entradas = element.entradas;
               listado.mes = element.mes;
               listado.year = element.year;
               listadoGrafica.add(listado);
-
+              print(element);
               setState(() {
                 columnChart();
                 tabla();
@@ -423,7 +426,6 @@ class _ReportePersonaAnualMes extends State<ReportePersonaAnualMes> {
   List <DataCell> getCells(List<dynamic> cells) => cells.map((data) => DataCell(Text('$data' ?? 'nada'))).toList();
  
   List <DataRow> getRows (List<reporte.Listado> row,) => row.map((reporte.Listado hola,) {
-
     final cells = [hola.year, hola.mes, hola.entradas];
     return DataRow(cells: getCells(cells));
   }).toList();
@@ -479,7 +481,7 @@ class _ReportePersonaAnualMes extends State<ReportePersonaAnualMes> {
                               
                               LineSeries<reporte.Listado, String>(
                                   dataSource: listadoGrafica,
-                                  xValueMapper: (reporte.Listado sales, _) => sales.year + sales.mes,
+                                  xValueMapper: (reporte.Listado sales, _) => sales.year,
                                   yValueMapper: (reporte.Listado sales, __) => int.parse(sales.entradas),
                                   color: Theme.of(context).primaryColor,
                                   
@@ -497,15 +499,19 @@ class _ReportePersonaAnualMes extends State<ReportePersonaAnualMes> {
   
   Widget columnChart1(){
     return Container(
-    height: cantidadColumnas*30, // height of the Container widget
+    height: 100*cantidadColumnas, // height of the Container widget
      // width of the Container widget
     child: Center(
       child: SfCartesianChart(
-          title: ChartTitle(text:"Gráfica"),
+          title: ChartTitle(text:"Gráfica mes " + this.mes , textStyle: TextStyle(
+                    color: Colors.white,
+                    fontFamily: 'Gotic',
+                    fontWeight: FontWeight.w400
+                  )),
           // legend: Legend(isVisible: true),
           series: <ChartSeries>[
             BarSeries<reporte.Listado, String>(dataSource: listadoGrafica, 
-                      xValueMapper: (reporte.Listado sales, _) => sales.year + sales.mes,
+                      xValueMapper: (reporte.Listado sales, _) => sales.year,
                       yValueMapper: (reporte.Listado sales, __) => int.parse(sales.entradas),
                       color: Theme.of(context).primaryColor,
                       dataLabelSettings: DataLabelSettings(
