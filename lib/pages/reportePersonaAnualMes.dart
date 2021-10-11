@@ -151,7 +151,7 @@ class _ReportePersonaAnualMes extends State<ReportePersonaAnualMes> {
               listado.mes = element.mes;
               listado.year = element.year;
               listadoGrafica.add(listado);
-
+              print(element);
               setState(() {
                 columnChart();
                 tabla();
@@ -423,7 +423,6 @@ class _ReportePersonaAnualMes extends State<ReportePersonaAnualMes> {
   List <DataCell> getCells(List<dynamic> cells) => cells.map((data) => DataCell(Text('$data' ?? 'nada'))).toList();
  
   List <DataRow> getRows (List<reporte.Listado> row,) => row.map((reporte.Listado hola,) {
-
     final cells = [hola.year, hola.mes, hola.entradas];
     return DataRow(cells: getCells(cells));
   }).toList();
@@ -479,7 +478,7 @@ class _ReportePersonaAnualMes extends State<ReportePersonaAnualMes> {
                               
                               LineSeries<reporte.Listado, String>(
                                   dataSource: listadoGrafica,
-                                  xValueMapper: (reporte.Listado sales, _) => sales.year + sales.mes,
+                                  xValueMapper: (reporte.Listado sales, _) => sales.year,
                                   yValueMapper: (reporte.Listado sales, __) => int.parse(sales.entradas),
                                   color: Theme.of(context).primaryColor,
                                   
@@ -505,7 +504,7 @@ class _ReportePersonaAnualMes extends State<ReportePersonaAnualMes> {
           // legend: Legend(isVisible: true),
           series: <ChartSeries>[
             BarSeries<reporte.Listado, String>(dataSource: listadoGrafica, 
-                      xValueMapper: (reporte.Listado sales, _) => sales.year + sales.mes,
+                      xValueMapper: (reporte.Listado sales, _) => sales.year,
                       yValueMapper: (reporte.Listado sales, __) => int.parse(sales.entradas),
                       color: Theme.of(context).primaryColor,
                       dataLabelSettings: DataLabelSettings(
