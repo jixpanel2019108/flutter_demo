@@ -14,6 +14,7 @@ class MenuPage extends StatefulWidget {
   final String nickname;
   final String email;
   final List<Menu> menu;
+  
   const MenuPage({ Key key, this.token, this.nickname, this.email, this.menu }) : super(key: key);
   @override
   _MenuPage createState() => _MenuPage();
@@ -22,6 +23,7 @@ class MenuPage extends StatefulWidget {
 class _MenuPage extends   State<MenuPage> {
   final padding = EdgeInsets.symmetric(horizontal: 20);
   List<Menu> menuIn = [];
+  String value1;
   
   @override
   Widget build(BuildContext context){
@@ -90,42 +92,59 @@ class _MenuPage extends   State<MenuPage> {
             ),
           ],
         ),
-
-        // child: ListView(
-        //   // Important: Remove any padding from the ListView.
-        //   padding: EdgeInsets.zero,
-        //   children: [
-        //     DrawerHeader(
-        //       decoration: BoxDecoration(
-        //         color: Color(0xffFE1EF8),
-        //       ),
-        //       child: Column(
-        //         children: [
-        //           const SizedBox(height: 40),
-        //           Expanded(
-        //             child: Image.asset('assets/logo_shoppertrace_blanco.png'),
-        //           ),
-        //           const SizedBox(height: 10),
-        //           Text(widget.nickname, style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white),),
-        //           const SizedBox(height: 5),
-        //           Text(widget.email, style: TextStyle(color: Colors.white),)
-        //         ],
-        //       ),
-        //     ),
-        //     ListView.builder(
-        //       itemCount: menuIn.length ?? 0,
-        //           itemBuilder: (BuildContext context, int index) {
-        //             return ListTile(
-        //             title: Text('Item ${index + 1}'),
-        //            );
-        //           },
-        //       )
-        //   ],
-        // ),
-        
       ),
     );
   }
+
+  
+  /*Widget dropdown1(){
+    List menu1 = [];
+    return Container(
+      padding: EdgeInsets.only(left: 16, right: 16),
+      decoration: BoxDecoration(
+        border: Border.all(color: Color(0xffFE1EF8), width: 2),
+        borderRadius: BorderRadius.circular(10)
+      ),
+
+      child: DropdownButton(
+        hint: Text('Selecciona una Razón', style: TextStyle(fontSize: 15, color: Color(0xffe1c0ea)),),
+        dropdownColor: Colors.grey,
+        icon: Icon(Icons.arrow_drop_down),
+        iconSize: 36,
+        underline: SizedBox(),
+        style: TextStyle(
+          color: Colors.black,
+          fontSize: 15
+        ),
+        value: value1,
+        onChanged: (newValue){
+          setState(() {
+            value1 = newValue;
+          });
+        },
+        items: menu1.map((listado){
+          return DropdownMenuItem(
+            value: '${listado.value}',
+            child: Text('${listado.value}', style: TextStyle(color: Color(0xffe1c0ea)),),
+            onTap: (){
+              idRazon = listado.id;
+              UserService userService = new UserService();
+              userService.centroComercial(widget.token, listado.id).then((centrosComerciales) =>{
+                if(centrosComerciales.error == true){
+                  print('Error al obtener los inmuebles')
+                }else{
+                  menu1 = centrosComerciales.listado,
+                  //this.listadoComercial = this.listadoComercial,
+                  this.pruebalista = menu1 != null? menu1 : <comercial.Listado>[]
+                }
+
+              });
+            },
+          );
+        }).toList()
+      ), 
+    );
+  }*/
 
   Widget buildMenuItem({
     String text,
