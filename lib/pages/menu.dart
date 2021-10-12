@@ -86,7 +86,7 @@ class _MenuPage extends   State<MenuPage> {
             ),
             const SizedBox(height: 16,),
             buildMenuItem(
-              text: 'Reporte Personas Mes Anual',
+              text: 'Reporte Personas Meses Anual',
               icon: Icons.people,   
               indice: 8
             ),

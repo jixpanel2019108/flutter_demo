@@ -6,7 +6,7 @@ import 'package:flutter/services.Dart';
 import 'package:flutter_demo/services/userService.dart';
 import 'package:flutter_demo/services/reportService.dart';
 import 'package:charts_flutter/flutter.dart' as charts;
-import 'package:flutter_demo/models/reportePersonasMesesCincoAnual.dart' as reporte;
+import 'package:flutter_demo/models/reportePersonasMesesCincoAnualModel.dart' as reporte;
 import 'package:flutter_demo/models/catCentroComercialModel.dart' as comercial;
 import 'package:flutter_demo/models/catRazonSocialModel.dart' as razon;
 import 'package:flutter_demo/models/conteoPersonasModel.dart' as personas;
@@ -143,7 +143,7 @@ class _reportePersonasMesesCincoAnual extends State<reportePersonasMesesCincoAnu
         listadoGrafica = [];
         ReportService reportService = new ReportService();
 
-        reportService.reportePesonaAnualMes(widget.token, widget.nickname, this.idInmueble, anioIni, anioFin, mes).then((reporteObtenido) => {
+        reportService.reportePersonasMesesCincoAnual(widget.token, widget.nickname, this.idInmueble, anioIni, anioFin, mes).then((reporteObtenido) => {
 
           cantidadColumnas = reporteObtenido.listado.length.toDouble(),
           reporteObtenido.listado.forEach((element) {
@@ -155,7 +155,7 @@ class _reportePersonasMesesCincoAnual extends State<reportePersonasMesesCincoAnu
               listadoGrafica.add(listado);
               print(element);
               setState(() {
-                columnChart();
+                columnChart1();
                 tabla();
               });
             })
@@ -428,77 +428,15 @@ class _reportePersonasMesesCincoAnual extends State<reportePersonasMesesCincoAnu
     final cells = [hola.year, hola.mes, hola.entradas];
     return DataRow(cells: getCells(cells));
   }).toList();
-
-
-  Widget grafica(){
-
-    List<charts.Series<reporte.Listado,String>> series = [
-      charts.Series(
-        id: "Financial",
-        data: listadoGrafica,
-        domainFn: (reporte.Listado series, _) => series.year + series.mes,
-        measureFn: (reporte.Listado series, _) => int.parse(series.entradas),
-        colorFn: (_, __) => charts.MaterialPalette.blue.shadeDefault),
-      
-    ];
-    
-  
-
-  }
-
  
-  List<charts.Series<reporte.Listado, String>> _createSampleData() {
-
-    return [new charts.Series<reporte.Listado, String>(
-                  id: 'Reporte',
-                  colorFn: (_, __) => charts.MaterialPalette.blue.shadeDefault,
-                  domainFn: (reporte.Listado listado, _) => listado.year + listado.mes,
-                  measureFn: (reporte.Listado listado, _) => int.parse(listado.entradas),
-                  data: this.listadoGrafica,
-                )];
-
-  }
-  
-  Widget columnChart(){
-    // final DateFormat formatter = DateFormat('yyyy-MM-dd');
-    // DateTime year = DateTime.now();
-    // final String yearString = formatter.format(year);
-    return SafeArea(
-      child: SfCartesianChart(
-        // margin: EdgeInsets.all(0),
-        title: ChartTitle(text: "Gráfica"),
-        // legend: Legend(isVisible: true),
-        // tooltipBehavior: _tooltipBehavior,
-        primaryXAxis: CategoryAxis(
-                              // Y axis labels will be rendered with currency format
-                              // labelPlacement: LabelPlacement.onTicks
-                              arrangeByIndex: true
-                          ),
-                          
-                          series: <ChartSeries>[
-                              // Renders column chart
-                              
-                              LineSeries<reporte.Listado, String>(
-                                  dataSource: listadoGrafica,
-                                  xValueMapper: (reporte.Listado sales, _) => sales.year,
-                                  yValueMapper: (reporte.Listado sales, __) => int.parse(sales.entradas),
-                                  color: Theme.of(context).primaryColor,
-                                  
-                                  dataLabelSettings: DataLabelSettings(
-                                    isVisible: true,
-                                    // Positioning the data label
-                                    labelAlignment: ChartDataLabelAlignment.middle
-                                )
-                              )
-                          ]
-                      ),
-    );
-  }
-
-  
   Widget columnChart1(){
+    Color color1 = Colors.red;
+    Color color2 = Colors.yellow;
+    Color color3 = Colors.blueAccent;
+    Color color4 = Colors.red;
+    Color color5 = Colors.red;
     return Container(
-    height: 100*cantidadColumnas, // height of the Container widget
+    height: 25*cantidadColumnas, // height of the Container widget
      // width of the Container widget
     child: Center(
       child: SfCartesianChart(
