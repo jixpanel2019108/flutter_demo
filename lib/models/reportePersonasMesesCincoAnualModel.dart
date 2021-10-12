@@ -55,7 +55,7 @@ class Listado {
     factory Listado.fromJson(Map<String, dynamic> json) => Listado(
         entradas: json["entradas"],
         mes: json["mes"],
-        year: json["AÃ±o"],
+        year: json["aÃ±o"],
     );
 
     Map<String, dynamic> toJson() => {
