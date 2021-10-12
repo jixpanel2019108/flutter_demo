@@ -4,6 +4,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'package:flutter_demo/models/reportePersonaAnualMesModel.dart';
 import 'package:flutter_demo/models/reportePersonaDiaModel.dart';
+import 'package:flutter_demo/models/reportePersonasMesesCincoAnual.dart';
 import 'package:http/http.dart' as http;
 
 class ReportService{
@@ -65,5 +66,40 @@ class ReportService{
       throw Exception('Failed to load in reportePersonaAnualMes Service');
     }
   }
+
+  Future <ReportePersonasMesesCincoAnual> reportePersonasMesesCincoAnual (String token,String usuario, String inmueble, String aini, String afin, String mes) async{
+
+    print(inmueble);
+    print(aini);
+    print(afin);
+    print(mes);
+    
+
+    var urlRequest = Uri.parse(urlReporte+"/reportePersonasMesesCincoAnual");
+    var bodyRequest = jsonEncode({
+                                    "key": "12345",
+                                    "token": token,
+                                    "inmueble": inmueble,
+                                    "aini": aini,
+                                    "afin": afin,
+                                    "mes": mes,
+                                    "excel":"0"
+                                  });
+    
+    final http.Response response = await http.post(urlRequest, 
+                                      headers: <String,String>{ "Content-Type": "application/json"},
+                                      body: bodyRequest);
+    final body = json.decode(response.body);
+
+    if(response.statusCode == 200 || response.statusCode == 202){
+      print(body);
+      return ReportePersonasMesesCincoAnual.fromJson(json.decode(response.body));
+    }else{
+      throw Exception('Failed to load in reportePersonaAnualMes Service');
+    }
+  }
+
+
+
 }
 
