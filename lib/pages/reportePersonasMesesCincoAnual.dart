@@ -6,7 +6,7 @@ import 'package:flutter/services.Dart';
 import 'package:flutter_demo/services/userService.dart';
 import 'package:flutter_demo/services/reportService.dart';
 import 'package:charts_flutter/flutter.dart' as charts;
-import 'package:flutter_demo/models/reportePersonaAnualMesModel.dart' as reporte;
+import 'package:flutter_demo/models/reportePersonasMesesCincoAnual.dart' as reporte;
 import 'package:flutter_demo/models/catCentroComercialModel.dart' as comercial;
 import 'package:flutter_demo/models/catRazonSocialModel.dart' as razon;
 import 'package:flutter_demo/models/conteoPersonasModel.dart' as personas;
@@ -144,7 +144,6 @@ class _reportePersonasMesesCincoAnual extends State<reportePersonasMesesCincoAnu
         ReportService reportService = new ReportService();
 
         reportService.reportePesonaAnualMes(widget.token, widget.nickname, this.idInmueble, anioIni, anioFin, mes).then((reporteObtenido) => {
-          
 
           cantidadColumnas = reporteObtenido.listado.length.toDouble(),
           reporteObtenido.listado.forEach((element) {
