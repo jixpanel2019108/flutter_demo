@@ -50,12 +50,22 @@ class _ReportePersonaAnioMesHora extends State<ReportePersonaAnioMesHora> {
   String fini;
   String ffin;
 
-  final mesController = TextEditingController();
+  final mesIniController = TextEditingController();
   final anioIniController = TextEditingController();
   final anioFinController = TextEditingController();
-  String mes = "";
+  final mesFinController = TextEditingController();
+  final diaIniController = TextEditingController();
+  final diaFinController = TextEditingController();
+  final horaIniController = TextEditingController();
+  final horaFinController = TextEditingController();
+  String mesIni = "";
+  String mesFin;
   String anioIni;
   String anioFin;
+  String diaIni;
+  String diaFin;
+  String horaIni;
+  String horaFin;
   bool dropdown1Bool = false;
   bool dropdown2Bool = false;
   
@@ -106,11 +116,19 @@ class _ReportePersonaAnioMesHora extends State<ReportePersonaAnioMesHora> {
           const SizedBox(height: 15,),
           anioFinal(),
           const SizedBox(height: 15,),
-          mesesito(),
+          mesInicial(),
+          const SizedBox(height: 15,),
+          mesFinal(),
+          const SizedBox(height: 15,),
+          diaInicial(),
+          const SizedBox(height: 15,),
+          diaFinal(),
+          const SizedBox(height: 15,),
+          horaInicial(),
+          const SizedBox(height: 15,),
+          horaFinal(),
           const SizedBox(height: 25,),
           botonConsulta(),
-          const SizedBox(height: 25,),
-          columnChart(),
           const SizedBox(height: 15,),
           Center(child:Text("Datos", style: TextStyle(color: Colors.white,fontFamily: 'Gotic', fontWeight: FontWeight.bold, fontSize: 14),)),
           tabla(),
@@ -213,7 +231,7 @@ class _ReportePersonaAnioMesHora extends State<ReportePersonaAnioMesHora> {
     );
   }
 
-  Widget mesesito() {
+  Widget mesInicial() {
     return Container(
       margin: EdgeInsets.only(right: 250),
       child: StreamBuilder(
@@ -223,14 +241,184 @@ class _ReportePersonaAnioMesHora extends State<ReportePersonaAnioMesHora> {
               child: Column(
                 children: <Widget>[
                   TextFormField(
-                    controller: mesController,
+                    controller: mesIniController,
                     inputFormatters: [
                       LengthLimitingTextInputFormatter(2),
                     ],
                     style: TextStyle(color: Colors.white, fontSize: 15),
                     keyboardType: TextInputType.number,
                     decoration: InputDecoration(
-                      labelText: 'Mes',
+                      labelText: 'Mes Inicial',
+                      hintStyle: TextStyle(
+                        color: Color(0xffe1c0ea)
+                      ),
+                      labelStyle: TextStyle(
+                        color: Color(0xffe1c0ea)
+                      ),
+                    ),
+                  ),
+                ]
+              ),
+            );
+          }
+      ),
+    );
+  }
+
+  Widget mesFinal() {
+    return Container(
+      margin: EdgeInsets.only(right: 250),
+      child: StreamBuilder(
+          builder: (BuildContext context, AsyncSnapshot snapshot) {
+            return Container(
+              //padding: EdgeInsets.symmetric(horizontal: 40.0),
+              child: Column(
+                children: <Widget>[
+                  TextFormField(
+                    controller: mesFinController,
+                    inputFormatters: [
+                      LengthLimitingTextInputFormatter(2),
+                    ],
+                    style: TextStyle(color: Colors.white, fontSize: 15),
+                    keyboardType: TextInputType.number,
+                    decoration: InputDecoration(
+                      labelText: 'Mes Final',
+                      hintStyle: TextStyle(
+                        color: Color(0xffe1c0ea)
+                      ),
+                      labelStyle: TextStyle(
+                        color: Color(0xffe1c0ea)
+                      ),
+                    ),
+                  ),
+                ]
+              ),
+            );
+          }
+      ),
+    );
+  }
+
+  Widget diaInicial() {
+    return Container(
+      margin: EdgeInsets.only(right: 250),
+      child: StreamBuilder(
+          builder: (BuildContext context, AsyncSnapshot snapshot) {
+            return Container(
+              //padding: EdgeInsets.symmetric(horizontal: 40.0),
+              child: Column(
+                children: <Widget>[
+                  TextFormField(
+                    controller: diaIniController,
+                    inputFormatters: [
+                      LengthLimitingTextInputFormatter(2),
+                    ],
+                    style: TextStyle(color: Colors.white, fontSize: 15),
+                    keyboardType: TextInputType.number,
+                    decoration: InputDecoration(
+                      labelText: 'Dia Inicial',
+                      hintStyle: TextStyle(
+                        color: Color(0xffe1c0ea)
+                      ),
+                      labelStyle: TextStyle(
+                        color: Color(0xffe1c0ea)
+                      ),
+                    ),
+                  ),
+                ]
+              ),
+            );
+          }
+      ),
+    );
+  }
+
+  Widget diaFinal() {
+    return Container(
+      margin: EdgeInsets.only(right: 250),
+      child: StreamBuilder(
+          builder: (BuildContext context, AsyncSnapshot snapshot) {
+            return Container(
+              //padding: EdgeInsets.symmetric(horizontal: 40.0),
+              child: Column(
+                children: <Widget>[
+                  TextFormField(
+                    controller: diaFinController,
+                    inputFormatters: [
+                      LengthLimitingTextInputFormatter(2),
+                    ],
+                    style: TextStyle(color: Colors.white, fontSize: 15),
+                    keyboardType: TextInputType.number,
+                    decoration: InputDecoration(
+                      labelText: 'Dia Final',
+                      hintStyle: TextStyle(
+                        color: Color(0xffe1c0ea)
+                      ),
+                      labelStyle: TextStyle(
+                        color: Color(0xffe1c0ea)
+                      ),
+                    ),
+                  ),
+                ]
+              ),
+            );
+          }
+      ),
+    );
+  }
+
+  Widget horaInicial() {
+    return Container(
+      margin: EdgeInsets.only(right: 250),
+      child: StreamBuilder(
+          builder: (BuildContext context, AsyncSnapshot snapshot) {
+            return Container(
+              //padding: EdgeInsets.symmetric(horizontal: 40.0),
+              child: Column(
+                children: <Widget>[
+                  TextFormField(
+                    controller: horaIniController,
+                    inputFormatters: [
+                      LengthLimitingTextInputFormatter(2),
+                    ],
+                    style: TextStyle(color: Colors.white, fontSize: 15),
+                    keyboardType: TextInputType.number,
+                    decoration: InputDecoration(
+                      labelText: 'Hora Inicial',
+                      hintStyle: TextStyle(
+                        color: Color(0xffe1c0ea)
+                      ),
+                      labelStyle: TextStyle(
+                        color: Color(0xffe1c0ea)
+                      ),
+                    ),
+                  ),
+                ]
+              ),
+            );
+          }
+      ),
+    );
+  }
+
+  Widget horaFinal() {
+    return Container(
+      margin: EdgeInsets.only(right: 250),
+      child: StreamBuilder(
+          builder: (BuildContext context, AsyncSnapshot snapshot) {
+            return Container(
+              //padding: EdgeInsets.symmetric(horizontal: 40.0),
+              child: Column(
+                children: <Widget>[
+                  TextFormField(
+                    controller: horaFinController,
+                    inputFormatters: [
+                      LengthLimitingTextInputFormatter(2),
+                    ],
+                    style: TextStyle(color: Colors.white, fontSize: 15),
+                    keyboardType: TextInputType.number,
+                    decoration: InputDecoration(
+                      labelText: 'Hora Final',
                       hintStyle: TextStyle(
                         color: Color(0xffe1c0ea)
                       ),
@@ -355,9 +543,14 @@ class _ReportePersonaAnioMesHora extends State<ReportePersonaAnioMesHora> {
       ),
       color: Color(0xff890e8a),
       onPressed: (){
-        mes = mesController.text ?? "";
+        mesIni = mesIniController.text ?? "";
+        mesFin = mesFinController.text ?? "";
         anioIni = anioIniController.text ?? "";
         anioFin = anioFinController.text ?? "";
+        diaIni = horaIniController.text ?? "";
+        diaFin = diaFinController.text ?? "";
+        horaFin = horaFinController.text ?? "";
+        horaIni = horaIniController.text ?? "";
         listadoGrafica = [];
 
         //VALIDACIONES
@@ -381,7 +574,7 @@ class _ReportePersonaAnioMesHora extends State<ReportePersonaAnioMesHora> {
                     backgroundColor: Colors.red,
                     content:  Text("Seleccione un año final"),
                     duration: const Duration(seconds: 1)));
-        }else if (mes == ""){
+        }else if (mesIni == ""){
           ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                     backgroundColor: Colors.red,
                     content:  Text("Seleccione un mes"),
@@ -391,14 +584,14 @@ class _ReportePersonaAnioMesHora extends State<ReportePersonaAnioMesHora> {
                     backgroundColor: Colors.red,
                     content:  Text("El año inicial no puede ser mayor al año final"),
                     duration: const Duration(seconds: 1)));
-        }else if((int.parse(mes)>12)||(int.parse(mes)<1)){
+        }else if((int.parse(mesIni)>12)||(int.parse(mesIni)<1)){
           ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                     backgroundColor: Colors.red,
                     content:  Text("Tiene que elegir un mes valido entre 1 y 12"),
                     duration: const Duration(seconds: 1)));
         }else {
         ReportService reportService = new ReportService();
-        reportService.reportePesonaAnualMes(widget.token, widget.nickname, this.idInmueble, anioIni, anioFin, mes).then((reporteObtenido) => {
+        reportService.reportePersonaAnioMesHora(widget.token, widget.nickname, this.idInmueble, anioIni, anioFin, mesIni, mesFin, diaIni, diaFin, horaIni, horaFin).then((reporteObtenido) => {
           cantidadColumnas = reporteObtenido.listado.length.toDouble(),
 
           reporteObtenido.listado.forEach((element) {
@@ -426,12 +619,12 @@ class _ReportePersonaAnioMesHora extends State<ReportePersonaAnioMesHora> {
               }else if(count%10.abs() == 1){
                 listado.color = Colors.brown;
               }
+              listado.fecha = element.fecha;
               listado.entradas = element.entradas;
               listado.mes = element.mes;
               listado.year = element.year;
               listadoGrafica.add(listado);
               setState(() {
-                columnChart();
                 tabla();
               });
             })
@@ -482,34 +675,4 @@ class _ReportePersonaAnioMesHora extends State<ReportePersonaAnioMesHora> {
     return DataRow(cells: getCells(cells));
   }).toList();
 
-  Widget columnChart(){
-    return Container(
-    height: 100*cantidadColumnas, // height of the Container widget
-     // width of the Container widget
-    child: Center(
-      child: SfCartesianChart(
-          title: ChartTitle(text:"Gráfica mes " + this.mes , textStyle: TextStyle(
-                              color: Colors.white,
-                              fontFamily: 'Gotic',
-                              fontWeight: FontWeight.w400
-                            )),
-          series: <ChartSeries>[
-            BarSeries<reporte.Listado, String>(dataSource: listadoGrafica, 
-                      xValueMapper: (reporte.Listado sales, _) => sales.year,
-                      yValueMapper: (reporte.Listado sales, __) => int.parse(sales.entradas),
-                      pointColorMapper: (reporte.Listado data, _) => data.color,
-                      dataLabelSettings: DataLabelSettings(
-                                          isVisible: true,
-                                          labelAlignment: ChartDataLabelAlignment.top
-                    )
-                      )
-          ],
-          primaryXAxis: CategoryAxis(
-                            arrangeByIndex: true
-                        ),
-        )
-      )
-    );
-    
-  }
 }
