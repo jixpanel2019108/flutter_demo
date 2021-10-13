@@ -10,9 +10,7 @@ import 'package:flutter_demo/models/catCentroComercialModel.dart' as comercial;
 import 'package:flutter_demo/models/catRazonSocialModel.dart' as razon;
 import 'package:flutter_demo/models/conteoPersonasModel.dart' as personas;
 import 'package:flutter_demo/pages/menu.dart';
-import 'package:charts_flutter/flutter.dart' as charts;
 import 'package:syncfusion_flutter_charts/charts.dart';
-import 'package:syncfusion_flutter_charts/sparkcharts.dart';
 
 class ReportePersonasAnual extends StatefulWidget {
   final String token;
@@ -21,7 +19,6 @@ class ReportePersonasAnual extends StatefulWidget {
   final List<razon.Listado> listadoRazon;
   final List<charts.Series> grafica;
   final bool animacion;
-  
 
   const ReportePersonasAnual({ Key key, this.token, this.nickname, this.email, this.listadoRazon, this.animacion, this.grafica}) :  super(key: key);
 
@@ -43,6 +40,8 @@ class _ReportePersonasAnualState extends State<ReportePersonasAnual> {
   String id;
   String value;
   String alertaAmarilla;
+  bool dropdown1Bool = false;
+  bool dropdown2Bool = false;
   List<comercial.Listado> listadoComercial;
   List<personas.Listado1> listadoPersonas;
   List<reporte.Listado> listadoGrafica = [];
@@ -54,8 +53,8 @@ class _ReportePersonasAnualState extends State<ReportePersonasAnual> {
 
   final fechainicial = TextEditingController();
   final fechafinal = TextEditingController();
-  String fein;
-  String fefi;
+  String fein = "";
+  String fefi = "";
   
   @override
   Widget build(BuildContext context) {
@@ -116,45 +115,6 @@ class _ReportePersonasAnualState extends State<ReportePersonasAnual> {
           //tabla()
         ],
       ),
-    );
-  }
-
-  Widget botonConsulta(){
-    return RaisedButton(
-      child: Center(
-        //padding: EdgeInsets.symmetric(horizontal: 90, vertical: 20),
-        child: 
-        Text('Consultar',
-          style: TextStyle(color: Colors.white),
-        )
-      ),
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(5) 
-      ),
-      color: Color(0xff890e8a),
-      onPressed: (){
-        fein = fechainicial.text;
-        fefi = fechafinal.text;
-        listadoGrafica = [];
-        UserService userService = new UserService();
-        userService.reportePersonasAnual(widget.token, this.id, fein, fefi).then((reporteObtenido) => {
-          if(reporteObtenido.error == true){
-            print('Error al hacer la consula en page reportePersonasAnual')
-          }else{
-            reporteObtenido.listado.forEach((element) {
-              reporte.Listado listado = new reporte.Listado();
-              listado.conteo = element.conteo;
-              listado.fecha = element.fecha;
-              listadoGrafica.add(listado);
-
-              setState(() {
-                columnChart();
-                tabla();
-              });
-            })
-          }
-        });
-      },
     );
   }
 
@@ -322,7 +282,11 @@ class _ReportePersonasAnualState extends State<ReportePersonasAnual> {
                 }else{
                   this.listadoComercial = centrosComerciales.listado,
                   //this.listadoComercial = this.listadoComercial,
-                  this.listaDropdownInmueble = listadoComercial != null? listadoComercial : <comercial.Listado>[]
+                  this.listaDropdownInmueble = listadoComercial != null? listadoComercial : <comercial.Listado>[],
+                  this.dropdown1Bool = true,
+                  setState(() {
+                    dropdown2();
+                  })
                 }
               });
             },
@@ -368,12 +332,109 @@ class _ReportePersonasAnualState extends State<ReportePersonasAnual> {
               this.id = valueItem.id;
               this.value = valueItem.value;
               this.alertaAmarilla = valueItem.alertaAmarilla;
+              this.dropdown2Bool = true;
             },
           );
         }).toList()
       ), 
     );
   }
+
+  Widget botonConsulta(){
+    return RaisedButton(
+      child: Center(
+        //padding: EdgeInsets.symmetric(horizontal: 90, vertical: 20),
+        child: 
+        Text('Consultar',
+          style: TextStyle(color: Colors.white),
+        )
+      ),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(5) 
+      ),
+      color: Color(0xff890e8a),
+      onPressed: (){
+        this.fein = fechainicial.text ?? "";
+        this.fefi = fechafinal.text ?? "";
+        listadoGrafica = [];
+
+        if(this.dropdown1Bool == false) {
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                    backgroundColor: Colors.red,
+                    content:  Text("Seleccione una Razón"),
+                    duration: const Duration(seconds: 1)));
+        }else if(this.dropdown2Bool == false){
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                    backgroundColor: Colors.red,
+                    content:  Text("Seleccione un Inmueble"),
+                    duration: const Duration(seconds: 1)));
+        }else if(this.fein == ""){
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                    backgroundColor: Colors.red,
+                    content:  Text("Ingrese una fecha inicial"),
+                    duration: const Duration(seconds: 1)));
+        }else if(this.fefi == ""){
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                    backgroundColor: Colors.red,
+                    content:  Text("Ingrese una fecha final"),
+                    duration: const Duration(seconds: 1)));
+        }else if(int.parse(this.fein)> int.parse(this.fefi)){
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                    backgroundColor: Colors.red,
+                    content:  Text("El año inicial no puede ser mayor al año final"),
+                    duration: const Duration(seconds: 1)));
+        }else {
+          UserService userService = new UserService();
+          userService.reportePersonasAnual(widget.token, this.id, fein, fefi).then((reporteObtenido) => {
+            if(reporteObtenido.error == true){
+              print('Error al hacer la consula en page reportePersonasAnual')
+            }else{
+              reporteObtenido.listado.forEach((element) {
+                int count;
+                count = int.parse(this.fein) - int.parse(element.fecha);
+                reporte.Listado listado = new reporte.Listado();
+
+                if(count%10.abs() == 0){
+                listado.color = Colors.teal;
+              }else if(count%10.abs() == 9){
+                listado.color = Colors.yellowAccent;
+              }else if(count%10.abs() == 8){
+                listado.color = Colors.deepPurple;
+              }else if(count%10.abs() == 7){
+                listado.color = Colors.red;
+              }else if(count%10.abs() == 6){
+                listado.color = Colors.blue;
+              }else if(count%10.abs() == 5){
+                listado.color = Colors.green;
+              }else if(count%10.abs() == 4){
+                listado.color = Colors.grey;
+              }else if(count%10.abs() == 3){
+                listado.color = Colors.lightBlue;
+              }else if(count%10.abs() == 2){
+                listado.color = Colors.white;
+              }else if(count%10.abs() == 1){
+                listado.color = Colors.brown;
+              }
+
+                listado.conteo = element.conteo;
+                listado.fecha = element.fecha;
+                listadoGrafica.add(listado);
+  
+                setState(() {
+                  columnChart();
+                  tabla();
+                });
+              })
+            }
+        });
+
+        }
+
+        
+      },
+    );
+  }
+
 
   Widget tabla(){
     final columns = ['Fecha','Conteo'];
@@ -405,51 +466,6 @@ class _ReportePersonasAnualState extends State<ReportePersonasAnual> {
     );
   }
 
-  List <DataColumn> getColumns(List<String> columns) => columns
-      .map((String column) => DataColumn(
-        label: Text(column, style: TextStyle(color: Colors.white),),
-      ))
-
-    .toList();
- 
-  List <DataCell> getCells(List<dynamic> cells) => cells.map((data) => DataCell(Text('$data' ?? 'nada'))).toList();
- 
-  List <DataRow> getRows (List<reporte.Listado> row,) => row.map((reporte.Listado hola,) {
-
-    final cells = [hola.fecha, hola.conteo];
-    return DataRow(cells: getCells(cells));
-  }).toList();
-
-
-  Widget grafica(){
-
-    List<charts.Series<reporte.Listado,String>> series = [
-      charts.Series(
-        id: "Financial",
-        data: listadoGrafica,
-        domainFn: (reporte.Listado series, _) => series.fecha,
-        measureFn: (reporte.Listado series, _) => int.parse(series.conteo),
-        colorFn: (_, __) => charts.MaterialPalette.blue.shadeDefault),
-      
-    ];
-    
-  
-
-  }
-
- 
-  List<charts.Series<reporte.Listado, String>> _createSampleData() {
-
-    return [new charts.Series<reporte.Listado, String>(
-                  id: 'Reporte',
-                  colorFn: (_, __) => charts.MaterialPalette.blue.shadeDefault,
-                  domainFn: (reporte.Listado listado, _) => listado.fecha,
-                  measureFn: (reporte.Listado listado, _) => int.parse(listado.conteo),
-                  data: this.listadoGrafica,
-                )];
-
-  }
-  
   Widget columnChart(){
     return SfCartesianChart(
       primaryXAxis: CategoryAxis(
@@ -464,7 +480,7 @@ class _ReportePersonasAnualState extends State<ReportePersonasAnual> {
                                 dataSource: listadoGrafica,
                                 xValueMapper: (reporte.Listado sales, _) => int.parse(sales.fecha),
                                 yValueMapper: (reporte.Listado sales, __) => int.parse(sales.conteo),
-                                color: Theme.of(context).primaryColor,
+                                pointColorMapper: (reporte.Listado data, _) => data.color,
                                 dataLabelSettings: DataLabelSettings(
                                     isVisible: true,
                                     // Positioning the data label
@@ -475,6 +491,19 @@ class _ReportePersonasAnualState extends State<ReportePersonasAnual> {
                     );
   }
 
+  List <DataColumn> getColumns(List<String> columns) => columns.map((String column) => DataColumn(
+        label: Text(column, style: TextStyle(color: Colors.white),),
+      )).toList();
+ 
+  List <DataCell> getCells(List<dynamic> cells) => cells.map((data) => DataCell(Text('$data' ?? 'nada'))).toList();
+ 
+  List <DataRow> getRows (List<reporte.Listado> row,) => row.map((reporte.Listado hola,) {
+
+    final cells = [hola.fecha, hola.conteo];
+    return DataRow(cells: getCells(cells));
+  }).toList();
+
+  
   
   
 }

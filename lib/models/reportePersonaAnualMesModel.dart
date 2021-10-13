@@ -4,6 +4,7 @@
 //     final reportePersonaAnualMes = reportePersonaAnualMesFromJson(jsonString);
 
 import 'dart:convert';
+import 'package:flutter/material.dart';
 
 ReportePersonaAnualMes reportePersonaAnualMesFromJson(String str) => ReportePersonaAnualMes.fromJson(json.decode(str));
 
@@ -46,11 +47,13 @@ class Listado {
         this.entradas,
         this.mes,
         this.year,
+        this.color,
     });
 
     String entradas;
     String mes;
     String year;
+    Color color;
 
     factory Listado.fromJson(Map<String, dynamic> json) => Listado(
         entradas: json["entradas"],
@@ -62,5 +65,6 @@ class Listado {
         "entradas": entradas,
         "Mes": mes,
         "Año": year,
+        "Color": color,
     };
 }

@@ -5,6 +5,8 @@
 
 import 'dart:convert';
 
+import 'package:flutter/material.dart';
+
 ReportePersonasAnualResponseModel reportePersonasAnualResponseModelFromJson(String str) => ReportePersonasAnualResponseModel.fromJson(json.decode(str));
 
 String reportePersonasAnualResponseModelToJson(ReportePersonasAnualResponseModel data) => json.encode(data.toJson());
@@ -53,10 +55,12 @@ class Listado {
     Listado({
         this.fecha,
         this.conteo,
+        this.color,
     });
 
     String fecha;
     String conteo;
+    Color color;
 
     factory Listado.fromJson(Map<String, dynamic> json) => Listado(
         fecha: json["fecha"],
@@ -66,5 +70,6 @@ class Listado {
     Map<String, dynamic> toJson() => {
         "fecha": fecha,
         "conteo": conteo,
+        "color": color,
     };
 }

@@ -11,10 +11,7 @@ import 'package:flutter_demo/models/catCentroComercialModel.dart' as comercial;
 import 'package:flutter_demo/models/catRazonSocialModel.dart' as razon;
 import 'package:flutter_demo/models/conteoPersonasModel.dart' as personas;
 import 'package:flutter_demo/pages/menu.dart';
-import 'package:intl/intl.dart';
-import 'package:charts_flutter/flutter.dart' as charts;
 import 'package:syncfusion_flutter_charts/charts.dart';
-import 'package:syncfusion_flutter_charts/sparkcharts.dart';
 
 class ReportePersonasDia extends StatefulWidget {
   final String token;
@@ -59,6 +56,8 @@ class _ReportePersonasDia extends State<ReportePersonasDia> {
   final anioController = TextEditingController();
   String mes;
   String anio;
+  bool dropdown1Bool = false;
+  bool dropdown2Bool = false;
   
   @override
   Widget build(BuildContext context) {
@@ -111,74 +110,12 @@ class _ReportePersonasDia extends State<ReportePersonasDia> {
           const SizedBox(height: 25,),
           columnChart1(),
           tabla(),
-          
-          // charts.BarChart(
-          //   _createSampleData(),
-          //   animate: true,
-          // )
-          //tabla()
         ],
       ),
     );
   }
 
-  Widget botonConsulta(){
-    return RaisedButton(
-      child: Center(
-        //padding: EdgeInsets.symmetric(horizontal: 90, vertical: 20),
-        child: 
-        Text('Consultar',
-          style: TextStyle(color: Colors.white),
-        )
-      ),
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(5) 
-      ),
-      color: Color(0xff890e8a),
-      onPressed: (){
-        mes = mesController.text;
-        anio = anioController.text;
-        listadoGrafica = [];
-        ReportService reportService = new ReportService();
-
-        reportService.reportePersonaDia(widget.token, this.idInmueble, mes, anio).then((reporteObtenido) => {
-          
-          cantidadColumnas = reporteObtenido.listado.length.toDouble(),
-          reporteObtenido.listado.forEach((element) {
-              print(element);
-              reporte.Listado listado = new reporte.Listado();
-              listado.entradas = element.entradas;
-              listado.fecha = element.fecha;
-              listadoGrafica.add(listado);
-
-              setState(() {
-                columnChart();
-                tabla();
-              });
-            })
-            
-            
-            /*if(reporteObtenido.error == true){
-            print('Error al hacer la consulta en page reportePersonasDia')
-          }else{
-            reporteObtenido.listado.forEach((element) {
-              print(element);
-              reporte.Listado listado = new reporte.Listado();
-              listado.entradas = element.entradas;
-              listado.fecha = element.fecha;
-              listadoGrafica.add(listado);
-
-              setState(() {
-                columnChart();
-                tabla();
-              });
-            })
-          }*/
-        });
-      },
-    );
-  }
-
+ 
 
   Widget union1(){
     return Container(
@@ -312,7 +249,11 @@ class _ReportePersonasDia extends State<ReportePersonasDia> {
                 }else{
                   this.listadoComercial = centrosComerciales.listado,
                   //this.listadoComercial = this.listadoComercial,
-                  this.listaDropdownInmueble = listadoComercial != null? listadoComercial : <comercial.Listado>[]
+                  this.listaDropdownInmueble = listadoComercial != null? listadoComercial : <comercial.Listado>[],
+                  this.dropdown1Bool = true,
+                  setState(() {
+                    dropdown2();
+                  })
                 }
               });
             },
@@ -358,10 +299,79 @@ class _ReportePersonasDia extends State<ReportePersonasDia> {
               this.idInmueble = valueItem.id;
               this.value = valueItem.value;
               this.alertaAmarilla = valueItem.alertaAmarilla;
+              this.dropdown2Bool = true;
             },
           );
         }).toList()
       ), 
+    );
+  }
+
+   Widget botonConsulta(){
+    return RaisedButton(
+      child: Center(
+        //padding: EdgeInsets.symmetric(horizontal: 90, vertical: 20),
+        child: 
+        Text('Consultar',
+          style: TextStyle(color: Colors.white),
+        )
+      ),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(5) 
+      ),
+      color: Color(0xff890e8a),
+      onPressed: (){
+        mes = mesController.text ?? "";
+        anio = anioController.text ?? "";
+        listadoGrafica = [];
+
+        if(this.dropdown1Bool == false) {
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                    backgroundColor: Colors.red,
+                    content:  Text("Seleccione una Razón"),
+                    duration: const Duration(seconds: 1)));
+        }else if(this.dropdown2Bool == false){
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                    backgroundColor: Colors.red,
+                    content:  Text("Seleccione un Inmueble"),
+                    duration: const Duration(seconds: 1)));
+        }else if (mes == ""){
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                    backgroundColor: Colors.red,
+                    content:  Text("Ingresee un mes "),
+                    duration: const Duration(seconds: 1)));
+        }else if(anio == ""){
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                    backgroundColor: Colors.red,
+                    content:  Text("Inrgese un anio"),
+                    duration: const Duration(seconds: 1)));
+        }else if((int.parse(mes)>12) || (int.parse(mes)<1)){
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                    backgroundColor: Colors.red,
+                    content:  Text("Inrgese un mes valido entre 1 y 12"),
+                    duration: const Duration(seconds: 1)));
+        }else {
+          ReportService reportService = new ReportService();
+
+                  reportService.reportePersonaDia(widget.token, this.idInmueble, mes, anio).then((reporteObtenido) => {
+                    
+                    cantidadColumnas = reporteObtenido.listado.length.toDouble(),
+                    reporteObtenido.listado.forEach((element) {
+                        
+                        reporte.Listado listado = new reporte.Listado();
+                        listado.entradas = element.entradas;
+                        listado.fecha = element.fecha;
+                        listadoGrafica.add(listado);
+
+                        setState(() {
+                          columnChart1();
+                          tabla();
+                        });
+                      })
+
+                  });
+        }
+      },
     );
   }
 
@@ -395,88 +405,6 @@ class _ReportePersonasDia extends State<ReportePersonasDia> {
     );
   }
 
-  List <DataColumn> getColumns(List<String> columns) => columns
-      .map((String column) => DataColumn(
-        label: Text(column, style: TextStyle(color: Colors.white),),
-      ))
-
-    .toList();
- 
-  List <DataCell> getCells(List<dynamic> cells) => cells.map((data) => DataCell(Text('$data' ?? 'nada'))).toList();
- 
-  List <DataRow> getRows (List<reporte.Listado> row,) => row.map((reporte.Listado hola,) {
-
-    final cells = [hola.fecha, hola.entradas];
-    return DataRow(cells: getCells(cells));
-  }).toList();
-
-
-  Widget grafica(){
-
-    List<charts.Series<reporte.Listado,String>> series = [
-      charts.Series(
-        id: "Financial",
-        data: listadoGrafica,
-        domainFn: (reporte.Listado series, _) => series.fecha.toString(),
-        measureFn: (reporte.Listado series, _) => int.parse(series.entradas),
-        colorFn: (_, __) => charts.MaterialPalette.blue.shadeDefault),
-      
-    ];
-    
-  
-
-  }
-
- 
-  List<charts.Series<reporte.Listado, String>> _createSampleData() {
-
-    return [new charts.Series<reporte.Listado, String>(
-                  id: 'Reporte',
-                  colorFn: (_, __) => charts.MaterialPalette.blue.shadeDefault,
-                  domainFn: (reporte.Listado listado, _) => listado.fecha.toString(),
-                  measureFn: (reporte.Listado listado, _) => int.parse(listado.entradas),
-                  data: this.listadoGrafica,
-                )];
-
-  }
-  
-  Widget columnChart(){
-    // final DateFormat formatter = DateFormat('yyyy-MM-dd');
-    // DateTime fecha = DateTime.now();
-    // final String fechaString = formatter.format(fecha);
-    return SafeArea(
-      child: SfCartesianChart(
-        // margin: EdgeInsets.all(0),
-        title: ChartTitle(text: "Gráfica"),
-        // legend: Legend(isVisible: true),
-        // tooltipBehavior: _tooltipBehavior,
-        primaryXAxis: CategoryAxis(
-                              // Y axis labels will be rendered with currency format
-                              // labelPlacement: LabelPlacement.onTicks
-                              arrangeByIndex: true
-                          ),
-                          
-                          series: <ChartSeries>[
-                              // Renders column chart
-                              
-                              LineSeries<reporte.Listado, String>(
-                                  dataSource: listadoGrafica,
-                                  xValueMapper: (reporte.Listado sales, _) => sales.fecha,
-                                  yValueMapper: (reporte.Listado sales, __) => int.parse(sales.entradas),
-                                  color: Theme.of(context).primaryColor,
-                                  
-                                  dataLabelSettings: DataLabelSettings(
-                                    isVisible: true,
-                                    // Positioning the data label
-                                    labelAlignment: ChartDataLabelAlignment.middle
-                                )
-                              )
-                          ]
-                      ),
-    );
-  }
-
-  
   Widget columnChart1(){
     return Container(
     height: cantidadColumnas*30, // height of the Container widget
@@ -510,4 +438,18 @@ class _ReportePersonasDia extends State<ReportePersonasDia> {
     );
     
   }
+
+  List <DataColumn> getColumns(List<String> columns) => columns.map((String column) => DataColumn(
+        label: Text(column, style: TextStyle(color: Colors.white),),
+      )).toList();
+ 
+  List <DataCell> getCells(List<dynamic> cells) => cells.map((data) => DataCell(Text('$data' ?? 'nada'))).toList();
+ 
+  List <DataRow> getRows (List<reporte.Listado> row,) => row.map((reporte.Listado hola,) {
+
+    final cells = [hola.fecha, hola.entradas];
+    return DataRow(cells: getCells(cells));
+  }).toList();
+
+  
 }

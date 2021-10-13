@@ -1,18 +1,10 @@
 //@dart=2.9
 
-import 'dart:convert';
-import 'dart:html';
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_demo/models/catCentroComercialModel.dart' as comercial;
 import 'package:flutter_demo/models/catRazonSocialModel.dart' as razon;
-import 'package:flutter_demo/models/conteoParqueosModel.dart';
 import 'package:flutter_demo/models/conteoPersonasModel.dart' as personas;
-import 'package:flutter_demo/models/userModel.dart';
-import 'package:intl/intl.dart';
 import 'package:flutter_demo/services/userService.dart';
-import 'package:flutter_demo/models/listMenuAppModel.dart';
 import 'package:flutter_demo/pages/menu.dart';
 
 class ParqueosPage extends StatefulWidget{
@@ -46,6 +38,8 @@ class _ParqueosPage extends State<ParqueosPage> {
   String id;
   String value;
   String alertaAmarilla;
+  bool dropdown1Bool = false;
+  bool dropdown2Bool = false;
 
   @override
   Widget build(BuildContext context){
@@ -109,49 +103,6 @@ class _ParqueosPage extends State<ParqueosPage> {
           tabla()
         ],
       ),
-    );
-  }
-
-  Widget botonConsulta(){
-    return RaisedButton(
-      child: Center(
-        //padding: EdgeInsets.symmetric(horizontal: 90, vertical: 20),
-        child: 
-        Text('Consultar',
-          style: TextStyle(color: Colors.white),
-        )
-      ),
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(20) 
-      ),
-      color: Color(0xff890e8a),
-      onPressed: (){
-        UserService userService = new UserService();
-        listadoTabla = [];
-        userService.conteoParqueos(widget.token, widget.nickname, _dateTime, idRazon, ocupacionMaximaParqueos, alertaOcupacion, this.id).then((conteo) => {
-          if(conteo.error == true){
-            print('Error al consultar sus resultados')
-          }else{
-            conteo.listado1.forEach((element) {
-              personas.Listado1 lista = new personas.Listado1();
-              lista.cc = element.cc;
-              lista.entradas = element.entradas;
-              lista.fecha = element.fecha;
-              lista.hora = element.hora;
-              lista.ocupacionInstantanea = element.ocupacionInstantanea;
-              lista.ocupacionMaximaAutorizada = element.ocupacionMaximaAutorizada;
-              lista.porcentajeOcupacion = element.porcentajeOcupacion;
-              lista.salidas = element.salidas;
-              lista.acumuladoSalidas = element.acumuladoSalidas;
-              lista.alertaOcupacion = element.alertaOcupacion;
-              lista.acumuladoEntradas = element.acumuladoEntradas;
-              listadoTabla.add(lista);
-            }),
-            tabla(),
-            setState(() {})
-          }
-        });
-      },
     );
   }
 
@@ -249,7 +200,11 @@ class _ParqueosPage extends State<ParqueosPage> {
                 }else{
                   this.listadoComercial = centrosComerciales.listado,
                   this.listadoComercial = this.listadoComercial,
-                  this.pruebalista = listadoComercial != null? listadoComercial : <comercial.Listado>[]
+                  this.pruebalista = listadoComercial != null? listadoComercial : <comercial.Listado>[],
+                  this.dropdown1Bool = true,
+                  setState(() {
+                    dropdown2();
+                  })
                 }
               });
             },
@@ -295,6 +250,7 @@ class _ParqueosPage extends State<ParqueosPage> {
               this.id = valueItem.id;
               this.value = valueItem.value;
               this.alertaAmarilla = valueItem.alertaAmarilla;
+              this.dropdown2Bool = true;
             },
           );
         }).toList()
@@ -302,14 +258,64 @@ class _ParqueosPage extends State<ParqueosPage> {
     );
   }
 
+  Widget botonConsulta(){
+    return RaisedButton(
+      child: Center(
+        //padding: EdgeInsets.symmetric(horizontal: 90, vertical: 20),
+        child: 
+        Text('Consultar',
+          style: TextStyle(color: Colors.white),
+        )
+      ),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(20) 
+      ),
+      color: Color(0xff890e8a),
+      onPressed: (){
+        UserService userService = new UserService();
+        listadoTabla = [];
 
-  List <DataColumn> getColumns(List<String> columns) => columns
-      .map((String column) => DataColumn(
-        label: Text(column, style: TextStyle(color: Colors.white),),
-      ))
+        if (this.dropdown1Bool == false){
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                    backgroundColor: Colors.red,
+                    content:  Text("Seleccione una Razón"),
+                    duration: const Duration(seconds: 1)));
+        }else if(this.dropdown2Bool == false){
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                    backgroundColor: Colors.red,
+                    content:  Text("Seleccione un Inmueble"),
+                    duration: const Duration(seconds: 1)));
+        }else {
+          userService.conteoParqueos(widget.token, widget.nickname, _dateTime, idRazon, ocupacionMaximaParqueos, alertaOcupacion, this.id).then((conteo) => {
+          if(conteo.error == true){
+            print('Error al consultar sus resultados')
+          }else{
+            conteo.listado1.forEach((element) {
+              personas.Listado1 lista = new personas.Listado1();
+              lista.cc = element.cc;
+              lista.entradas = element.entradas;
+              lista.fecha = element.fecha;
+              lista.hora = element.hora;
+              lista.ocupacionInstantanea = element.ocupacionInstantanea;
+              lista.ocupacionMaximaAutorizada = element.ocupacionMaximaAutorizada;
+              lista.porcentajeOcupacion = element.porcentajeOcupacion;
+              lista.salidas = element.salidas;
+              lista.acumuladoSalidas = element.acumuladoSalidas;
+              lista.alertaOcupacion = element.alertaOcupacion;
+              lista.acumuladoEntradas = element.acumuladoEntradas;
+              listadoTabla.add(lista);
+            }),
+            tabla(),
+            setState(() { tabla();})
+          }
+        });
+        }
 
-    .toList();
-
+        
+      },
+    );
+  }
+  
   Widget tabla(){
     final columns = ['CC','Fecha','Acumulado Salidas','Alerta Ocupación','Ocupacion Instantanea','Hora','Entradas', 'Ocupación Max.','Porcentaje Ocup.','Salidas', 'Acumulados Entradas'];
     print('listadoTabla');
@@ -340,7 +346,10 @@ class _ParqueosPage extends State<ParqueosPage> {
     );
   }
 
-  
+  List <DataColumn> getColumns(List<String> columns) => columns.map((String column) => DataColumn(
+        label: Text(column, style: TextStyle(color: Colors.white),),
+      )).toList();
+
 
   List <DataCell> getCells(List<dynamic> cells) => cells.map((data) => DataCell(Text('$data' ?? 'nada'))).toList();
 

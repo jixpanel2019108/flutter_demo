@@ -68,13 +68,7 @@ class ReportService{
     }
   }
 
-  Future <ReportePersonasMesesCincoAnual> reportePersonasMesesCincoAnual (String token,String usuario, String inmueble, String aini, String afin, String mes) async{
-
-    print(inmueble);
-    print(aini);
-    print(afin);
-    print(mes);
-    
+  Future <ReportePersonasMesesCincoAnual> reportePersonasMesesCincoAnual (String token,String usuario, String inmueble, String aini, String afin) async{
 
     var urlRequest = Uri.parse(urlReporte+"/reportePersonasMesesCincoAnual");
     var bodyRequest = jsonEncode({
@@ -83,7 +77,6 @@ class ReportService{
                                     "inmueble": inmueble,
                                     "aini": aini,
                                     "afin": afin,
-                                    "mes": mes,
                                     "excel":"0"
                                   });
     
