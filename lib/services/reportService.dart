@@ -5,6 +5,7 @@ import 'dart:convert';
 import 'package:flutter_demo/models/reportePersonaAnualMesModel.dart';
 import 'package:flutter_demo/models/reportePersonaDiaModel.dart';
 import 'package:flutter_demo/models/reportePersonasMesesCincoAnualModel.dart';
+import 'package:flutter_demo/models/reportePersonaAnioMesHoraModel.dart';
 import 'package:http/http.dart' as http;
 
 class ReportService{
@@ -94,6 +95,36 @@ class ReportService{
     if(response.statusCode == 200 || response.statusCode == 202){
       print(body);
       return ReportePersonasMesesCincoAnual.fromJson(json.decode(response.body));
+    }else{
+      throw Exception('Failed to load in reportePersonaAnualMes Service');
+    }
+  }
+
+  Future <ReportePersonaAnioMesHora> reportePersonaAnioMesHora (String token,String usuario, String inmueble, String aini, String afin, String mesIni, String mesFin, String diaIni, String diaFin, String horaIni, String horaFin) async{
+    var urlRequest = Uri.parse(urlReporte+"/reportePersonaAnioMesDia");
+    var bodyRequest = jsonEncode({
+                                    "key": "12345",
+                                    "token": token,
+                                    "inmueble": inmueble,
+                                    "aini": aini,
+                                    "afin": afin,
+                                    "mesIni": mesIni,
+                                    "mesFin": mesFin,
+                                    "diaIni": diaIni,
+                                    "diaFin": diaFin,
+                                    "horaIni": horaIni,
+                                    "horaFin": horaFin,
+                                    "excel":"0"
+                                  });
+    
+    final http.Response response = await http.post(urlRequest, 
+                                      headers: <String,String>{ "Content-Type": "application/json"},
+                                      body: bodyRequest);
+    final body = json.decode(response.body);
+
+    if(response.statusCode == 200 || response.statusCode == 202){
+      print(body);
+      return ReportePersonaAnioMesHora.fromJson(json.decode(response.body));
     }else{
       throw Exception('Failed to load in reportePersonaAnualMes Service');
     }

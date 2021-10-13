@@ -11,6 +11,7 @@ import 'package:flutter_demo/pages/conteoParqueos.dart';
 import 'package:flutter_demo/pages/reportePersonaAnualMes.dart';
 import 'package:flutter_demo/pages/reportePersonasMesesCincoAnual.dart';
 import 'package:flutter_demo/pages/reportePersonasDia.dart';
+import 'package:flutter_demo/pages/reportePersonaAnioMesHora.dart';
 import 'package:flutter_demo/utils/user_simple_preferences.dart';
 import 'package:flutter_demo/pages/reportePersonasAnual.dart';
 import 'package:flutter_demo/pages/principal.dart';
@@ -39,6 +40,7 @@ class MyApp extends StatelessWidget {
         '/reporteDiario' : (context) => ReportePersonasDia(),
         '/reporteAnualMes' : (context) => ReportePersonaAnualMes(),
         '/reportePersonasMesesCinco' : (context) => reportePersonasMesesCincoAnual(),
+        '/reporteMesHora': (context) => ReportePersonaAnioMesHora(),
       },
     );
   }
