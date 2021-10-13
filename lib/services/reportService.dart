@@ -2,8 +2,10 @@
 
 import 'dart:async';
 import 'dart:convert';
+import 'package:flutter_demo/models/reportePersonaAnioMesHoraModel.dart';
 import 'package:flutter_demo/models/reportePersonaAnualMesModel.dart';
 import 'package:flutter_demo/models/reportePersonaDiaModel.dart';
+import 'package:flutter_demo/models/reportePersonaDiaSemanaModel.dart';
 import 'package:flutter_demo/models/reportePersonasMesesCincoAnualModel.dart';
 import 'package:http/http.dart' as http;
 
@@ -88,11 +90,69 @@ class ReportService{
       print(body);
       return ReportePersonasMesesCincoAnual.fromJson(json.decode(response.body));
     }else{
-      throw Exception('Failed to load in reportePersonaAnualMes Service');
+      throw Exception('Failed to load in reportePersonasMesesCincoAnual Service');
     }
   }
+  
+  Future <ReportePersonaAnioMesHora> reportePersonaAnioMesHora (String token,String usuario, String inmueble, String aIni, String aFin, 
+                                                        String mesIni, String mesFin, String diaIni, String diaFin, String horaIni, String horaFin) async{
 
+    var urlRequest = Uri.parse(urlReporte+"/reportePersonaAnioMesHora");
+    var bodyRequest = jsonEncode({
+                                  "key": "12345",
+                                  "token": token,
+                                  "inmueble": inmueble,
+                                  "añoIni": aIni,
+                                  "añoFin": aFin,
+                                  "mesIni": mesIni,
+                                  "mesFin": mesFin,
+                                  "diaIni": diaIni,
+                                  "diaFin": diaFin,
+                                  "horaIni": diaIni,
+                                  "horaFin": horaFin,
+                                  "excel":"0"
+                                });
+    
+    final http.Response response = await http.post(urlRequest, 
+                                      headers: <String,String>{ "Content-Type": "application/json"},
+                                      body: bodyRequest);
+    final body = json.decode(response.body);
 
+    if(response.statusCode == 200 || response.statusCode == 202){
+      print(body);
+      return ReportePersonaAnioMesHora.fromJson(json.decode(response.body));
+    }else{
+      throw Exception('Failed to load in reportePersonaAnioMesHora Service');
+    }
+  }
+  
+  Future <ReportePersonaDiaSemana> reportePersonaDiaSemana (String token,String usuario, String inmueble, String year, 
+                                                        String mes, String diaIni, String diaFin) async{
+
+    var urlRequest = Uri.parse(urlReporte+"/reportePersonaDiaSemana");
+    var bodyRequest = jsonEncode({
+                                  "key": "12345",
+                                  "token": token,
+                                  "inmueble": inmueble,
+                                  "año": year,
+                                  "mes": mes,
+                                  "diaIni": diaIni,
+                                  "diaFin": diaFin,
+                                  "excel":"0"
+                                });
+    
+    final http.Response response = await http.post(urlRequest, 
+                                      headers: <String,String>{ "Content-Type": "application/json"},
+                                      body: bodyRequest);
+    final body = json.decode(response.body);
+
+    if(response.statusCode == 200 || response.statusCode == 202){
+      print(body);
+      return ReportePersonaDiaSemana.fromJson(json.decode(response.body));
+    }else{
+      throw Exception('Failed to load in reportePersonaDiaSemana Service');
+    }
+  }
 
 }
 
