@@ -45,6 +45,8 @@ class _PersonasPage extends State<PersonasPage> {
   String id;
   String value;
   String alertaAmarilla;
+  bool dropdown1Bool = false;
+  bool dropdown2Bool = false;
 
   @override
   Widget build(BuildContext context){
@@ -109,55 +111,7 @@ class _PersonasPage extends State<PersonasPage> {
       ),
     );
   }
-
-  Widget botonConsulta(){
-    
-    return RaisedButton(
-      child: Center(
-        //padding: EdgeInsets.symmetric(horizontal: 90, vertical: 20),
-        child: 
-        Text('Consultar',
-          style: TextStyle(color: Colors.white),
-        )
-      ),
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(5) 
-      ),
-      color: Color(0xff890e8a),
-      onPressed: (){
-        UserService userService = new UserService();
-        String formatoFecha = new DateFormat('yyyy-MM-dd').format(pruebafecha);
-        pruebafecha = DateTime.parse('$formatoFecha');
-        listadoTabla = [];
-        userService.conteoPersonas(widget.token, widget.nickname, pruebafecha, idRazon, ocupacionMaximaPersonas, alertaOcupacion, this.id).then((conteo) => {
-          if(conteo.error == true){
-            print('Error al consultar sus resultados')
-          }else{
-            conteo.listado1.forEach((element) {
-              personas.Listado1 lista = new personas.Listado1();
-              lista.cc = element.cc;
-              lista.entradas = element.entradas;
-              lista.fecha = element.fecha;
-              lista.hora = element.hora;
-              lista.ocupacionInstantanea = element.ocupacionInstantanea;
-              lista.ocupacionMaximaAutorizada = element.ocupacionMaximaAutorizada;
-              lista.porcentajeOcupacion = element.porcentajeOcupacion;
-              lista.salidas = element.salidas;
-              lista.acumuladoSalidas = element.acumuladoSalidas;
-              lista.alertaOcupacion = element.alertaOcupacion;
-              lista.acumuladoEntradas = element.acumuladoEntradas;
-              listadoTabla.add(lista);
-            }),
-            tabla(),
-            setState(() {
-              
-            })
-          }
-        });
-      },
-    );
-  }
-
+  
   Widget unionFe(){
     String formatoFecha = new DateFormat('yyyy-MM-dd').format(pruebafecha);
     return Container(
@@ -254,9 +208,12 @@ class _PersonasPage extends State<PersonasPage> {
                 }else{
                   this.listadoComercial = centrosComerciales.listado,
                   //this.listadoComercial = this.listadoComercial,
-                  this.pruebalista = listadoComercial != null? listadoComercial : <comercial.Listado>[]
+                  this.pruebalista = listadoComercial != null? listadoComercial : <comercial.Listado>[],
+                  this.dropdown1Bool = true,
+                  setState(() {
+                    dropdown2();
+                  })
                 }
-
               });
             },
           );
@@ -301,6 +258,7 @@ class _PersonasPage extends State<PersonasPage> {
               this.id = valueItem.id;
               this.value = valueItem.value;
               this.alertaAmarilla = valueItem.alertaAmarilla;
+              this.dropdown2Bool = true;
             },
           );
         }).toList()
@@ -308,13 +266,66 @@ class _PersonasPage extends State<PersonasPage> {
     );
   }
 
+  Widget botonConsulta(){
+    
+    return RaisedButton(
+      child: Center(
+        //padding: EdgeInsets.symmetric(horizontal: 90, vertical: 20),
+        child: 
+        Text('Consultar',
+          style: TextStyle(color: Colors.white),
+        )
+      ),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(5) 
+      ),
+      color: Color(0xff890e8a),
+      onPressed: (){
+        UserService userService = new UserService();
+        String formatoFecha = new DateFormat('yyyy-MM-dd').format(pruebafecha);
+        pruebafecha = DateTime.parse('$formatoFecha');
+        listadoTabla = [];
 
-  List <DataColumn> getColumns(List<String> columns) => columns
-      .map((String column) => DataColumn(
-        label: Text(column, style: TextStyle(color: Colors.white),),
-      ))
-
-    .toList();
+        if (this.dropdown1Bool == false){
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                    backgroundColor: Colors.red,
+                    content:  Text("Seleccione una Razón"),
+                    duration: const Duration(seconds: 1)));
+        }else if(this.dropdown2Bool == false){
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                    backgroundColor: Colors.red,
+                    content:  Text("Seleccione un Inmueble"),
+                    duration: const Duration(seconds: 1)));
+        }else {
+          userService.conteoPersonas(widget.token, widget.nickname, pruebafecha, idRazon, ocupacionMaximaPersonas, alertaOcupacion, this.id).then((conteo) => {
+          if(conteo.error == true){
+            print('Error al consultar sus resultados')
+          }else{
+            conteo.listado1.forEach((element) {
+              personas.Listado1 lista = new personas.Listado1();
+              lista.cc = element.cc;
+              lista.entradas = element.entradas;
+              lista.fecha = element.fecha;
+              lista.hora = element.hora;
+              lista.ocupacionInstantanea = element.ocupacionInstantanea;
+              lista.ocupacionMaximaAutorizada = element.ocupacionMaximaAutorizada;
+              lista.porcentajeOcupacion = element.porcentajeOcupacion;
+              lista.salidas = element.salidas;
+              lista.acumuladoSalidas = element.acumuladoSalidas;
+              lista.alertaOcupacion = element.alertaOcupacion;
+              lista.acumuladoEntradas = element.acumuladoEntradas;
+              listadoTabla.add(lista);
+            }),
+            tabla(),
+            setState(() {
+              tabla();
+            })
+          }
+        });
+        }
+      },
+    );
+  }
 
   Widget tabla(){
     final columns = ['CC','Fecha','Acumulado Salidas','Alerta Ocupación','Ocupacion Instantanea','Hora','Entradas', 'Ocupación Max.','Porcentaje Ocup.','Salidas', 'Acumulados Entradas'];
@@ -347,12 +358,12 @@ class _PersonasPage extends State<PersonasPage> {
     );
   }
 
-  
+  List <DataColumn> getColumns(List<String> columns) => columns.map((String column) => DataColumn(
+        label: Text(column, style: TextStyle(color: Colors.white),),
+      )).toList();
 
   List <DataCell> getCells(List<dynamic> cells) => cells.map((data) => DataCell(Text('$data' ?? 'nada'))).toList();
 
-
-    
   List <DataRow> getRows (List<personas.Listado1> row,) => row.map((personas.Listado1 hola,) {
 
     final cells = [hola.cc, hola.fecha, hola.acumuladoSalidas, hola.alertaOcupacion, hola.ocupacionInstantanea, hola.hora, hola.entradas, hola.ocupacionMaximaAutorizada, hola.porcentajeOcupacion, hola.salidas, hola.acumuladoEntradas, ];

@@ -12,7 +12,6 @@ import 'package:flutter_demo/models/catRazonSocialModel.dart' as razon;
 import 'package:flutter_demo/models/conteoPersonasModel.dart' as personas;
 import 'package:flutter_demo/pages/menu.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
-import 'dart:math' as math;
 
 class reportePersonasMesesCincoAnual extends StatefulWidget {
   final String token;
@@ -59,6 +58,8 @@ class _reportePersonasMesesCincoAnual extends State<reportePersonasMesesCincoAnu
   String mes = "";
   String anioIni;
   String anioFin;
+  bool dropdown1Bool = false;
+  bool dropdown2Bool = false;
   
   @override
   Widget build(BuildContext context) {
@@ -252,6 +253,7 @@ class _reportePersonasMesesCincoAnual extends State<reportePersonasMesesCincoAnu
                   this.listadoComercial = centrosComerciales.listado,
                   //this.listadoComercial = this.listadoComercial,
                   this.listaDropdownInmueble = listadoComercial != null? listadoComercial : <comercial.Listado>[],
+                  this.dropdown1Bool = true,
                   dropdown2(),
                   setState(() {
                     dropdown2();
@@ -302,6 +304,7 @@ class _reportePersonasMesesCincoAnual extends State<reportePersonasMesesCincoAnu
               this.idInmueble = valueItem.id;
               this.value = valueItem.value;
               this.alertaAmarilla = valueItem.alertaAmarilla;
+              this.dropdown2Bool = true;
             },
           );
         }).toList()
@@ -323,12 +326,32 @@ class _reportePersonasMesesCincoAnual extends State<reportePersonasMesesCincoAnu
       color: Color(0xff890e8a),
       onPressed: (){
         mes = mesController.text;
-        anioIni = anioIniController.text;
-        anioFin = anioFinController.text;
+        anioIni = anioIniController.text ?? "";
+        anioFin = anioFinController.text ?? "";
         listadoGrafica = [];
-        totalYear = int.parse(anioFin) - int.parse(anioIni) + 1;
+        
 
-        if(totalYear>5){
+        if (this.dropdown1Bool == false) {
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                    backgroundColor: Colors.red,
+                    content:  Text("Seleccione una Razón"),
+                    duration: const Duration(seconds: 1)));
+        }else if(this.dropdown2Bool == false){
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                    backgroundColor: Colors.red,
+                    content:  Text("Seleccione un Inmueble"),
+                    duration: const Duration(seconds: 1)));
+        }else if (anioIni == ""){
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                    backgroundColor: Colors.red,
+                    content:  Text("Seleccione un año inicial"),
+                    duration: const Duration(seconds: 1)));
+        }else if(anioFin == ""){
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                    backgroundColor: Colors.red,
+                    content:  Text("Seleccione un año final"),
+                    duration: const Duration(seconds: 1)));
+        }else if (int.parse(anioFin) - int.parse(anioIni) + 1>5){
           ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                     backgroundColor: Colors.red,
                     content:  Text("Solo puede seleccionar un rango de 5 años"),
@@ -341,6 +364,7 @@ class _reportePersonasMesesCincoAnual extends State<reportePersonasMesesCincoAnu
                     duration: const Duration(seconds: 1)));
 
         } else{
+          totalYear = int.parse(anioFin) - int.parse(anioIni) + 1;
           ReportService reportService = new ReportService();
           reportService.reportePersonasMesesCincoAnual(widget.token, widget.nickname, this.idInmueble, anioIni, anioFin)
             .then((reporteObtenido) => {

@@ -21,7 +21,6 @@ class ReportePersonaAnualMes extends StatefulWidget {
   final List<charts.Series> grafica;
   final bool animacion;
   
-
   const ReportePersonaAnualMes({ Key key, this.token, this.nickname, this.email, this.listadoRazon, this.animacion, this.grafica}) :  super(key: key);
 
   @override
@@ -30,7 +29,6 @@ class ReportePersonaAnualMes extends StatefulWidget {
 
 class _ReportePersonaAnualMes extends State<ReportePersonaAnualMes> {
 
-  DateTime _dateTime;
   String nombreRazon;
   String nombreInmueble;
   String idRazon;
@@ -58,6 +56,8 @@ class _ReportePersonaAnualMes extends State<ReportePersonaAnualMes> {
   String mes = "";
   String anioIni;
   String anioFin;
+  bool dropdown1Bool = false;
+  bool dropdown2Bool = false;
   
   @override
   Widget build(BuildContext context) {
@@ -86,7 +86,7 @@ class _ReportePersonaAnualMes extends State<ReportePersonaAnualMes> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           Text( 
-            'Reporte Personas Anual',
+            'Reporte Personas Anual Mes',
             style: TextStyle(color: Color(0xff890e8a), fontSize: 45,),
           ),
           const SizedBox(height: 25.0,),
@@ -108,63 +108,14 @@ class _ReportePersonaAnualMes extends State<ReportePersonaAnualMes> {
           const SizedBox(height: 25,),
           botonConsulta(),
           const SizedBox(height: 25,),
-          columnChart1(),
+          columnChart(),
           const SizedBox(height: 15,),
           Center(child:Text("Datos", style: TextStyle(color: Colors.white,fontFamily: 'Gotic', fontWeight: FontWeight.bold, fontSize: 14),)),
           tabla(),
-          
-          // charts.BarChart(
-          //   _createSampleData(),
-          //   animate: true,
-          // )
-          //tabla()
         ],
       ),
     );
   }
-
-  Widget botonConsulta(){
-    return RaisedButton(
-      child: Center(
-        //padding: EdgeInsets.symmetric(horizontal: 90, vertical: 20),
-        child: 
-        Text('Consultar',
-          style: TextStyle(color: Colors.white),
-        )
-      ),
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(5) 
-      ),
-      color: Color(0xff890e8a),
-      onPressed: (){
-        mes = mesController.text;
-        anioIni = anioIniController.text;
-        anioFin = anioFinController.text;
-        listadoGrafica = [];
-        ReportService reportService = new ReportService();
-
-        reportService.reportePesonaAnualMes(widget.token, widget.nickname, this.idInmueble, anioIni, anioFin, mes).then((reporteObtenido) => {
-          
-
-          cantidadColumnas = reporteObtenido.listado.length.toDouble(),
-          reporteObtenido.listado.forEach((element) {
-              print(element.year);
-              reporte.Listado listado = new reporte.Listado();
-              listado.entradas = element.entradas;
-              listado.mes = element.mes;
-              listado.year = element.year;
-              listadoGrafica.add(listado);
-              print(element);
-              setState(() {
-                columnChart();
-                tabla();
-              });
-            })
-        });
-      },
-    );
-  }
-
 
   Widget union1(){
     return Container(
@@ -174,7 +125,6 @@ class _ReportePersonaAnualMes extends State<ReportePersonaAnualMes> {
           SizedBox(height: 15, width: 15,),
           dropdown1(),
           SizedBox(width: 15,),
-         
         ],
       ),
     );
@@ -218,7 +168,6 @@ class _ReportePersonaAnualMes extends State<ReportePersonaAnualMes> {
                       ),
                     ),
                   ),
-                  
                 ],
               ),
             );
@@ -332,8 +281,11 @@ class _ReportePersonaAnualMes extends State<ReportePersonaAnualMes> {
                   print('Error al obtener los inmuebles')
                 }else{
                   this.listadoComercial = centrosComerciales.listado,
-                  //this.listadoComercial = this.listadoComercial,
-                  this.listaDropdownInmueble = listadoComercial != null? listadoComercial : <comercial.Listado>[]
+                  this.listaDropdownInmueble = listadoComercial != null? listadoComercial : <comercial.Listado>[],
+                  this.dropdown1Bool = true,
+                  setState(() {
+                    dropdown2();
+                  })
                 }
               });
             },
@@ -379,10 +331,111 @@ class _ReportePersonaAnualMes extends State<ReportePersonaAnualMes> {
               this.idInmueble = valueItem.id;
               this.value = valueItem.value;
               this.alertaAmarilla = valueItem.alertaAmarilla;
+              this.dropdown2Bool = true;
             },
           );
         }).toList()
       ), 
+    );
+  }
+
+  Widget botonConsulta(){
+    return RaisedButton(
+      child: Center(
+        //padding: EdgeInsets.symmetric(horizontal: 90, vertical: 20),
+        child: 
+        Text('Consultar',
+          style: TextStyle(color: Colors.white),
+        )
+      ),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(5) 
+      ),
+      color: Color(0xff890e8a),
+      onPressed: (){
+        mes = mesController.text ?? "";
+        anioIni = anioIniController.text ?? "";
+        anioFin = anioFinController.text ?? "";
+        listadoGrafica = [];
+
+        //VALIDACIONES
+        if(this.dropdown1Bool == false) {
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                    backgroundColor: Colors.red,
+                    content:  Text("Seleccione una Razón"),
+                    duration: const Duration(seconds: 1)));
+        }else if(this.dropdown2Bool == false){
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                    backgroundColor: Colors.red,
+                    content:  Text("Seleccione un Inmueble"),
+                    duration: const Duration(seconds: 1)));
+        }else if (anioIni == ""){
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                    backgroundColor: Colors.red,
+                    content:  Text("Seleccione un año inicial"),
+                    duration: const Duration(seconds: 1)));
+        }else if(anioFin == ""){
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                    backgroundColor: Colors.red,
+                    content:  Text("Seleccione un año final"),
+                    duration: const Duration(seconds: 1)));
+        }else if (mes == ""){
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                    backgroundColor: Colors.red,
+                    content:  Text("Seleccione un mes"),
+                    duration: const Duration(seconds: 1)));
+        }else if(int.parse(anioIni)> int.parse(anioFin)){
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                    backgroundColor: Colors.red,
+                    content:  Text("El año inicial no puede ser mayor al año final"),
+                    duration: const Duration(seconds: 1)));
+        }else if((int.parse(mes)>12)||(int.parse(mes)<1)){
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                    backgroundColor: Colors.red,
+                    content:  Text("Tiene que elegir un mes valido entre 1 y 12"),
+                    duration: const Duration(seconds: 1)));
+        }else {
+        ReportService reportService = new ReportService();
+        reportService.reportePesonaAnualMes(widget.token, widget.nickname, this.idInmueble, anioIni, anioFin, mes).then((reporteObtenido) => {
+          cantidadColumnas = reporteObtenido.listado.length.toDouble(),
+
+          reporteObtenido.listado.forEach((element) {
+              int count;
+              count = int.parse(anioFin) - int.parse(element.year);
+              reporte.Listado listado = new reporte.Listado();
+              if(count%10.abs() == 0){
+                listado.color = Colors.teal;
+              }else if(count%10.abs() == 9){
+                listado.color = Colors.yellowAccent;
+              }else if(count%10.abs() == 8){
+                listado.color = Colors.deepPurple;
+              }else if(count%10.abs() == 7){
+                listado.color = Colors.red;
+              }else if(count%10.abs() == 6){
+                listado.color = Colors.blue;
+              }else if(count%10.abs() == 5){
+                listado.color = Colors.green;
+              }else if(count%10.abs() == 4){
+                listado.color = Colors.grey;
+              }else if(count%10.abs() == 3){
+                listado.color = Colors.lightBlue;
+              }else if(count%10.abs() == 2){
+                listado.color = Colors.white;
+              }else if(count%10.abs() == 1){
+                listado.color = Colors.brown;
+              }
+              listado.entradas = element.entradas;
+              listado.mes = element.mes;
+              listado.year = element.year;
+              listadoGrafica.add(listado);
+              setState(() {
+                columnChart();
+                tabla();
+              });
+            })
+        });
+        }        
+      },
     );
   }
 
@@ -416,12 +469,9 @@ class _ReportePersonaAnualMes extends State<ReportePersonaAnualMes> {
     );
   }
 
-  List <DataColumn> getColumns(List<String> columns) => columns
-      .map((String column) => DataColumn(
+  List <DataColumn> getColumns(List<String> columns) => columns.map((String column) => DataColumn(
         label: Text(column, style: TextStyle(color: Colors.white),),
-      ))
-
-    .toList();
+      ))    .toList();
  
   List <DataCell> getCells(List<dynamic> cells) => cells.map((data) => DataCell(Text('$data' ?? 'nada'))).toList();
  
@@ -430,105 +480,31 @@ class _ReportePersonaAnualMes extends State<ReportePersonaAnualMes> {
     return DataRow(cells: getCells(cells));
   }).toList();
 
-
-  Widget grafica(){
-
-    List<charts.Series<reporte.Listado,String>> series = [
-      charts.Series(
-        id: "Financial",
-        data: listadoGrafica,
-        domainFn: (reporte.Listado series, _) => series.year + series.mes,
-        measureFn: (reporte.Listado series, _) => int.parse(series.entradas),
-        colorFn: (_, __) => charts.MaterialPalette.blue.shadeDefault),
-      
-    ];
-    
-  
-
-  }
-
- 
-  List<charts.Series<reporte.Listado, String>> _createSampleData() {
-
-    return [new charts.Series<reporte.Listado, String>(
-                  id: 'Reporte',
-                  colorFn: (_, __) => charts.MaterialPalette.blue.shadeDefault,
-                  domainFn: (reporte.Listado listado, _) => listado.year + listado.mes,
-                  measureFn: (reporte.Listado listado, _) => int.parse(listado.entradas),
-                  data: this.listadoGrafica,
-                )];
-
-  }
-  
   Widget columnChart(){
-    // final DateFormat formatter = DateFormat('yyyy-MM-dd');
-    // DateTime year = DateTime.now();
-    // final String yearString = formatter.format(year);
-    return SafeArea(
-      child: SfCartesianChart(
-        // margin: EdgeInsets.all(0),
-        title: ChartTitle(text: "Gráfica"),
-        // legend: Legend(isVisible: true),
-        // tooltipBehavior: _tooltipBehavior,
-        primaryXAxis: CategoryAxis(
-                              // Y axis labels will be rendered with currency format
-                              // labelPlacement: LabelPlacement.onTicks
-                              arrangeByIndex: true
-                          ),
-                          
-                          series: <ChartSeries>[
-                              // Renders column chart
-                              
-                              LineSeries<reporte.Listado, String>(
-                                  dataSource: listadoGrafica,
-                                  xValueMapper: (reporte.Listado sales, _) => sales.year,
-                                  yValueMapper: (reporte.Listado sales, __) => int.parse(sales.entradas),
-                                  color: Theme.of(context).primaryColor,
-                                  
-                                  dataLabelSettings: DataLabelSettings(
-                                    isVisible: true,
-                                    // Positioning the data label
-                                    labelAlignment: ChartDataLabelAlignment.middle
-                                )
-                              )
-                          ]
-                      ),
-    );
-  }
-
-  
-  Widget columnChart1(){
     return Container(
     height: 100*cantidadColumnas, // height of the Container widget
      // width of the Container widget
     child: Center(
       child: SfCartesianChart(
           title: ChartTitle(text:"Gráfica mes " + this.mes , textStyle: TextStyle(
-                    color: Colors.white,
-                    fontFamily: 'Gotic',
-                    fontWeight: FontWeight.w400
-                  )),
-          // legend: Legend(isVisible: true),
+                              color: Colors.white,
+                              fontFamily: 'Gotic',
+                              fontWeight: FontWeight.w400
+                            )),
           series: <ChartSeries>[
             BarSeries<reporte.Listado, String>(dataSource: listadoGrafica, 
                       xValueMapper: (reporte.Listado sales, _) => sales.year,
                       yValueMapper: (reporte.Listado sales, __) => int.parse(sales.entradas),
-                      color: Theme.of(context).primaryColor,
+                      pointColorMapper: (reporte.Listado data, _) => data.color,
                       dataLabelSettings: DataLabelSettings(
-                                    isVisible: true,
-                                    // Positioning the data label
-                                    labelAlignment: ChartDataLabelAlignment.top
+                                          isVisible: true,
+                                          labelAlignment: ChartDataLabelAlignment.top
                     )
                       )
-                      
           ],
           primaryXAxis: CategoryAxis(
-                            // Y axis labels will be rendered with currency format
-                            // labelPlacement: LabelPlacement.onTicks
                             arrangeByIndex: true
-                            
                         ),
-          
         )
       )
     );
