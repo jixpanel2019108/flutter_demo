@@ -12,6 +12,7 @@ import 'package:flutter_demo/models/catRazonSocialModel.dart' as razon;
 import 'package:flutter_demo/models/conteoPersonasModel.dart' as personas;
 import 'package:flutter_demo/pages/menu.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
+import 'dart:math' as math;
 
 class reportePersonasMesesCincoAnual extends StatefulWidget {
   final String token;
@@ -30,7 +31,6 @@ class reportePersonasMesesCincoAnual extends StatefulWidget {
 
 class _reportePersonasMesesCincoAnual extends State<reportePersonasMesesCincoAnual> {
 
-  DateTime _dateTime;
   String nombreRazon;
   String nombreInmueble;
   String idRazon;
@@ -51,6 +51,7 @@ class _reportePersonasMesesCincoAnual extends State<reportePersonasMesesCincoAnu
 
   String fini;
   String ffin;
+  int totalYear;
 
   final mesController = TextEditingController();
   final anioIniController = TextEditingController();
@@ -86,7 +87,7 @@ class _reportePersonasMesesCincoAnual extends State<reportePersonasMesesCincoAnu
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           Text( 
-            'Reporte Personas Anual',
+            'Reporte Personas todos los meses por años',
             style: TextStyle(color: Color(0xff890e8a), fontSize: 45,),
           ),
           const SizedBox(height: 25.0,),
@@ -103,8 +104,6 @@ class _reportePersonasMesesCincoAnual extends State<reportePersonasMesesCincoAnu
           anioInicial(),
           const SizedBox(height: 15,),
           anioFinal(),
-          const SizedBox(height: 15,),
-          mesesito(),
           const SizedBox(height: 25,),
           botonConsulta(),
           const SizedBox(height: 25,),
@@ -113,58 +112,12 @@ class _reportePersonasMesesCincoAnual extends State<reportePersonasMesesCincoAnu
           Center(child:Text("Datos", style: TextStyle(color: Colors.white,fontFamily: 'Gotic', fontWeight: FontWeight.bold, fontSize: 14),)),
           tabla(),
           
-          // charts.BarChart(
-          //   _createSampleData(),
-          //   animate: true,
-          // )
-          //tabla()
         ],
       ),
     );
   }
 
-  Widget botonConsulta(){
-    return RaisedButton(
-      child: Center(
-        //padding: EdgeInsets.symmetric(horizontal: 90, vertical: 20),
-        child: 
-        Text('Consultar',
-          style: TextStyle(color: Colors.white),
-        )
-      ),
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(5) 
-      ),
-      color: Color(0xff890e8a),
-      onPressed: (){
-        mes = mesController.text;
-        anioIni = anioIniController.text;
-        anioFin = anioFinController.text;
-        listadoGrafica = [];
-        ReportService reportService = new ReportService();
-
-        reportService.reportePersonasMesesCincoAnual(widget.token, widget.nickname, this.idInmueble, anioIni, anioFin, mes).then((reporteObtenido) => {
-
-          cantidadColumnas = reporteObtenido.listado.length.toDouble(),
-          reporteObtenido.listado.forEach((element) {
-              print(element.year);
-              reporte.Listado listado = new reporte.Listado();
-              listado.entradas = element.entradas;
-              listado.mes = element.mes;
-              listado.year = element.year;
-              listadoGrafica.add(listado);
-              print(element);
-              setState(() {
-                columnChart1();
-                tabla();
-              });
-            })
-        });
-      },
-    );
-  }
-
-
+  
   Widget union1(){
     return Container(
       child: Row(
@@ -261,40 +214,6 @@ class _reportePersonasMesesCincoAnual extends State<reportePersonasMesesCincoAnu
     );
   }
 
-  Widget mesesito() {
-    return Container(
-      margin: EdgeInsets.only(right: 250),
-      child: StreamBuilder(
-          builder: (BuildContext context, AsyncSnapshot snapshot) {
-            return Container(
-              //padding: EdgeInsets.symmetric(horizontal: 40.0),
-              child: Column(
-                children: <Widget>[
-                  TextFormField(
-                    controller: mesController,
-                    inputFormatters: [
-                      LengthLimitingTextInputFormatter(2),
-                    ],
-                    style: TextStyle(color: Colors.white, fontSize: 15),
-                    keyboardType: TextInputType.number,
-                    decoration: InputDecoration(
-                      labelText: 'Mes',
-                      hintStyle: TextStyle(
-                        color: Color(0xffe1c0ea)
-                      ),
-                      labelStyle: TextStyle(
-                        color: Color(0xffe1c0ea)
-                      ),
-                    ),
-                  ),
-                ]
-              ),
-            );
-          }
-      ),
-    );
-  }
-
   Widget dropdown1(){
     return Container(
       padding: EdgeInsets.only(left: 16, right: 16),
@@ -315,8 +234,8 @@ class _reportePersonasMesesCincoAnual extends State<reportePersonasMesesCincoAnu
         value: nombreRazon,
         onChanged: (newValue){
           setState(() {
-            nombreRazon = newValue;
             dropdown2();
+            nombreRazon = newValue;
           });
         },
         items: widget.listadoRazon.map((listado){
@@ -332,7 +251,11 @@ class _reportePersonasMesesCincoAnual extends State<reportePersonasMesesCincoAnu
                 }else{
                   this.listadoComercial = centrosComerciales.listado,
                   //this.listadoComercial = this.listadoComercial,
-                  this.listaDropdownInmueble = listadoComercial != null? listadoComercial : <comercial.Listado>[]
+                  this.listaDropdownInmueble = listadoComercial != null? listadoComercial : <comercial.Listado>[],
+                  dropdown2(),
+                  setState(() {
+                    dropdown2();
+                  })
                 }
               });
             },
@@ -362,6 +285,7 @@ class _reportePersonasMesesCincoAnual extends State<reportePersonasMesesCincoAnu
         value: nombreInmueble,
         onChanged: (newValue){
           setState(() {
+            dropdown2();
             nombreInmueble = newValue;
           });
         },
@@ -382,6 +306,104 @@ class _reportePersonasMesesCincoAnual extends State<reportePersonasMesesCincoAnu
           );
         }).toList()
       ), 
+    );
+  }
+
+  Widget botonConsulta(){
+    return RaisedButton(
+      child: Center(
+        child: 
+        Text('Consultar',
+          style: TextStyle(color: Colors.white),
+        )
+      ),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(5) 
+      ),
+      color: Color(0xff890e8a),
+      onPressed: (){
+        mes = mesController.text;
+        anioIni = anioIniController.text;
+        anioFin = anioFinController.text;
+        listadoGrafica = [];
+        totalYear = int.parse(anioFin) - int.parse(anioIni) + 1;
+
+        if(totalYear>5){
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                    backgroundColor: Colors.red,
+                    content:  Text("Solo puede seleccionar un rango de 5 años"),
+                    duration: const Duration(seconds: 1)));
+
+        } else if(int.parse(anioIni) > int.parse(anioFin)){
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                    backgroundColor: Colors.red,
+                    content:  Text("El año inicial no puede ser mayor al año final"),
+                    duration: const Duration(seconds: 1)));
+
+        } else{
+          ReportService reportService = new ReportService();
+          reportService.reportePersonasMesesCincoAnual(widget.token, widget.nickname, this.idInmueble, anioIni, anioFin)
+            .then((reporteObtenido) => {
+              cantidadColumnas = reporteObtenido.listado.length.toDouble(),
+
+              reporteObtenido.listado.forEach((element) {
+                  int count;
+                  count = int.parse(anioFin) - int.parse(element.year);
+                  reporte.Listado listado = new reporte.Listado();
+
+                  switch (count) {
+                    case 0:
+                      listado.color = Colors.red[400];
+                      break;
+                    case 1:
+                        listado.color = Colors.blue[400];
+                      break;
+                    case 2:
+                        listado.color = Colors.green[400];
+                      break;
+                    case 3:
+                        listado.color = Colors.yellow;
+                      break;
+                    case 4:
+                        listado.color = Colors.teal;
+                      break;
+                    case 5:
+                        listado.color = Colors.purple;
+                      break;
+                    case 6:
+                        listado.color = Colors.red[400];
+                      break;
+                    case 7:
+                        listado.color = Colors.blue[400];
+                      break;
+                    case 8:
+                        listado.color = Colors.green[400];
+                      break;
+                    case 9:
+                        listado.color = Colors.yellow;
+                      break;
+                    case 10:
+                        listado.color = Colors.teal;
+                      break;
+                    default:
+                        listado.color = Colors.pink[400];
+              }
+              
+              listado.entradas = element.entradas;
+              listado.mes = element.mes;
+              listado.year = element.year;
+              listadoGrafica.add(listado);
+
+              setState(() {
+                columnChart1();
+                tabla();
+              });
+
+            })
+        });
+
+        }
+      },
     );
   }
 
@@ -415,26 +437,8 @@ class _reportePersonasMesesCincoAnual extends State<reportePersonasMesesCincoAnu
     );
   }
 
-  List <DataColumn> getColumns(List<String> columns) => columns
-      .map((String column) => DataColumn(
-        label: Text(column, style: TextStyle(color: Colors.white),),
-      ))
-
-    .toList();
- 
-  List <DataCell> getCells(List<dynamic> cells) => cells.map((data) => DataCell(Text('$data' ?? 'nada'))).toList();
- 
-  List <DataRow> getRows (List<reporte.Listado> row,) => row.map((reporte.Listado hola,) {
-    final cells = [hola.year, hola.mes, hola.entradas];
-    return DataRow(cells: getCells(cells));
-  }).toList();
- 
   Widget columnChart1(){
-    Color color1 = Colors.red;
-    Color color2 = Colors.yellow;
-    Color color3 = Colors.blueAccent;
-    Color color4 = Colors.red;
-    Color color5 = Colors.red;
+
     return Container(
     height: 25*cantidadColumnas, // height of the Container widget
      // width of the Container widget
@@ -448,9 +452,9 @@ class _reportePersonasMesesCincoAnual extends State<reportePersonasMesesCincoAnu
           // legend: Legend(isVisible: true),
           series: <ChartSeries>[
             BarSeries<reporte.Listado, String>(dataSource: listadoGrafica, 
-                      xValueMapper: (reporte.Listado sales, _) => sales.year,
+                      xValueMapper: (reporte.Listado sales, _) => sales.mes +"/"+ sales.year,
                       yValueMapper: (reporte.Listado sales, __) => int.parse(sales.entradas),
-                      color: Theme.of(context).primaryColor,
+                      pointColorMapper: (reporte.Listado data, _) => data.color,
                       dataLabelSettings: DataLabelSettings(
                                     isVisible: true,
                                     // Positioning the data label
@@ -471,4 +475,18 @@ class _reportePersonasMesesCincoAnual extends State<reportePersonasMesesCincoAnu
     );
     
   }
+
+
+  List <DataColumn> getColumns(List<String> columns) => columns.map((String column) => DataColumn(
+        label: Text(column, style: TextStyle(color: Colors.white),),
+      )).toList();
+
+  List <DataCell> getCells(List<dynamic> cells) => cells.map((data) => DataCell(Text('$data' ?? 'nada'))).toList();
+ 
+  List <DataRow> getRows (List<reporte.Listado> row,) => row.map((reporte.Listado hola,) {
+    final cells = [hola.year, hola.mes, hola.entradas];
+    return DataRow(cells: getCells(cells));
+  }).toList();
+ 
+  
 }
