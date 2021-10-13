@@ -52,6 +52,8 @@ class _ParqueosPage extends State<ParqueosPage> {
     return Scaffold(
       backgroundColor: Color(0xff313131),
       appBar: AppBar(
+        title: Image.asset('assets/logo_shoppertrace_blanco.png', width: 200, ),
+        centerTitle: true,
         backgroundColor: Colors.transparent,
       ),
       drawer: MenuPage(token: widget.token, nickname: widget.nickname,email:widget.email,),
