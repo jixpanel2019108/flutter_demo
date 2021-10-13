@@ -528,7 +528,10 @@ class _ReportePersonaAnioMesHora extends State<ReportePersonaAnioMesHora> {
                 }else{
                   this.listadoComercial = centrosComerciales.listado,
                   //this.listadoComercial = this.listadoComercial,
-                  this.listaDropdownInmueble = listadoComercial != null? listadoComercial : <comercial.Listado>[]
+                  this.listaDropdownInmueble = listadoComercial != null? listadoComercial : <comercial.Listado>[],
+                  setState((){
+                    dropdown2();
+                  })
                 }
               });
             },
