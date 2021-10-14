@@ -128,7 +128,10 @@ class ReportService{
   
   Future <ReportePersonaDiaSemana> reportePersonaDiaSemana (String token,String usuario, String inmueble, String year, 
                                                         String mes, String diaIni, String diaFin) async{
-
+      print(year);
+      print(mes);
+      print(diaIni);
+      print(diaFin);
     var urlRequest = Uri.parse(urlReporte+"/reportePersonaDiaSemana");
     var bodyRequest = jsonEncode({
                                   "key": "12345",

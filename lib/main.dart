@@ -12,6 +12,7 @@ import 'package:flutter_demo/pages/reportePersonaAnualMes.dart';
 import 'package:flutter_demo/pages/reportePersonaAnioMesHora.dart';
 import 'package:flutter_demo/pages/reportePersonasMesesCincoAnual.dart';
 import 'package:flutter_demo/pages/reportePersonasDia.dart';
+import 'package:flutter_demo/pages/reportePersonaDiaSemana.dart';
 import 'package:flutter_demo/utils/user_simple_preferences.dart';
 import 'package:flutter_demo/pages/reportePersonasAnual.dart';
 import 'package:flutter_demo/pages/principal.dart';
@@ -41,6 +42,7 @@ class MyApp extends StatelessWidget {
         '/reporteAnualMes' : (context) => ReportePersonaAnualMes(),
         '/reportePersonasMesesCinco' : (context) => reportePersonasMesesCincoAnual(),
         '/reporteAnioMesHora': (context) => ReportePersonaAnioMesHora(),
+        '/reporteDiaSemana': (context) => ReportePersonaDiaSemana(),
       },
     );
   }
