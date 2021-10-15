@@ -7,7 +7,9 @@ import 'package:flutter_demo/pages/conteoPersonas.dart';
 import 'package:flutter_demo/pages/reportePersonasAnual.dart';
 import 'package:flutter_demo/pages/reportePersonasDia.dart';
 import 'package:flutter_demo/pages/reportePersonaAnualMes.dart';
+import 'package:flutter_demo/pages/reportePersonaAnioMesHora.dart';
 import 'package:flutter_demo/pages/reportePersonasMesesCincoAnual.dart';
+import 'package:flutter_demo/pages/reportePersonaDiaSemana.dart';
 import 'package:flutter_demo/services/userService.dart';
 
 class MenuPage extends StatefulWidget {
@@ -89,6 +91,18 @@ class _MenuPage extends   State<MenuPage> {
               text: 'Reporte Personas Meses Anual',
               icon: Icons.people,   
               indice: 8
+            ),
+            const SizedBox(height: 16,),
+            buildMenuItem(
+              text: 'Reporte Hora Mes',
+              icon: Icons.calendar_today,
+              indice: 9
+            ),
+            const SizedBox(height: 16,),
+            buildMenuItem(
+              text: 'Reporte Semana Dia',
+              icon: Icons.calendar_today,
+              indice: 10
             ),
             const SizedBox(height: 24),
             Divider(color: Colors.white70),
@@ -291,6 +305,48 @@ class _MenuPage extends   State<MenuPage> {
                   context,
                   MaterialPageRoute(
                     builder: (context) => reportePersonasMesesCincoAnual(
+                      token: widget.token,
+                      email: widget.email,
+                      nickname: widget.nickname,
+                      listadoRazon: peticionRazonSocial.listado,
+                    )
+                  )
+                )
+              }else{
+                print('Error en boton menu Conteo Parqueos')
+              }
+            });
+          }
+          break;
+          case 9: {
+            UserService userService = new UserService();
+            userService.razonSocial(widget.token).then((peticionRazonSocial) => {
+              if(peticionRazonSocial.error == false){
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => ReportePersonaAnioMesHora(
+                      token: widget.token,
+                      email: widget.email,
+                      nickname: widget.nickname,
+                      listadoRazon: peticionRazonSocial.listado,
+                    )
+                  )
+                )
+              }else{
+                print('Error en boton menu Conteo Parqueos')
+              }
+            });
+          }
+          break;
+          case 10: {
+            UserService userService = new UserService();
+            userService.razonSocial(widget.token).then((peticionRazonSocial) => {
+              if(peticionRazonSocial.error == false){
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => ReportePersonaDiaSemana(
                       token: widget.token,
                       email: widget.email,
                       nickname: widget.nickname,

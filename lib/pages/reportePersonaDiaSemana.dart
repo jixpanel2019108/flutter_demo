@@ -4,31 +4,31 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.Dart';
 import 'package:flutter_demo/services/userService.dart';
+import 'package:flutter_demo/services/reportService.dart';
 import 'package:charts_flutter/flutter.dart' as charts;
-import 'package:flutter_demo/models/reportePersonasAnualModel.dart' as reporte;
+import 'package:flutter_demo/models/reportePersonaDiaSemanaModel.dart' as reporte;
 import 'package:flutter_demo/models/catCentroComercialModel.dart' as comercial;
 import 'package:flutter_demo/models/catRazonSocialModel.dart' as razon;
 import 'package:flutter_demo/models/conteoPersonasModel.dart' as personas;
 import 'package:flutter_demo/pages/menu.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 
-class ReportePersonasAnual extends StatefulWidget {
+class ReportePersonaDiaSemana extends StatefulWidget {
   final String token;
   final String nickname;
   final String email;
   final List<razon.Listado> listadoRazon;
   final List<charts.Series> grafica;
   final bool animacion;
-
-  const ReportePersonasAnual({ Key key, this.token, this.nickname, this.email, this.listadoRazon, this.animacion, this.grafica}) :  super(key: key);
+  
+  const ReportePersonaDiaSemana({ Key key, this.token, this.nickname, this.email, this.listadoRazon, this.animacion, this.grafica}) :  super(key: key);
 
   @override
-  _ReportePersonasAnualState createState() => _ReportePersonasAnualState();
+  _ReportePersonaDiaSemana createState() => _ReportePersonaDiaSemana();
 }
 
-class _ReportePersonasAnualState extends State<ReportePersonasAnual> {
+class _ReportePersonaDiaSemana extends State<ReportePersonaDiaSemana> {
 
-  DateTime _dateTime;
   String nombreRazon;
   String nombreInmueble;
   String idRazon;
@@ -37,24 +37,29 @@ class _ReportePersonasAnualState extends State<ReportePersonasAnual> {
   String alertaRoja;
   String ocupacionMaximaPersonas;
   String ocupacionMaximaParqueos;
-  String id;
+  String idInmueble;
   String value;
   String alertaAmarilla;
-  bool dropdown1Bool = false;
-  bool dropdown2Bool = false;
   List<comercial.Listado> listadoComercial;
   List<personas.Listado1> listadoPersonas;
   List<reporte.Listado> listadoGrafica = [];
   List listaDropdownInmueble = [];
   List listadoTabla = [];
+  double cantidadColumnas = 0;
 
   String fini;
   String ffin;
 
-  final fechainicial = TextEditingController();
-  final fechafinal = TextEditingController();
-  String fein = "";
-  String fefi = "";
+  final mesController = TextEditingController();
+  final yearController = TextEditingController();
+  final diaIniController = TextEditingController();
+  final diaFinController = TextEditingController();
+  String mes = "";
+  String year;
+  String diaIni;
+  String diaFin;
+  bool dropdown1Bool = false;
+  bool dropdown2Bool = false;
   
   @override
   Widget build(BuildContext context) {
@@ -67,7 +72,7 @@ class _ReportePersonasAnualState extends State<ReportePersonasAnual> {
       ),
       drawer: MenuPage(token: widget.token, nickname: widget.nickname,email:widget.email,),
       body: SingleChildScrollView(
-        child: Container(
+        child: Container( 
           child: Column(
             children: [
               cuerpo(context),
@@ -85,7 +90,7 @@ class _ReportePersonasAnualState extends State<ReportePersonasAnual> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           Text( 
-            'Reporte Personas Anual',
+            'Reporte Personas Anual Mes',
             style: TextStyle(color: Color(0xff890e8a), fontSize: 45,),
           ),
           const SizedBox(height: 25.0,),
@@ -99,52 +104,20 @@ class _ReportePersonasAnualState extends State<ReportePersonasAnual> {
           const SizedBox(height: 15,),
           union2(),
           const SizedBox(height: 15,),
-          initialDate(),
+          Anio(),
           const SizedBox(height: 15,),
-          lastDate(),
+          mesLabel(),
+          const SizedBox(height: 15,),
+          diaInicial(),
+          const SizedBox(height: 15,),
+          diaFinal(),
           const SizedBox(height: 25,),
           botonConsulta(),
           const SizedBox(height: 25,),
+          columnChart(),
+          const SizedBox(height: 15,),
+          Center(child:Text("Datos", style: TextStyle(color: Colors.white,fontFamily: 'Gotic', fontWeight: FontWeight.bold, fontSize: 14),)),
           tabla(),
-          const SizedBox(height: 25,),
-          columnChart()
-          // charts.BarChart(
-          //   _createSampleData(),
-          //   animate: true,
-          // )
-          //tabla()
-        ],
-      ),
-    );
-  }
-
-  Widget unionFe(){
-    return Container(
-      child: Row(
-        children: <Widget>[
-          Text( _dateTime == null ? 'No has seleccionado fecha' : _dateTime.toString(),),
-          SizedBox(height: 15, width: 15,),
-          RaisedButton(
-            child: Text('Selecciona una fecha', style: TextStyle(color: Colors.white),),
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(5)
-            ),
-            color: Color(0xff890e8a),
-            onPressed: (){
-              showDatePicker(
-                context: context,
-                initialDate: _dateTime == null ? DateTime.now() : _dateTime,
-                firstDate: DateTime(2001),
-                lastDate: DateTime.now(),
-                
-              ).then((date){
-                setState(() {
-                  print(date);
-                  _dateTime = date;
-                });
-              });
-            } 
-          )
         ],
       ),
     );
@@ -158,7 +131,6 @@ class _ReportePersonasAnualState extends State<ReportePersonasAnual> {
           SizedBox(height: 15, width: 15,),
           dropdown1(),
           SizedBox(width: 15,),
-         
         ],
       ),
     );
@@ -176,7 +148,7 @@ class _ReportePersonasAnualState extends State<ReportePersonasAnual> {
     );
   }
 
-  Widget initialDate() {
+  Widget Anio() {
     return Container(
       margin: EdgeInsets.only(right: 250),
       child: StreamBuilder(
@@ -185,7 +157,7 @@ class _ReportePersonasAnualState extends State<ReportePersonasAnual> {
               child: Column(
                 children: <Widget>[
                   TextFormField(
-                    controller: fechainicial,
+                    controller: yearController,
                     inputFormatters: [
                       LengthLimitingTextInputFormatter(4),
                     ],
@@ -193,7 +165,41 @@ class _ReportePersonasAnualState extends State<ReportePersonasAnual> {
                     keyboardType: TextInputType.number,
                     cursorColor: Colors.white,
                     decoration: InputDecoration(
-                      labelText: 'Año Inicial',
+                      labelText: 'Año',
+                      hintStyle: TextStyle(
+                        color: Colors.white
+                      ),
+                      labelStyle: TextStyle(
+                        color: Color(0xffe1c0ea)
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            );
+          }
+      ),
+    );
+  }
+
+  Widget mesLabel() {
+    return Container(
+      margin: EdgeInsets.only(right: 250),
+      child: StreamBuilder(
+          builder: (BuildContext context, AsyncSnapshot snapshot) {
+            return Container(
+              child: Column(
+                children: <Widget>[
+                  TextFormField(
+                    controller: mesController,
+                    inputFormatters: [
+                      LengthLimitingTextInputFormatter(4),
+                    ],
+                    style: TextStyle(color: Colors.white, fontSize: 15),
+                    keyboardType: TextInputType.number,
+                    cursorColor: Colors.white,
+                    decoration: InputDecoration(
+                      labelText: 'Mes',
                       hintStyle: TextStyle(
                         color: Colors.white
                       ),
@@ -211,33 +217,69 @@ class _ReportePersonasAnualState extends State<ReportePersonasAnual> {
     );
   }
 
-  Widget lastDate() {
+  Widget diaInicial() {
     return Container(
       margin: EdgeInsets.only(right: 250),
       child: StreamBuilder(
           builder: (BuildContext context, AsyncSnapshot snapshot) {
             return Container(
-              //padding: EdgeInsets.symmetric(horizontal: 40.0),
               child: Column(
                 children: <Widget>[
                   TextFormField(
-                    controller: fechafinal,
+                    controller: diaIniController,
                     inputFormatters: [
                       LengthLimitingTextInputFormatter(4),
                     ],
                     style: TextStyle(color: Colors.white, fontSize: 15),
                     keyboardType: TextInputType.number,
+                    cursorColor: Colors.white,
                     decoration: InputDecoration(
-                      labelText: 'Año Final',
+                      labelText: 'Dia Inicial',
                       hintStyle: TextStyle(
-                        color: Color(0xffe1c0ea)
+                        color: Colors.white
                       ),
                       labelStyle: TextStyle(
                         color: Color(0xffe1c0ea)
                       ),
                     ),
                   ),
-                ]
+                  
+                ],
+              ),
+            );
+          }
+      ),
+    );
+  }
+
+  Widget diaFinal() {
+    return Container(
+      margin: EdgeInsets.only(right: 250),
+      child: StreamBuilder(
+          builder: (BuildContext context, AsyncSnapshot snapshot) {
+            return Container(
+              child: Column(
+                children: <Widget>[
+                  TextFormField(
+                    controller: diaFinController,
+                    inputFormatters: [
+                      LengthLimitingTextInputFormatter(4),
+                    ],
+                    style: TextStyle(color: Colors.white, fontSize: 15),
+                    keyboardType: TextInputType.number,
+                    cursorColor: Colors.white,
+                    decoration: InputDecoration(
+                      labelText: 'Dia Final',
+                      hintStyle: TextStyle(
+                        color: Colors.white
+                      ),
+                      labelStyle: TextStyle(
+                        color: Color(0xffe1c0ea)
+                      ),
+                    ),
+                  ),
+                  
+                ],
               ),
             );
           }
@@ -281,7 +323,6 @@ class _ReportePersonasAnualState extends State<ReportePersonasAnual> {
                   print('Error al obtener los inmuebles')
                 }else{
                   this.listadoComercial = centrosComerciales.listado,
-                  //this.listadoComercial = this.listadoComercial,
                   this.listaDropdownInmueble = listadoComercial != null? listadoComercial : <comercial.Listado>[],
                   this.dropdown1Bool = true,
                   setState(() {
@@ -329,7 +370,7 @@ class _ReportePersonasAnualState extends State<ReportePersonasAnual> {
               this.alertaRoja = valueItem.alertaRoja;
               this.ocupacionMaximaPersonas = valueItem.ocupacionMaximaPersonas;
               this.ocupacionMaximaParqueos = valueItem.ocupacionMaximaParqueos;
-              this.id = valueItem.id;
+              this.idInmueble = valueItem.id;
               this.value = valueItem.value;
               this.alertaAmarilla = valueItem.alertaAmarilla;
               this.dropdown2Bool = true;
@@ -354,10 +395,13 @@ class _ReportePersonasAnualState extends State<ReportePersonasAnual> {
       ),
       color: Color(0xff890e8a),
       onPressed: (){
-        this.fein = fechainicial.text ?? "";
-        this.fefi = fechafinal.text ?? "";
+        mes = mesController.text ?? "";
+        diaIni = diaIniController.text ?? "";
+        diaFin = diaFinController.text ?? "";
+        year = yearController.text ?? "";
         listadoGrafica = [];
 
+        //VALIDACIONES
         if(this.dropdown1Bool == false) {
           ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                     backgroundColor: Colors.red,
@@ -368,33 +412,41 @@ class _ReportePersonasAnualState extends State<ReportePersonasAnual> {
                     backgroundColor: Colors.red,
                     content:  Text("Seleccione un Inmueble"),
                     duration: const Duration(seconds: 1)));
-        }else if(this.fein == ""){
+        }else if (diaIni == ""){
           ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                     backgroundColor: Colors.red,
-                    content:  Text("Ingrese una fecha inicial"),
+                    content:  Text("Seleccione un año inicial"),
                     duration: const Duration(seconds: 1)));
-        }else if(this.fefi == ""){
+        }else if(diaFin == ""){
           ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                     backgroundColor: Colors.red,
-                    content:  Text("Ingrese una fecha final"),
+                    content:  Text("Seleccione un año final"),
                     duration: const Duration(seconds: 1)));
-        }else if(int.parse(this.fein)> int.parse(this.fefi)){
+        }else if (mes == ""){
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                    backgroundColor: Colors.red,
+                    content:  Text("Seleccione un mes"),
+                    duration: const Duration(seconds: 1)));
+        }else if(int.parse(diaIni)> int.parse(diaFin)){
           ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                     backgroundColor: Colors.red,
                     content:  Text("El año inicial no puede ser mayor al año final"),
                     duration: const Duration(seconds: 1)));
+        }else if((int.parse(mes)>12)||(int.parse(mes)<1)){
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                    backgroundColor: Colors.red,
+                    content:  Text("Tiene que elegir un mes valido entre 1 y 12"),
+                    duration: const Duration(seconds: 1)));
         }else {
-          UserService userService = new UserService();
-          userService.reportePersonasAnual(widget.token, this.id, fein, fefi).then((reporteObtenido) => {
-            if(reporteObtenido.error == true){
-              print('Error al hacer la consula en page reportePersonasAnual')
-            }else{
-              reporteObtenido.listado.forEach((element) {
-                int count;
-                count = int.parse(this.fein) - int.parse(element.fecha);
-                reporte.Listado listado = new reporte.Listado();
+        ReportService reportService = new ReportService();
+        reportService.reportePersonaDiaSemana(widget.token, widget.nickname, this.idInmueble, year, mes, diaIni, diaFin, ).then((reporteObtenido) => {
+          cantidadColumnas = reporteObtenido.listado.length.toDouble(),
 
-                if(count%10.abs() == 0){
+          reporteObtenido.listado.forEach((element) {
+              int count;
+              count = int.parse(diaFin) - int.parse(element.numero);
+              reporte.Listado listado = new reporte.Listado();
+              if(count%10.abs() == 0){
                 listado.color = Colors.teal;
               }else if(count%10.abs() == 9){
                 listado.color = Colors.yellowAccent;
@@ -415,33 +467,27 @@ class _ReportePersonasAnualState extends State<ReportePersonasAnual> {
               }else if(count%10.abs() == 1){
                 listado.color = Colors.brown;
               }
-
-                listado.conteo = element.conteo;
-                listado.fecha = element.fecha;
-                listadoGrafica.add(listado);
-  
-                setState(() {
-                  columnChart();
-                  tabla();
-                });
-              })
-            }
+              listado.entradas = element.entradas;
+              listado.numero = element.numero;
+              listado.dia = element.dia;
+              listadoGrafica.add(listado);
+              setState(() {
+                columnChart();
+                tabla();
+              });
+            })
         });
-
-        }
-
-        
+        }        
       },
     );
   }
 
-
   Widget tabla(){
-    final columns = ['Fecha','Conteo'];
+    final columns = ['Número','Conteo', 'Dia'];
     return SingleChildScrollView(
       scrollDirection: Axis.horizontal,
       child: Container(
-        padding: EdgeInsets.symmetric(horizontal: 140,),
+        padding: EdgeInsets.symmetric(horizontal: 120,),
         child: DataTable(
           dataRowColor: MaterialStateProperty.resolveWith<Color>((Set<MaterialState> states) {
             if(states.contains(MaterialState.selected))
@@ -466,44 +512,45 @@ class _ReportePersonasAnualState extends State<ReportePersonasAnual> {
     );
   }
 
-  Widget columnChart(){
-    return SfCartesianChart(
-      primaryXAxis: CategoryAxis(
-                            // Y axis labels will be rendered with currency format
-                            // labelPlacement: LabelPlacement.onTicks
-                            arrangeByIndex: true
-                        ),
-                        series: <ChartSeries>[
-                            // Renders column chart
-                            
-                            ColumnSeries<reporte.Listado, int>(
-                                dataSource: listadoGrafica,
-                                xValueMapper: (reporte.Listado sales, _) => int.parse(sales.fecha),
-                                yValueMapper: (reporte.Listado sales, __) => int.parse(sales.conteo),
-                                pointColorMapper: (reporte.Listado data, _) => data.color,
-                                dataLabelSettings: DataLabelSettings(
-                                    isVisible: true,
-                                    // Positioning the data label
-                                    labelAlignment: ChartDataLabelAlignment.top
-                                )
-                            )
-                        ]
-                    );
-  }
-
   List <DataColumn> getColumns(List<String> columns) => columns.map((String column) => DataColumn(
         label: Text(column, style: TextStyle(color: Colors.white),),
-      )).toList();
+      ))    .toList();
  
   List <DataCell> getCells(List<dynamic> cells) => cells.map((data) => DataCell(Text('$data' ?? 'nada'))).toList();
  
-  List <DataRow> getRows (List<reporte.Listado> row,) => row.map((reporte.Listado hola,) {
-
-    final cells = [hola.fecha, hola.conteo];
+  List <DataRow> getRows (List<reporte.Listado> row,) => row.map((reporte.Listado report,) {
+    final cells = [report.numero, report.entradas, report.dia];
     return DataRow(cells: getCells(cells));
   }).toList();
 
-  
-  
-  
+  Widget columnChart(){
+    return Container(
+    height: 100*cantidadColumnas, // height of the Container widget
+     // width of the Container widget
+    child: Center(
+      child: SfCartesianChart(
+          title: ChartTitle(text:"Gráfica mes " + this.mes , textStyle: TextStyle(
+                              color: Colors.white,
+                              fontFamily: 'Gotic',
+                              fontWeight: FontWeight.w400
+                            )),
+          series: <ChartSeries>[
+            BarSeries<reporte.Listado, String>(dataSource: listadoGrafica, 
+                      xValueMapper: (reporte.Listado sales, _) => sales.dia,
+                      yValueMapper: (reporte.Listado sales, __) => int.parse(sales.entradas),
+                      pointColorMapper: (reporte.Listado data, _) => data.color,
+                      dataLabelSettings: DataLabelSettings(
+                                          isVisible: true,
+                                          labelAlignment: ChartDataLabelAlignment.top
+                    )
+                      )
+          ],
+          primaryXAxis: CategoryAxis(
+                            arrangeByIndex: true
+                        ),
+        )
+      )
+    );
+    
+  }
 }
