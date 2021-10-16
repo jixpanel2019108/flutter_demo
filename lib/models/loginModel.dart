@@ -1,6 +1,4 @@
 // @dart=2.9
-import 'dart:convert';
-
 class LoginResponseModel {
     
   final String msg;

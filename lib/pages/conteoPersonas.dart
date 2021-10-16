@@ -1,17 +1,11 @@
 //@dart=2.9
 
-import 'dart:convert';
-import 'dart:html';
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_demo/models/catCentroComercialModel.dart' as comercial;
 import 'package:flutter_demo/models/catRazonSocialModel.dart' as razon;
 import 'package:flutter_demo/models/conteoPersonasModel.dart' as personas;
-import 'package:flutter_demo/models/userModel.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter_demo/services/userService.dart';
-import 'package:flutter_demo/models/listMenuAppModel.dart';
 import 'package:flutter_demo/pages/menu.dart';
 
 class PersonasPage extends StatefulWidget{
@@ -27,7 +21,6 @@ class PersonasPage extends StatefulWidget{
 
 class _PersonasPage extends State<PersonasPage> {
   DateTime pruebafecha = new DateTime.now();
-  DateTime _dateTime; 
   String fechaString;
   String idRazon;
   String valueRazon;
@@ -47,6 +40,7 @@ class _PersonasPage extends State<PersonasPage> {
   String alertaAmarilla;
   bool dropdown1Bool = false;
   bool dropdown2Bool = false;
+  String fechaDropdown;
 
   @override
   Widget build(BuildContext context){
@@ -60,6 +54,7 @@ class _PersonasPage extends State<PersonasPage> {
       ),
       drawer: MenuPage(token: widget.token, nickname: widget.nickname,email:widget.email,),
       body: SingleChildScrollView(
+        scrollDirection: Axis.horizontal,
         child: Container(
           child: Column(
             children: [
@@ -85,7 +80,7 @@ class _PersonasPage extends State<PersonasPage> {
 
   Widget datosCabecera(context){
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 20.0, horizontal: 20.0),
+      padding: const EdgeInsets.symmetric(vertical: 0.0, horizontal: 20.0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
@@ -117,9 +112,10 @@ class _PersonasPage extends State<PersonasPage> {
   Widget unionFe(){
     String formatoFecha = new DateFormat('yyyy-MM-dd').format(pruebafecha);
     return Container(
+      
       child: Row(
         children: <Widget>[
-          Text( pruebafecha == DateTime.now() ? 'No has seleccionado fecha' : 'La fecha es: ' + formatoFecha, style: TextStyle(color: Color(0xffe1c0ea)),),
+          Text( pruebafecha == DateTime.now() ? 'No has seleccionado fecha' : 'Fecha: ' + formatoFecha, style: TextStyle(color: Color(0xffe1c0ea)),),
           //Text('$texto'),
           SizedBox(height: 15, width: 15,),
           RaisedButton(
@@ -152,7 +148,7 @@ class _PersonasPage extends State<PersonasPage> {
     return Container(
       child: Row(
         children: [
-          Text('Seleccione una Razon:', style: TextStyle(fontWeight: FontWeight.bold, color: Color(0xffe1c0ea)),),
+          Text('Seleccione una Razón:', style: TextStyle(fontWeight: FontWeight.bold, color: Color(0xffe1c0ea)),),
           SizedBox(height: 15, width: 15,),
           dropdown1(),
           SizedBox(width: 15,),
@@ -177,11 +173,12 @@ class _PersonasPage extends State<PersonasPage> {
     return Container(
       padding: EdgeInsets.only(left: 16, right: 16),
       decoration: BoxDecoration(
-        border: Border.all(color: Color(0xffFE1EF8), width: 2),
+        border: Border.all(color: Color(0xffFE1EF8), width: 1),
         borderRadius: BorderRadius.circular(10)
       ),
 
       child: DropdownButton(
+        
         hint: Text('Selecciona una Razón', style: TextStyle(fontSize: 15, color: Color(0xffe1c0ea)),),
         dropdownColor: Colors.grey,
         icon: Icon(Icons.arrow_drop_down),

@@ -2,9 +2,7 @@
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_demo/models/userModel.dart';
 import 'package:flutter_demo/services/userService.dart';
-import 'package:flutter_demo/utils/user_simple_preferences.dart';
 
 //flutter run --no-sound-null-safety
 

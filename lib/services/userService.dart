@@ -13,7 +13,6 @@ import 'package:flutter_demo/models/listPerfilModel.dart';
 import 'package:flutter_demo/models/logoutModel.dart';
 import 'package:flutter_demo/models/reportePersonasAnualModel.dart';
 import 'package:flutter_demo/models/loginModel.dart';
-import 'package:flutter_demo/utils/user_simple_preferences.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:intl/intl.dart';
@@ -33,8 +32,6 @@ class UserService{
 
         if(response.statusCode == 200 || response.statusCode == 202){
           print(body);
-          final String token = body['token'];
-          UserSimplePreferences.setToken(token);
           return LoginResponseModel.fromJson(json.decode(response.body));
         }else{
           throw Exception('Failed to load in login Service');
@@ -65,7 +62,6 @@ class UserService{
     final http.Response response = await http.post(Uri.parse(url+"/listPerfil"),
                                     headers: <String,String>{ "Content-Type": "application/json"},
                                     body: jsonEncode({"key": "12345","token": token}));
-    final body = json.decode(response.body);
     
     if(response.statusCode == 200 || response.statusCode == 202){
       // print(body);

@@ -30,7 +30,6 @@ class ReportePersonasDia extends StatefulWidget {
 
 class _ReportePersonasDia extends State<ReportePersonasDia> {
 
-  DateTime _dateTime;
   String nombreRazon;
   String nombreInmueble;
   String idRazon;

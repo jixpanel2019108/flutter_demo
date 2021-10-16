@@ -1,17 +1,10 @@
 // @dart=2.9
 
-import 'dart:html';
-import 'dart:js';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_demo/models/userModel.dart';
-import 'package:flutter_demo/models/listMenuAppModel.dart';
-import 'package:flutter_demo/pages/menu.dart';
 import 'package:flutter_demo/pages/principal.dart';
 import 'package:flutter_demo/services/userService.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-//import 'package:flutter_demo/pages/forgotPassword.dart';
+
 
 // ignore: camel_case_types
 class loginScreen extends StatefulWidget {
@@ -243,7 +236,6 @@ class _login extends State<loginScreen> {
                 usu = usuario.text;
                 pass = password.text;
                 UserService userService = new UserService();
-                User user = new User();
                 userService.login(usu,pass).then((response)=> {
 
                   if (response.token.isNotEmpty) {

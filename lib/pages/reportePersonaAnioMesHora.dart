@@ -11,7 +11,6 @@ import 'package:flutter_demo/models/catCentroComercialModel.dart' as comercial;
 import 'package:flutter_demo/models/catRazonSocialModel.dart' as razon;
 import 'package:flutter_demo/models/conteoPersonasModel.dart' as personas;
 import 'package:flutter_demo/pages/menu.dart';
-import 'package:syncfusion_flutter_charts/charts.dart';
 
 class ReportePersonaAnioMesHora extends StatefulWidget {
   final String token;

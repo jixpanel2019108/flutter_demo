@@ -104,7 +104,7 @@ class _ReportePersonaDiaSemana extends State<ReportePersonaDiaSemana> {
           const SizedBox(height: 15,),
           union2(),
           const SizedBox(height: 15,),
-          Anio(),
+          textAnio(),
           const SizedBox(height: 15,),
           mesLabel(),
           const SizedBox(height: 15,),
@@ -148,7 +148,7 @@ class _ReportePersonaDiaSemana extends State<ReportePersonaDiaSemana> {
     );
   }
 
-  Widget Anio() {
+  Widget textAnio() {
     return Container(
       margin: EdgeInsets.only(right: 250),
       child: StreamBuilder(
