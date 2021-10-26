@@ -45,7 +45,7 @@ class _ReportePersonaAnualMes extends State<ReportePersonaAnualMes> {
   List<reporte.Listado> listadoGrafica = [];
   List listaDropdownInmueble = [];
   List listadoTabla = [];
-  double cantidadColumnas = 0;
+  double cantidadColumnas = 3;
 
   String fini;
   String ffin;
@@ -87,12 +87,19 @@ class _ReportePersonaAnualMes extends State<ReportePersonaAnualMes> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
-          Text( 
-            'Reporte Personas Anual Mes',
-            style: TextStyle(color: Color(0xff890e8a), fontSize: 45,),
+          Align(
+            alignment: Alignment.center,
+            child: Container(
+              child: Text('Personas (Anual/Mes)',
+                          style: TextStyle(color:Color(0xffe1c0ea), fontSize: 30, fontWeight: FontWeight.bold),
+              ),
+            ),
           ),
           const SizedBox(height: 25.0,),
-          Text('Usuario: '+ widget.nickname, style: TextStyle(fontWeight: FontWeight.bold ,color: Color(0xffe1c0ea)),),
+          Row(
+            children: 
+            [Text('Usuario: ', style: TextStyle(fontWeight: FontWeight.bold ,color: Color(0xffe1c0ea)),),
+             Text(widget.nickname, style: TextStyle(color: Color(0xffe1c0ea)))],),
           const SizedBox(height: 25.0,),
           Text('Ultima Actualización:', style: TextStyle(color: Color(0xffe1c0ea),fontWeight: FontWeight.bold)),
           const SizedBox(height: 25.0,),
@@ -110,9 +117,24 @@ class _ReportePersonaAnualMes extends State<ReportePersonaAnualMes> {
           const SizedBox(height: 25,),
           botonConsulta(),
           const SizedBox(height: 25,),
+          Align(
+                alignment: Alignment.center,
+                child: Container(
+                  child: Text('Gráfica',style: TextStyle(color:Color(0xffe1c0ea), fontSize: 20, fontWeight: FontWeight.bold),
+                ),
+              ),
+          ),
+          const SizedBox(height: 5,),
           columnChart(),
           const SizedBox(height: 15,),
-          Center(child:Text("Datos", style: TextStyle(color: Colors.white,fontFamily: 'Gotic', fontWeight: FontWeight.bold, fontSize: 14),)),
+          Align(
+                alignment: Alignment.center,
+                child: Container(
+                  child: Text('Tabla de Datos',style: TextStyle(color:Color(0xffe1c0ea), fontSize: 20, fontWeight: FontWeight.bold),
+                ),
+              ),
+          ),
+          const SizedBox(height: 5,),
           tabla(),
         ],
       ),
@@ -123,7 +145,7 @@ class _ReportePersonaAnualMes extends State<ReportePersonaAnualMes> {
     return Container(
       child: Row(
         children: <Widget> [
-          Text('Seleccione una Razon:', style: TextStyle(fontWeight: FontWeight.bold, color: Color(0xffe1c0ea)),),
+          Text('Razón:     ', style: TextStyle(fontWeight: FontWeight.bold, color: Color(0xffe1c0ea)),),
           SizedBox(height: 15, width: 15,),
           dropdown1(),
           SizedBox(width: 15,),
@@ -136,7 +158,7 @@ class _ReportePersonaAnualMes extends State<ReportePersonaAnualMes> {
     return Container(
       child: Row(
         children: [
-          Text('Seleccione un Inmueble:',  style: TextStyle(fontWeight: FontWeight.bold, color: Color(0xffe1c0ea)),),
+          Text('Inmueble:',  style: TextStyle(fontWeight: FontWeight.bold, color: Color(0xffe1c0ea)),),
           SizedBox(height: 15, width: 15,),
           dropdown2()
         ],
@@ -146,7 +168,7 @@ class _ReportePersonaAnualMes extends State<ReportePersonaAnualMes> {
 
   Widget anioInicial() {
     return Container(
-      margin: EdgeInsets.only(right: 250),
+      // margin: EdgeInsets.only(right: 250),
       child: StreamBuilder(
           builder: (BuildContext context, AsyncSnapshot snapshot) {
             return Container(
@@ -180,7 +202,7 @@ class _ReportePersonaAnualMes extends State<ReportePersonaAnualMes> {
 
   Widget anioFinal() {
     return Container(
-      margin: EdgeInsets.only(right: 250),
+      // margin: EdgeInsets.only(right: 250),
       child: StreamBuilder(
           builder: (BuildContext context, AsyncSnapshot snapshot) {
             return Container(
@@ -215,7 +237,7 @@ class _ReportePersonaAnualMes extends State<ReportePersonaAnualMes> {
 
   Widget mesesito() {
     return Container(
-      margin: EdgeInsets.only(right: 250),
+      // margin: EdgeInsets.only(right: 250),
       child: StreamBuilder(
           builder: (BuildContext context, AsyncSnapshot snapshot) {
             return Container(
@@ -251,7 +273,7 @@ class _ReportePersonaAnualMes extends State<ReportePersonaAnualMes> {
     return Container(
       padding: EdgeInsets.only(left: 16, right: 16),
       decoration: BoxDecoration(
-        border: Border.all(color: Color(0xff890e8a), width: 2),
+        border: Border.all(color: Color(0xff890e8a), width: 1),
         borderRadius: BorderRadius.circular(10)
       ),
       child: DropdownButton(
@@ -301,7 +323,7 @@ class _ReportePersonaAnualMes extends State<ReportePersonaAnualMes> {
     return Container(
       padding: EdgeInsets.only(left: 16, right: 16),
       decoration: BoxDecoration(
-        border: Border.all(color: Color(0xff890e8a), width: 2),
+        border: Border.all(color: Color(0xff890e8a), width: 1),
         borderRadius: BorderRadius.circular(10)
       ),
       child: DropdownButton(
@@ -444,9 +466,10 @@ class _ReportePersonaAnualMes extends State<ReportePersonaAnualMes> {
   Widget tabla(){
     final columns = ['Año','Mes','Conteo'];
     return SingleChildScrollView(
-      scrollDirection: Axis.horizontal,
+      // scrollDirection: Axis.horizontal,
       child: Container(
-        padding: EdgeInsets.symmetric(horizontal: 120,),
+        alignment: Alignment.center,
+        // padding: EdgeInsets.symmetric(horizontal: 120,),
         child: DataTable(
           dataRowColor: MaterialStateProperty.resolveWith<Color>((Set<MaterialState> states) {
             if(states.contains(MaterialState.selected))
@@ -488,11 +511,11 @@ class _ReportePersonaAnualMes extends State<ReportePersonaAnualMes> {
      // width of the Container widget
     child: Center(
       child: SfCartesianChart(
-          title: ChartTitle(text:"Gráfica mes " + this.mes , textStyle: TextStyle(
-                              color: Colors.white,
-                              fontFamily: 'Gotic',
-                              fontWeight: FontWeight.w400
-                            )),
+          // title: ChartTitle(text:"Gráfica mes " + this.mes , textStyle: TextStyle(
+          //                     color: Colors.white,
+          //                     fontFamily: 'Gotic',
+          //                     fontWeight: FontWeight.w400
+          //                   )),
           series: <ChartSeries>[
             BarSeries<reporte.Listado, String>(dataSource: listadoGrafica, 
                       xValueMapper: (reporte.Listado sales, _) => sales.year,

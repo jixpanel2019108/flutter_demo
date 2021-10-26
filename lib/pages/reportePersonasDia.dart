@@ -46,7 +46,7 @@ class _ReportePersonasDia extends State<ReportePersonasDia> {
   List<reporte.Listado> listadoGrafica = [];
   List listaDropdownInmueble = [];
   List listadoTabla = [];
-  double cantidadColumnas = 0;
+  double cantidadColumnas = 8;
 
   String fini;
   String ffin;
@@ -86,12 +86,19 @@ class _ReportePersonasDia extends State<ReportePersonasDia> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
-          Text( 
-            'Reporte Personas Anual',
-            style: TextStyle(color: Color(0xff890e8a), fontSize: 45,),
+          Align(
+            alignment: Alignment.center,
+            child: Container(
+              child: Text('Personas (Diario)',
+                          style: TextStyle(color:Color(0xffe1c0ea), fontSize: 30, fontWeight: FontWeight.bold),
+              ),
+            ),
           ),
           const SizedBox(height: 25.0,),
-          Text('Usuario: '+ widget.nickname, style: TextStyle(fontWeight: FontWeight.bold ,color: Color(0xffe1c0ea)),),
+          Row(
+            children: 
+            [Text('Usuario: ', style: TextStyle(fontWeight: FontWeight.bold ,color: Color(0xffe1c0ea)),),
+             Text(widget.nickname, style: TextStyle(color: Color(0xffe1c0ea)))],),
           const SizedBox(height: 25.0,),
           Text('Ultima Actualización:', style: TextStyle(color: Color(0xffe1c0ea),fontWeight: FontWeight.bold)),
           const SizedBox(height: 25.0,),
@@ -107,7 +114,26 @@ class _ReportePersonasDia extends State<ReportePersonasDia> {
           const SizedBox(height: 25,),
           botonConsulta(),
           const SizedBox(height: 25,),
+
+          Align(
+                alignment: Alignment.center,
+                child: Container(
+                  child: Text('Gráfica',style: TextStyle(color:Color(0xffe1c0ea), fontSize: 20, fontWeight: FontWeight.bold),
+                ),
+              ),
+          ),
+          const SizedBox(height: 5,),
+
           columnChart1(),
+          const SizedBox(height: 25,),
+          Align(
+                alignment: Alignment.center,
+                child: Container(
+                  child: Text('Tabla de datos',style: TextStyle(color:Color(0xffe1c0ea), fontSize: 20, fontWeight: FontWeight.bold),
+                ),
+              ),
+          ),
+          const SizedBox(height: 5,),
           tabla(),
         ],
       ),
@@ -120,7 +146,7 @@ class _ReportePersonasDia extends State<ReportePersonasDia> {
     return Container(
       child: Row(
         children: <Widget> [
-          Text('Seleccione una Razon:', style: TextStyle(fontWeight: FontWeight.bold, color: Color(0xffe1c0ea)),),
+          Text('Razón:     ', style: TextStyle(fontWeight: FontWeight.bold, color: Color(0xffe1c0ea)),),
           SizedBox(height: 15, width: 15,),
           dropdown1(),
           SizedBox(width: 15,),
@@ -134,7 +160,7 @@ class _ReportePersonasDia extends State<ReportePersonasDia> {
     return Container(
       child: Row(
         children: [
-          Text('Seleccione un Inmueble:',  style: TextStyle(fontWeight: FontWeight.bold, color: Color(0xffe1c0ea)),),
+          Text('Inmueble:',  style: TextStyle(fontWeight: FontWeight.bold, color: Color(0xffe1c0ea)),),
           SizedBox(height: 15, width: 15,),
           dropdown2()
         ],
@@ -144,7 +170,7 @@ class _ReportePersonasDia extends State<ReportePersonasDia> {
 
   Widget initialDate() {
     return Container(
-      margin: EdgeInsets.only(right: 250),
+      // margin: EdgeInsets.only(right: 250),
       child: StreamBuilder(
           builder: (BuildContext context, AsyncSnapshot snapshot) {
             return Container(
@@ -179,7 +205,7 @@ class _ReportePersonasDia extends State<ReportePersonasDia> {
 
   Widget lastDate() {
     return Container(
-      margin: EdgeInsets.only(right: 250),
+      // margin: EdgeInsets.only(right: 250),
       child: StreamBuilder(
           builder: (BuildContext context, AsyncSnapshot snapshot) {
             return Container(
@@ -215,7 +241,7 @@ class _ReportePersonasDia extends State<ReportePersonasDia> {
     return Container(
       padding: EdgeInsets.only(left: 16, right: 16),
       decoration: BoxDecoration(
-        border: Border.all(color: Color(0xff890e8a), width: 2),
+        border: Border.all(color: Color(0xff890e8a), width: 1),
         borderRadius: BorderRadius.circular(10)
       ),
       child: DropdownButton(
@@ -266,7 +292,7 @@ class _ReportePersonasDia extends State<ReportePersonasDia> {
     return Container(
       padding: EdgeInsets.only(left: 16, right: 16),
       decoration: BoxDecoration(
-        border: Border.all(color: Color(0xff890e8a), width: 2),
+        border: Border.all(color: Color(0xff890e8a), width: 1),
         borderRadius: BorderRadius.circular(10)
       ),
       child: DropdownButton(
@@ -360,6 +386,30 @@ class _ReportePersonasDia extends State<ReportePersonasDia> {
                         reporte.Listado listado = new reporte.Listado();
                         listado.entradas = element.entradas;
                         listado.fecha = element.fecha;
+                        print("Este es el substring"+element.fecha.substring(9,10));
+                        if(int.parse(element.fecha.substring(9,10))%10.abs() == 0){
+                          listado.color = Colors.teal;
+                        }else if(int.parse(element.fecha.substring(9,10))%10.abs() == 9){
+                          listado.color = Colors.yellowAccent;
+                        }else if(int.parse(element.fecha.substring(9,10))%10.abs() == 8){
+                          listado.color = Colors.deepPurple;
+                        }else if(int.parse(element.fecha.substring(9,10))%10.abs() == 7){
+                          listado.color = Colors.red;
+                        }else if(int.parse(element.fecha.substring(9,10))%10.abs() == 6){
+                          listado.color = Colors.blue;
+                        }else if(int.parse(element.fecha.substring(9,10))%10.abs() == 5){
+                          listado.color = Colors.green;
+                        }else if(int.parse(element.fecha.substring(9,10))%10.abs() == 4){
+                          listado.color = Colors.grey;
+                        }else if(int.parse(element.fecha.substring(9,10))%10.abs() == 3){
+                          listado.color = Colors.lightBlue;
+                        }else if(int.parse(element.fecha.substring(9,10))%10.abs() == 2){
+                          listado.color = Colors.white;
+                        }else if(int.parse(element.fecha.substring(9,10))%10.abs() == 1){
+                          listado.color = Colors.brown;
+                        }else{
+                          listado.color = Colors.white;
+                        }
                         listadoGrafica.add(listado);
 
                         setState(() {
@@ -377,9 +427,10 @@ class _ReportePersonasDia extends State<ReportePersonasDia> {
   Widget tabla(){
     final columns = ['Fecha','Conteo'];
     return SingleChildScrollView(
-      scrollDirection: Axis.horizontal,
+      // scrollDirection: Axis.horizontal,
       child: Container(
-        padding: EdgeInsets.symmetric(horizontal: 120,),
+        alignment: Alignment.center,
+        // padding: EdgeInsets.symmetric(horizontal: 120,),
         child: DataTable(
           dataRowColor: MaterialStateProperty.resolveWith<Color>((Set<MaterialState> states) {
             if(states.contains(MaterialState.selected))
@@ -410,13 +461,13 @@ class _ReportePersonasDia extends State<ReportePersonasDia> {
      // width of the Container widget
     child: Center(
       child: SfCartesianChart(
-          title: ChartTitle(text:"Gráfica"),
+          // title: ChartTitle(text:"Gráfica"),
           // legend: Legend(isVisible: true),
           series: <ChartSeries>[
             BarSeries<reporte.Listado, String>(dataSource: listadoGrafica, 
                       xValueMapper: (reporte.Listado sales, _) => sales.fecha,
                       yValueMapper: (reporte.Listado sales, __) => int.parse(sales.entradas),
-                      color: Theme.of(context).primaryColor,
+                      pointColorMapper: (reporte.Listado data, _) => data.color,
                       dataLabelSettings: DataLabelSettings(
                                     isVisible: true,
                                     // Positioning the data label

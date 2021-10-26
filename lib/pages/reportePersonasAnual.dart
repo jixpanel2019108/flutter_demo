@@ -28,7 +28,6 @@ class ReportePersonasAnual extends StatefulWidget {
 
 class _ReportePersonasAnualState extends State<ReportePersonasAnual> {
 
-  DateTime _dateTime;
   String nombreRazon;
   String nombreInmueble;
   String idRazon;
@@ -84,12 +83,19 @@ class _ReportePersonasAnualState extends State<ReportePersonasAnual> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
-          Text( 
-            'Reporte Personas Anual',
-            style: TextStyle(color: Color(0xff890e8a), fontSize: 45,),
+          Align(
+            alignment: Alignment.center,
+            child: Container(
+              child: Text('Personas (Anual)',
+                          style: TextStyle(color:Color(0xffe1c0ea), fontSize: 30, fontWeight: FontWeight.bold),
+              ),
+            ),
           ),
           const SizedBox(height: 25.0,),
-          Text('Usuario: '+ widget.nickname, style: TextStyle(fontWeight: FontWeight.bold ,color: Color(0xffe1c0ea)),),
+           Row(
+            children: 
+            [Text('Usuario: ', style: TextStyle(fontWeight: FontWeight.bold ,color: Color(0xffe1c0ea)),),
+             Text(widget.nickname, style: TextStyle(color: Color(0xffe1c0ea)))],),
           const SizedBox(height: 25.0,),
           Text('Ultima Actualización:', style: TextStyle(color: Color(0xffe1c0ea),fontWeight: FontWeight.bold)),
           const SizedBox(height: 25.0,),
@@ -104,10 +110,25 @@ class _ReportePersonasAnualState extends State<ReportePersonasAnual> {
           lastDate(),
           const SizedBox(height: 25,),
           botonConsulta(),
+          const SizedBox(height: 30,),
+          Align(
+                alignment: Alignment.center,
+                child: Container(
+                  child: Text('Gráfica',style: TextStyle(color:Color(0xffe1c0ea), fontSize: 20, fontWeight: FontWeight.bold),
+                ),
+              ),
+          ),
+          columnChart(),
           const SizedBox(height: 25,),
+          Align(
+                alignment: Alignment.center,
+                child: Container(
+                  child: Text('Tabla de datos',style: TextStyle(color:Color(0xffe1c0ea), fontSize: 20, fontWeight: FontWeight.bold),
+                ),
+              ),
+          ),
+          const SizedBox(height: 5,),
           tabla(),
-          const SizedBox(height: 25,),
-          columnChart()
           // charts.BarChart(
           //   _createSampleData(),
           //   animate: true,
@@ -118,43 +139,43 @@ class _ReportePersonasAnualState extends State<ReportePersonasAnual> {
     );
   }
 
-  Widget unionFe(){
-    return Container(
-      child: Row(
-        children: <Widget>[
-          Text( _dateTime == null ? 'No has seleccionado fecha' : _dateTime.toString(),),
-          SizedBox(height: 15, width: 15,),
-          RaisedButton(
-            child: Text('Selecciona una fecha', style: TextStyle(color: Colors.white),),
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(5)
-            ),
-            color: Color(0xff890e8a),
-            onPressed: (){
-              showDatePicker(
-                context: context,
-                initialDate: _dateTime == null ? DateTime.now() : _dateTime,
-                firstDate: DateTime(2001),
-                lastDate: DateTime.now(),
+  // Widget unionFe(){
+  //   return Container(
+  //     child: Row(
+  //       children: <Widget>[
+  //         Text( _dateTime == null ? 'No has seleccionado fecha' : _dateTime.toString(),),
+  //         SizedBox(height: 15, width: 15,),
+  //         RaisedButton(
+  //           child: Text('Selecciona una fecha', style: TextStyle(color: Colors.white),),
+  //           shape: RoundedRectangleBorder(
+  //             borderRadius: BorderRadius.circular(5)
+  //           ),
+  //           color: Color(0xff890e8a),
+  //           onPressed: (){
+  //             showDatePicker(
+  //               context: context,
+  //               initialDate: _dateTime == null ? DateTime.now() : _dateTime,
+  //               firstDate: DateTime(2001),
+  //               lastDate: DateTime.now(),
                 
-              ).then((date){
-                setState(() {
-                  print(date);
-                  _dateTime = date;
-                });
-              });
-            } 
-          )
-        ],
-      ),
-    );
-  }
+  //             ).then((date){
+  //               setState(() {
+  //                 print(date);
+  //                 _dateTime = date;
+  //               });
+  //             });
+  //           } 
+  //         )
+  //       ],
+  //     ),
+  //   );
+  // }
 
   Widget union1(){
     return Container(
       child: Row(
         children: <Widget> [
-          Text('Seleccione una Razon:', style: TextStyle(fontWeight: FontWeight.bold, color: Color(0xffe1c0ea)),),
+          Text('Razón:     ', style: TextStyle(fontWeight: FontWeight.bold, color: Color(0xffe1c0ea)),),
           SizedBox(height: 15, width: 15,),
           dropdown1(),
           SizedBox(width: 15,),
@@ -168,7 +189,7 @@ class _ReportePersonasAnualState extends State<ReportePersonasAnual> {
     return Container(
       child: Row(
         children: [
-          Text('Seleccione un Inmueble:',  style: TextStyle(fontWeight: FontWeight.bold, color: Color(0xffe1c0ea)),),
+          Text('Inmueble:',  style: TextStyle(fontWeight: FontWeight.bold, color: Color(0xffe1c0ea)),),
           SizedBox(height: 15, width: 15,),
           dropdown2()
         ],
@@ -178,19 +199,20 @@ class _ReportePersonasAnualState extends State<ReportePersonasAnual> {
 
   Widget initialDate() {
     return Container(
-      margin: EdgeInsets.only(right: 250),
+      // margin: EdgeInsets.only(right: 250),
       child: StreamBuilder(
           builder: (BuildContext context, AsyncSnapshot snapshot) {
             return Container(
               child: Column(
                 children: <Widget>[
                   TextFormField(
+                    keyboardType: TextInputType.number,
                     controller: fechainicial,
                     inputFormatters: [
                       LengthLimitingTextInputFormatter(4),
                     ],
                     style: TextStyle(color: Colors.white, fontSize: 15),
-                    keyboardType: TextInputType.number,
+                    // keyboardType: TextInputType.number,
                     cursorColor: Colors.white,
                     decoration: InputDecoration(
                       labelText: 'Año Inicial',
@@ -213,7 +235,7 @@ class _ReportePersonasAnualState extends State<ReportePersonasAnual> {
 
   Widget lastDate() {
     return Container(
-      margin: EdgeInsets.only(right: 250),
+      // margin: EdgeInsets.only(right: 250),
       child: StreamBuilder(
           builder: (BuildContext context, AsyncSnapshot snapshot) {
             return Container(
@@ -414,6 +436,8 @@ class _ReportePersonasAnualState extends State<ReportePersonasAnual> {
                 listado.color = Colors.white;
               }else if(count%10.abs() == 1){
                 listado.color = Colors.brown;
+              }else{
+                listado.color = Colors.white;
               }
 
                 listado.conteo = element.conteo;
@@ -439,9 +463,11 @@ class _ReportePersonasAnualState extends State<ReportePersonasAnual> {
   Widget tabla(){
     final columns = ['Fecha','Conteo'];
     return SingleChildScrollView(
-      scrollDirection: Axis.horizontal,
+      // scrollDirection: Axis.horizontal,
+      
       child: Container(
-        padding: EdgeInsets.symmetric(horizontal: 140,),
+        alignment: Alignment.center,
+        // padding: EdgeInsets.symmetric(horizontal: 140,),
         child: DataTable(
           dataRowColor: MaterialStateProperty.resolveWith<Color>((Set<MaterialState> states) {
             if(states.contains(MaterialState.selected))

@@ -45,7 +45,7 @@ class _ReportePersonaDiaSemana extends State<ReportePersonaDiaSemana> {
   List<reporte.Listado> listadoGrafica = [];
   List listaDropdownInmueble = [];
   List listadoTabla = [];
-  double cantidadColumnas = 0;
+  double cantidadColumnas = 3;
 
   String fini;
   String ffin;
@@ -89,12 +89,19 @@ class _ReportePersonaDiaSemana extends State<ReportePersonaDiaSemana> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
-          Text( 
-            'Reporte Personas Anual Mes',
-            style: TextStyle(color: Color(0xff890e8a), fontSize: 45,),
+          Align(
+            alignment: Alignment.center,
+            child: Container(
+              child: Text('Persona (Dia/Semana)',
+                          style: TextStyle(color:Color(0xffe1c0ea), fontSize: 30, fontWeight: FontWeight.bold),
+              ),
+            ),
           ),
           const SizedBox(height: 25.0,),
-          Text('Usuario: '+ widget.nickname, style: TextStyle(fontWeight: FontWeight.bold ,color: Color(0xffe1c0ea)),),
+          Row(
+            children: 
+            [Text('Usuario: ', style: TextStyle(fontWeight: FontWeight.bold ,color: Color(0xffe1c0ea)),),
+             Text(widget.nickname, style: TextStyle(color: Color(0xffe1c0ea)))],),
           const SizedBox(height: 25.0,),
           Text('Ultima Actualización:', style: TextStyle(color: Color(0xffe1c0ea),fontWeight: FontWeight.bold)),
           const SizedBox(height: 25.0,),
@@ -105,18 +112,31 @@ class _ReportePersonaDiaSemana extends State<ReportePersonaDiaSemana> {
           union2(),
           const SizedBox(height: 15,),
           textAnio(),
-          const SizedBox(height: 15,),
+          const SizedBox(height: 10,),
           mesLabel(),
-          const SizedBox(height: 15,),
+          const SizedBox(height: 10,),
           diaInicial(),
-          const SizedBox(height: 15,),
+          const SizedBox(height: 10,),
           diaFinal(),
           const SizedBox(height: 25,),
           botonConsulta(),
           const SizedBox(height: 25,),
+          Align(
+                alignment: Alignment.center,
+                child: Container(
+                  child: Text('Gráfica',style: TextStyle(color:Color(0xffe1c0ea), fontSize: 20, fontWeight: FontWeight.bold),
+                ),
+              ),
+          ),
           columnChart(),
           const SizedBox(height: 15,),
-          Center(child:Text("Datos", style: TextStyle(color: Colors.white,fontFamily: 'Gotic', fontWeight: FontWeight.bold, fontSize: 14),)),
+          Align(
+                alignment: Alignment.center,
+                child: Container(
+                  child: Text('Tabla de Datos',style: TextStyle(color:Color(0xffe1c0ea), fontSize: 20, fontWeight: FontWeight.bold),
+                ),
+              ),
+          ),
           tabla(),
         ],
       ),
@@ -127,7 +147,7 @@ class _ReportePersonaDiaSemana extends State<ReportePersonaDiaSemana> {
     return Container(
       child: Row(
         children: <Widget> [
-          Text('Seleccione una Razon:', style: TextStyle(fontWeight: FontWeight.bold, color: Color(0xffe1c0ea)),),
+          Text('Razón:     ', style: TextStyle(fontWeight: FontWeight.bold, color: Color(0xffe1c0ea)),),
           SizedBox(height: 15, width: 15,),
           dropdown1(),
           SizedBox(width: 15,),
@@ -140,7 +160,7 @@ class _ReportePersonaDiaSemana extends State<ReportePersonaDiaSemana> {
     return Container(
       child: Row(
         children: [
-          Text('Seleccione un Inmueble:',  style: TextStyle(fontWeight: FontWeight.bold, color: Color(0xffe1c0ea)),),
+          Text('Inmueble:',  style: TextStyle(fontWeight: FontWeight.bold, color: Color(0xffe1c0ea)),),
           SizedBox(height: 15, width: 15,),
           dropdown2()
         ],
@@ -150,7 +170,7 @@ class _ReportePersonaDiaSemana extends State<ReportePersonaDiaSemana> {
 
   Widget textAnio() {
     return Container(
-      margin: EdgeInsets.only(right: 250),
+      // margin: EdgeInsets.only(right: 250),
       child: StreamBuilder(
           builder: (BuildContext context, AsyncSnapshot snapshot) {
             return Container(
@@ -184,7 +204,7 @@ class _ReportePersonaDiaSemana extends State<ReportePersonaDiaSemana> {
 
   Widget mesLabel() {
     return Container(
-      margin: EdgeInsets.only(right: 250),
+      // margin: EdgeInsets.only(right: 250),
       child: StreamBuilder(
           builder: (BuildContext context, AsyncSnapshot snapshot) {
             return Container(
@@ -219,7 +239,7 @@ class _ReportePersonaDiaSemana extends State<ReportePersonaDiaSemana> {
 
   Widget diaInicial() {
     return Container(
-      margin: EdgeInsets.only(right: 250),
+      // margin: EdgeInsets.only(right: 250),
       child: StreamBuilder(
           builder: (BuildContext context, AsyncSnapshot snapshot) {
             return Container(
@@ -254,7 +274,7 @@ class _ReportePersonaDiaSemana extends State<ReportePersonaDiaSemana> {
 
   Widget diaFinal() {
     return Container(
-      margin: EdgeInsets.only(right: 250),
+      // margin: EdgeInsets.only(right: 250),
       child: StreamBuilder(
           builder: (BuildContext context, AsyncSnapshot snapshot) {
             return Container(
@@ -291,7 +311,7 @@ class _ReportePersonaDiaSemana extends State<ReportePersonaDiaSemana> {
     return Container(
       padding: EdgeInsets.only(left: 16, right: 16),
       decoration: BoxDecoration(
-        border: Border.all(color: Color(0xff890e8a), width: 2),
+        border: Border.all(color: Color(0xff890e8a), width: 1),
         borderRadius: BorderRadius.circular(10)
       ),
       child: DropdownButton(
@@ -341,7 +361,7 @@ class _ReportePersonaDiaSemana extends State<ReportePersonaDiaSemana> {
     return Container(
       padding: EdgeInsets.only(left: 16, right: 16),
       decoration: BoxDecoration(
-        border: Border.all(color: Color(0xff890e8a), width: 2),
+        border: Border.all(color: Color(0xff890e8a), width: 1),
         borderRadius: BorderRadius.circular(10)
       ),
       child: DropdownButton(
@@ -485,9 +505,10 @@ class _ReportePersonaDiaSemana extends State<ReportePersonaDiaSemana> {
   Widget tabla(){
     final columns = ['Número','Conteo', 'Dia'];
     return SingleChildScrollView(
-      scrollDirection: Axis.horizontal,
+      // scrollDirection: Axis.horizontal,
       child: Container(
-        padding: EdgeInsets.symmetric(horizontal: 120,),
+        // padding: EdgeInsets.symmetric(horizontal: 120,),
+        alignment: Alignment.center,
         child: DataTable(
           dataRowColor: MaterialStateProperty.resolveWith<Color>((Set<MaterialState> states) {
             if(states.contains(MaterialState.selected))
@@ -529,11 +550,11 @@ class _ReportePersonaDiaSemana extends State<ReportePersonaDiaSemana> {
      // width of the Container widget
     child: Center(
       child: SfCartesianChart(
-          title: ChartTitle(text:"Gráfica mes " + this.mes , textStyle: TextStyle(
-                              color: Colors.white,
-                              fontFamily: 'Gotic',
-                              fontWeight: FontWeight.w400
-                            )),
+          // title: ChartTitle(text:"Gráfica mes " + this.mes , textStyle: TextStyle(
+          //                     color: Colors.white,
+          //                     fontFamily: 'Gotic',
+          //                     fontWeight: FontWeight.w400
+          //                   )),
           series: <ChartSeries>[
             BarSeries<reporte.Listado, String>(dataSource: listadoGrafica, 
                       xValueMapper: (reporte.Listado sales, _) => sales.dia,

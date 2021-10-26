@@ -6,6 +6,7 @@ import 'package:flutter_demo/models/catRazonSocialModel.dart' as razon;
 import 'package:flutter_demo/models/conteoPersonasModel.dart' as personas;
 import 'package:flutter_demo/services/userService.dart';
 import 'package:flutter_demo/pages/menu.dart';
+import 'package:intl/intl.dart';
 
 class ParqueosPage extends StatefulWidget{
   final String token;
@@ -22,6 +23,7 @@ class _ParqueosPage extends State<ParqueosPage> {
   DateTime _dateTime;
   String fechaString;
   DateTime pruebafecha = DateTime.now();
+  var fechaDropdown;
   String idRazon;
   String valueRazon;
   String valueInmueble;
@@ -77,16 +79,23 @@ class _ParqueosPage extends State<ParqueosPage> {
 
   Widget datosCabecera(context){
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 20.0, horizontal: 20.0),
+      padding: const EdgeInsets.symmetric(vertical: 00.0, horizontal: 20.0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
-          Text( 
-            'Conteo Parqueos',
-            style: TextStyle(color: Color(0xff890e8a), fontSize: 45,),
+          Align(
+            alignment: Alignment.center,
+            child: Container(
+              child: Text('Conteo Parqueos',
+                          style: TextStyle(color:Color(0xffe1c0ea), fontSize: 30, fontWeight: FontWeight.bold),
+              ),
+            ),
           ),
           const SizedBox(height: 25.0,),
-          Text('Usuario: '+ widget.nickname, style: TextStyle(fontWeight: FontWeight.bold ,color: Color(0xffe1c0ea)),),
+          Row(
+            children: 
+            [Text('Usuario: ', style: TextStyle(fontWeight: FontWeight.bold ,color: Color(0xffe1c0ea)),),
+             Text(widget.nickname, style: TextStyle(color: Color(0xffe1c0ea)))],),
           const SizedBox(height: 25.0,),
           Text('Ultima Actualización:', style: TextStyle(fontWeight: FontWeight.bold ,color: Color(0xffe1c0ea)),),
           const SizedBox(height: 25.0,),
@@ -100,6 +109,14 @@ class _ParqueosPage extends State<ParqueosPage> {
           const SizedBox(height: 25,),
           botonConsulta(),
           const SizedBox(height: 25,),
+          Align(
+                alignment: Alignment.center,
+                child: Container(
+                  child: Text('Tabla de datos',style: TextStyle(color:Color(0xffe1c0ea), fontSize: 20, fontWeight: FontWeight.bold),
+                ),
+              ),
+          ),
+          const SizedBox(height: 5,),
           tabla()
         ],
       ),
@@ -110,14 +127,14 @@ class _ParqueosPage extends State<ParqueosPage> {
     return Container(
       child: Row(
         children: <Widget>[
-          Text( _dateTime == null ? 'No has seleccionado fecha' : 'La fecha es: ' + _dateTime.toString(), style: TextStyle(color: Color(0xffe1c0ea)),),
+          Text('Fecha:      ', style: TextStyle(color: Color(0xffe1c0ea), fontWeight: FontWeight.bold),),
           SizedBox(height: 15, width: 15,),
           RaisedButton(
-            child: Text('Selecciona una fecha', style: TextStyle(color: Colors.white),),
+            child: Text(fechaDropdown ?? 'Seleccione una fecha', style: TextStyle(color: Color(0xffe1c0ea)),),
             shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(20)
+              borderRadius: BorderRadius.circular(10)
             ),
-            color: Color(0xffFE1EF8),
+            color: Color(0xff890e8a),
             onPressed: (){
               showDatePicker(
                 context: context,
@@ -129,6 +146,7 @@ class _ParqueosPage extends State<ParqueosPage> {
                 setState(() {
                   print(date);
                   _dateTime = date;
+                  fechaDropdown = new DateFormat('dd/MM/yyyy').format(date);
                 });
               });
             } 
@@ -142,7 +160,7 @@ class _ParqueosPage extends State<ParqueosPage> {
     return Container(
       child: Row(
         children: [
-          Text('Seleccione una Razon:', style: TextStyle(fontWeight: FontWeight.bold, color: Color(0xffe1c0ea)),),
+          Text('Razón:     ', style: TextStyle(fontWeight: FontWeight.bold, color: Color(0xffe1c0ea)),),
           SizedBox(height: 15, width: 15,),
           dropdown1(),
           SizedBox(width: 15,),
@@ -155,7 +173,7 @@ class _ParqueosPage extends State<ParqueosPage> {
     return Container(
       child: Row(
         children: [
-          Text('Seleccione un Inmueble:',  style: TextStyle(fontWeight: FontWeight.bold, color: Color(0xffe1c0ea)),),
+          Text('Inmueble:',  style: TextStyle(fontWeight: FontWeight.bold, color: Color(0xffe1c0ea)),),
           SizedBox(height: 15, width: 15,),
           dropdown2()
         ],
@@ -167,8 +185,8 @@ class _ParqueosPage extends State<ParqueosPage> {
     return Container(
       padding: EdgeInsets.only(left: 16, right: 16),
       decoration: BoxDecoration(
-        border: Border.all(color: Color(0xffFE1EF8), width: 2),
-        borderRadius: BorderRadius.circular(20)
+        border: Border.all(color: Color(0xffFE1EF8), width: 1),
+        borderRadius: BorderRadius.circular(10)
       ),
 
       child: DropdownButton(
@@ -218,8 +236,8 @@ class _ParqueosPage extends State<ParqueosPage> {
     return Container(
       padding: EdgeInsets.only(left: 16, right: 16),
       decoration: BoxDecoration(
-        border: Border.all(color: Color(0xffFE1EF8), width: 2),
-        borderRadius: BorderRadius.circular(20)
+        border: Border.all(color: Color(0xffFE1EF8), width: 1),
+        borderRadius: BorderRadius.circular(10)
       ),
       child: DropdownButton(
         hint: Text('Selecciona un Inmueble', style: TextStyle(fontSize: 15, color: Color(0xffe1c0ea)),),
@@ -268,7 +286,7 @@ class _ParqueosPage extends State<ParqueosPage> {
         )
       ),
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(20) 
+        borderRadius: BorderRadius.circular(10) 
       ),
       color: Color(0xff890e8a),
       onPressed: (){
@@ -355,7 +373,7 @@ class _ParqueosPage extends State<ParqueosPage> {
 
   List <DataRow> getRows (List<personas.Listado1> row,) => row.map((personas.Listado1 hola,) {
 
-    final cells = [hola.cc, hola.fecha, hola.acumuladoSalidas, hola.alertaOcupacion, hola.ocupacionInstantanea, hola.hora, hola.entradas, hola.ocupacionMaximaAutorizada, hola.porcentajeOcupacion, hola.salidas, hola.acumuladoEntradas, ];
+    final cells = [hola.cc, DateFormat('dd-MM-yyy').format(hola.fecha), hola.acumuladoSalidas, hola.alertaOcupacion, hola.ocupacionInstantanea, hola.hora, hola.entradas, hola.ocupacionMaximaAutorizada, hola.porcentajeOcupacion, hola.salidas, hola.acumuladoEntradas, ];
     return DataRow(cells: getCells(cells));
   }).toList();
   

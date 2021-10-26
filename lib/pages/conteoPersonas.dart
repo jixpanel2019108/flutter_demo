@@ -1,5 +1,5 @@
 //@dart=2.9
-
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_demo/models/catCentroComercialModel.dart' as comercial;
 import 'package:flutter_demo/models/catRazonSocialModel.dart' as razon;
@@ -22,6 +22,7 @@ class PersonasPage extends StatefulWidget{
 class _PersonasPage extends State<PersonasPage> {
   DateTime pruebafecha = new DateTime.now();
   String fechaString;
+  var fechaDropdown;
   String idRazon;
   String valueRazon;
   String valueInmueble;
@@ -40,7 +41,6 @@ class _PersonasPage extends State<PersonasPage> {
   String alertaAmarilla;
   bool dropdown1Bool = false;
   bool dropdown2Bool = false;
-  String fechaDropdown;
 
   @override
   Widget build(BuildContext context){
@@ -54,7 +54,7 @@ class _PersonasPage extends State<PersonasPage> {
       ),
       drawer: MenuPage(token: widget.token, nickname: widget.nickname,email:widget.email,),
       body: SingleChildScrollView(
-        scrollDirection: Axis.horizontal,
+        // scrollDirection: Axis.horizontal,
         child: Container(
           child: Column(
             children: [
@@ -84,12 +84,19 @@ class _PersonasPage extends State<PersonasPage> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
-          Text( 
-            'Conteo Personas',
-            style: TextStyle(color: Color(0xff890e8a), fontSize: 45,),
+          Align(
+            alignment: Alignment.center,
+            child: Container(
+              child: Text('Conteo Personas',
+                          style: TextStyle(color:Color(0xffe1c0ea), fontSize: 30, fontWeight: FontWeight.bold),
+              ),
+            ),
           ),
           const SizedBox(height: 25.0,),
-          Text('Usuario: '+ widget.nickname, style: TextStyle(fontWeight: FontWeight.bold ,color: Color(0xffe1c0ea)),),
+          Row(
+            children: 
+            [Text('Usuario: ', style: TextStyle(fontWeight: FontWeight.bold ,color: Color(0xffe1c0ea)),),
+             Text(widget.nickname, style: TextStyle(color: Color(0xffe1c0ea)))],),
           const SizedBox(height: 25.0,),
           Text('Ultima Actualización:', style: TextStyle(fontWeight: FontWeight.bold ,color: Color(0xffe1c0ea)),),
           const SizedBox(height: 25.0,),
@@ -103,6 +110,14 @@ class _PersonasPage extends State<PersonasPage> {
           const SizedBox(height: 25,),
           botonConsulta(),
           const SizedBox(height: 25,),
+          Align(
+                alignment: Alignment.center,
+                child: Container(
+                  child: Text('Tabla de datos',style: TextStyle(color:Color(0xffe1c0ea), fontSize: 20, fontWeight: FontWeight.bold),
+                ),
+              ),
+          ),
+          const SizedBox(height: 5,),
           tabla()
         ],
       ),
@@ -110,18 +125,16 @@ class _PersonasPage extends State<PersonasPage> {
   }
   
   Widget unionFe(){
-    String formatoFecha = new DateFormat('yyyy-MM-dd').format(pruebafecha);
     return Container(
-      
       child: Row(
         children: <Widget>[
-          Text( pruebafecha == DateTime.now() ? 'No has seleccionado fecha' : 'Fecha: ' + formatoFecha, style: TextStyle(color: Color(0xffe1c0ea)),),
+          Text( pruebafecha == DateTime.now() ? 'No has seleccionado fecha' : 'Fecha:      ', style: TextStyle(color: Color(0xffe1c0ea),fontWeight: FontWeight.bold),),
           //Text('$texto'),
           SizedBox(height: 15, width: 15,),
           RaisedButton(
-            child: Text('Selecciona una fecha', style: TextStyle(color: Colors.white),),
+            child: Text(fechaDropdown ?? 'Seleccione una fecha', style: TextStyle(color: Color(0xffe1c0ea)),),
             shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(20)
+              borderRadius: BorderRadius.circular(10)
             ),
             color: Color(0xff890e8a),
             onPressed: (){
@@ -134,7 +147,10 @@ class _PersonasPage extends State<PersonasPage> {
               ).then((date){
                 setState(() {
                   pruebafecha = date;
-                  formatoFecha = pruebafecha.toString();
+                  // formatoFecha = pruebafecha.toString();
+
+                  fechaDropdown = new DateFormat('dd/MM/yyyy').format(pruebafecha);
+                  
                 });
               });
             } 
@@ -146,9 +162,10 @@ class _PersonasPage extends State<PersonasPage> {
 
   Widget union1(){
     return Container(
+      
       child: Row(
         children: [
-          Text('Seleccione una Razón:', style: TextStyle(fontWeight: FontWeight.bold, color: Color(0xffe1c0ea)),),
+          Text('Razón:     ', style: TextStyle(fontWeight: FontWeight.bold, color: Color(0xffe1c0ea)),),
           SizedBox(height: 15, width: 15,),
           dropdown1(),
           SizedBox(width: 15,),
@@ -161,7 +178,7 @@ class _PersonasPage extends State<PersonasPage> {
     return Container(
       child: Row(
         children: [
-          Text('Seleccione un Inmueble:',  style: TextStyle(fontWeight: FontWeight.bold, color: Color(0xffe1c0ea)),),
+          Text('Inmueble:',  style: TextStyle(fontWeight: FontWeight.bold, color: Color(0xffe1c0ea)),),
           SizedBox(height: 15, width: 15,),
           dropdown2()
         ],
@@ -181,7 +198,7 @@ class _PersonasPage extends State<PersonasPage> {
         
         hint: Text('Selecciona una Razón', style: TextStyle(fontSize: 15, color: Color(0xffe1c0ea)),),
         dropdownColor: Colors.grey,
-        icon: Icon(Icons.arrow_drop_down),
+        icon: Icon(Icons.arrow_drop_down,),
         iconSize: 36,
         underline: SizedBox(),
         style: TextStyle(
@@ -225,13 +242,13 @@ class _PersonasPage extends State<PersonasPage> {
     return Container(
       padding: EdgeInsets.only(left: 16, right: 16),
       decoration: BoxDecoration(
-        border: Border.all(color: Color(0xffFE1EF8), width: 2),
+        border: Border.all(color: Color(0xffFE1EF8), width: 1),
         borderRadius: BorderRadius.circular(10)
       ),
       child: DropdownButton(
         hint: Text('Selecciona un Inmueble', style: TextStyle(fontSize: 15, color: Color(0xffe1c0ea)),),
         dropdownColor: Colors.grey,
-        icon: Icon(Icons.arrow_drop_down),
+        icon: Icon(Icons.arrow_drop_down, ),
         iconSize: 36,
         underline: SizedBox(),
         style: TextStyle(
@@ -328,7 +345,7 @@ class _PersonasPage extends State<PersonasPage> {
 
   Widget tabla(){
     final columns = ['CC','Fecha','Acumulado Salidas','Alerta Ocupación','Ocupacion Instantanea','Hora','Entradas', 'Ocupación Max.','Porcentaje Ocup.','Salidas', 'Acumulados Entradas'];
-    print('listadoTabla');
+    // print('listadoTabla');
     return SingleChildScrollView(
       scrollDirection: Axis.horizontal,
       child: Center(
@@ -352,6 +369,8 @@ class _PersonasPage extends State<PersonasPage> {
               return Theme.of(context).colorScheme.primary.withOpacity(0.08);
             return null;
           }),
+          headingTextStyle: TextStyle(color: Color(0xffe1c0ea),fontWeight: FontWeight.bold ,),
+
         )
       ),
     );
@@ -365,7 +384,7 @@ class _PersonasPage extends State<PersonasPage> {
 
   List <DataRow> getRows (List<personas.Listado1> row,) => row.map((personas.Listado1 hola,) {
 
-    final cells = [hola.cc, hola.fecha, hola.acumuladoSalidas, hola.alertaOcupacion, hola.ocupacionInstantanea, hola.hora, hola.entradas, hola.ocupacionMaximaAutorizada, hola.porcentajeOcupacion, hola.salidas, hola.acumuladoEntradas, ];
+    final cells = [hola.cc, DateFormat('dd-MM-yyy').format(hola.fecha), hola.acumuladoSalidas, hola.alertaOcupacion, hola.ocupacionInstantanea, hola.hora, hola.entradas, hola.ocupacionMaximaAutorizada, hola.porcentajeOcupacion, hola.salidas, hola.acumuladoEntradas, ];
     return DataRow(cells: getCells(cells));
   }).toList();
   
