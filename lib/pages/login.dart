@@ -239,14 +239,13 @@ class _login extends State<loginScreen> {
                 pass = password.text;
                 UserService userService = new UserService();
                 userService.login(usu,pass).then((response)=> {
-
                   if (response.token.isNotEmpty) {
                     print("Token No está vacio"),
                     
                     userService.listPerfil(response.token).then((usuarioEncontrado)=>{
-
                       if(response.error == false){
-                        userService.listMenuApp(response.token).then((menusEncontrados)=> {
+
+                        userService.listMenu(response.token).then((menusEncontrados)=> {
                           Navigator.push(
                           context,
                           MaterialPageRoute(
@@ -256,21 +255,11 @@ class _login extends State<loginScreen> {
                                                           menu: menusEncontrados.menu  ),
                       ),
                     ),
-
-                          
-
                         }),
-
-                        // print(usuarioEncontrado.perfil[0]),
-                        
-                        
                       }else{
                         print("Error true en list perfil en Login")
                       }
-
                     }),
-
-                    
 
                     //ALERTA
                     ScaffoldMessenger.of(context).showSnackBar(SnackBar(

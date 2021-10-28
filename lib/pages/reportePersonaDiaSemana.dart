@@ -3,6 +3,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.Dart';
+import 'package:flutter_demo/models/listMenuModel.dart';
 import 'package:flutter_demo/services/userService.dart';
 import 'package:flutter_demo/services/reportService.dart';
 import 'package:charts_flutter/flutter.dart' as charts;
@@ -20,8 +21,8 @@ class ReportePersonaDiaSemana extends StatefulWidget {
   final List<razon.Listado> listadoRazon;
   final List<charts.Series> grafica;
   final bool animacion;
-  
-  const ReportePersonaDiaSemana({ Key key, this.token, this.nickname, this.email, this.listadoRazon, this.animacion, this.grafica}) :  super(key: key);
+  final List<Menu> menu;
+  const ReportePersonaDiaSemana({ Key key, this.token, this.nickname, this.email, this.listadoRazon, this.animacion, this.grafica,this.menu}) :  super(key: key);
 
   @override
   _ReportePersonaDiaSemana createState() => _ReportePersonaDiaSemana();
@@ -70,7 +71,7 @@ class _ReportePersonaDiaSemana extends State<ReportePersonaDiaSemana> {
         centerTitle: true,
         backgroundColor: Colors.transparent,
       ),
-      drawer: MenuPage(token: widget.token, nickname: widget.nickname,email:widget.email,),
+      drawer: MenuPage(token: widget.token, nickname: widget.nickname,email:widget.email,menu:widget.menu),
       body: SingleChildScrollView(
         child: Container( 
           child: Column(

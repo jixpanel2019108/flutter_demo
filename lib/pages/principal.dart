@@ -2,7 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_demo/pages/menu.dart';
-import 'package:flutter_demo/models/listMenuAppModel.dart';
+import 'package:flutter_demo/models/listMenuModel.dart';
 
 class HomeScreen extends StatefulWidget {
   final String token;
@@ -30,7 +30,7 @@ class _Home extends State<HomeScreen> {
           centerTitle: true,
           backgroundColor: Colors.transparent,
         ),
-        drawer: MenuPage(token: widget.token, nickname: widget.nickname,email:widget.email,),
+        drawer: MenuPage(token: widget.token, nickname: widget.nickname,email:widget.email, menu: widget.menu,),
       )
     );
   }

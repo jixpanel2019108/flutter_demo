@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_demo/models/catCentroComercialModel.dart' as comercial;
 import 'package:flutter_demo/models/catRazonSocialModel.dart' as razon;
 import 'package:flutter_demo/models/conteoPersonasModel.dart' as personas;
+import 'package:flutter_demo/models/listMenuModel.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter_demo/services/userService.dart';
 import 'package:flutter_demo/pages/menu.dart';
@@ -13,8 +14,8 @@ class PersonasPage extends StatefulWidget{
   final String nickname;
   final String email;
   final List<razon.Listado> listadoRazon;
-
-  const PersonasPage({ Key key, this.token, this.nickname, this.email, this.listadoRazon}) :  super(key: key);
+  final List<Menu> menu;
+  const PersonasPage({ Key key, this.token, this.nickname, this.email, this.listadoRazon, this.menu}) :  super(key: key);
   @override
   _PersonasPage createState() => _PersonasPage();
 }
@@ -52,7 +53,7 @@ class _PersonasPage extends State<PersonasPage> {
         centerTitle: true,
         backgroundColor: Colors.transparent,
       ),
-      drawer: MenuPage(token: widget.token, nickname: widget.nickname,email:widget.email,),
+      drawer: MenuPage(token: widget.token, nickname: widget.nickname,email:widget.email,menu: widget.menu,),
       body: SingleChildScrollView(
         // scrollDirection: Axis.horizontal,
         child: Container(

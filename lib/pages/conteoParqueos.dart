@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_demo/models/catCentroComercialModel.dart' as comercial;
 import 'package:flutter_demo/models/catRazonSocialModel.dart' as razon;
 import 'package:flutter_demo/models/conteoPersonasModel.dart' as personas;
+import 'package:flutter_demo/models/listMenuModel.dart';
 import 'package:flutter_demo/services/userService.dart';
 import 'package:flutter_demo/pages/menu.dart';
 import 'package:intl/intl.dart';
@@ -13,8 +14,8 @@ class ParqueosPage extends StatefulWidget{
   final String nickname;
   final String email;
   final List<razon.Listado> listadoRazon;
-
-  const ParqueosPage({ Key key, this.token, this.nickname, this.email, this.listadoRazon}) :  super(key: key);
+  final List<Menu> menu;
+  const ParqueosPage({ Key key, this.token, this.nickname, this.email, this.listadoRazon,this.menu}) :  super(key: key);
   @override
   _ParqueosPage createState() => _ParqueosPage();
 }
@@ -52,7 +53,7 @@ class _ParqueosPage extends State<ParqueosPage> {
         centerTitle: true,
         backgroundColor: Colors.transparent,
       ),
-      drawer: MenuPage(token: widget.token, nickname: widget.nickname,email:widget.email,),
+      drawer: MenuPage(token: widget.token, nickname: widget.nickname,email:widget.email,menu: widget.menu),
       body: SingleChildScrollView(
         child: Container(
           child: Column(
